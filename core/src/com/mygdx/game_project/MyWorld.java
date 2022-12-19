@@ -5,6 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -34,6 +37,9 @@ public class MyWorld extends ApplicationAdapter {
 	public Body player;
 	public Body enemy;
 
+	private OrthogonalTiledMapRenderer tmr;
+	private TiledMap tiledMap;
+
 	//endregion
 	@Override
 	public void create () {
@@ -41,11 +47,14 @@ public class MyWorld extends ApplicationAdapter {
 		viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
 		debugRenderer = new Box2DDebugRenderer();
 
+		tiledMap = new TmxMapLoader().load("TestMap.tmx");
+		tmr = new OrthogonalTiledMapRenderer(tiledMap, 3);
+
 		gravity = new Vector2(0,0);
 		world = new World(gravity, false);
 
 		player = createHitbox(0,60,32,18,10, false);
-		enemy = createHitbox(60,0,32,32,1,false);
+		enemy = createHitbox(60,0,32,32,.5f,false);
 		createHitbox(0,0,60,30,0,true);
 		createHitbox(100,100, 20,20,0,true);
 	}
@@ -57,11 +66,14 @@ public class MyWorld extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0f,0f,0f,1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		tmr.render();
 		debugRenderer.render(world, viewport.getCamera().combined);
 	}
 
 	public void update(float delta) {
 		world.step(1 / 60f, 6, 2);
+
+		tmr.setView((OrthographicCamera) viewport.getCamera());
 
 		updateInput(delta);
 	}
@@ -70,20 +82,33 @@ public class MyWorld extends ApplicationAdapter {
 		int horizontalForce = 0;
 		int verticalForce = 0;
 
-		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-			player.applyLinearImpulse(new Vector2(1000000, 0), player.getWorldCenter(), true);
-		}
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.J)) {
-			horizontalForce--;
+			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+				player.applyLinearImpulse(new Vector2(-1000000, 0), player.getWorldCenter(), true);
+			} else {
+				horizontalForce--;
+			}
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.L)) {
-			horizontalForce++;
+			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+				player.applyLinearImpulse(new Vector2(1000000, 0), player.getWorldCenter(), true);
+			} else {
+				horizontalForce++;
+			}
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.I)) {
-			verticalForce++;
+			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+				player.applyLinearImpulse(new Vector2(0, 1000000), player.getWorldCenter(), true);
+			} else {
+				verticalForce++;
+			}
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.K)) {
-			verticalForce--;
+			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+				player.applyLinearImpulse(new Vector2(0, -1000000), player.getWorldCenter(), true);
+			} else {
+				verticalForce--;
+			}
 		}
 		player.setLinearVelocity(horizontalForce * 500, verticalForce * 500);
 	}
@@ -91,6 +116,8 @@ public class MyWorld extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		world.dispose();
+		tiledMap.dispose();
+		tmr.dispose();
 	}
 
 	@Override
