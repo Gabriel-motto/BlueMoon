@@ -26,7 +26,8 @@ import com.mygdx.game_project.utils.Input;
 import com.mygdx.game_project.utils.TiledCollisions;
 
 /**
- * @// TODO: 14/12/2022 Poner nombre
+ * @// TODO: 22/12/2022 CollisionListener
+ * @// TODO: 22/12/2022
  */
 
 /**
