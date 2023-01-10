@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -44,6 +45,7 @@ public class MyWorld extends ApplicationAdapter {
 	private final float WORLD_HEIGHT = 480;
 	private Vector2 gravity;
 	private Box2DDebugRenderer debugRenderer;
+	private SpriteBatch batch;
 
 	// Entities
 	public Player player;
@@ -73,6 +75,8 @@ public class MyWorld extends ApplicationAdapter {
 		enemy = new Enemy(world, new Vector2(400, 400),
 				36,16, 1, 1, 3, 10);
 		objects = new Objects(world, new Vector2(200,100), 0f,0f, 5f);
+
+		batch = new SpriteBatch();
 	}
 
 	@Override
@@ -84,6 +88,12 @@ public class MyWorld extends ApplicationAdapter {
 
 		tmr.render();
 		debugRenderer.render(world, viewport.getCamera().combined.scl(32));
+
+		batch.begin();
+
+		player.draw(batch);
+
+		batch.end();
 	}
 
 	public void update(float delta) {
@@ -100,6 +110,7 @@ public class MyWorld extends ApplicationAdapter {
 		world.dispose();
 		tiledMap.dispose();
 		tmr.dispose();
+		batch.dispose();
 	}
 
 	@Override
