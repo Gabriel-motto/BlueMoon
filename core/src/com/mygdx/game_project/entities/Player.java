@@ -9,11 +9,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game_project.utils.CreateHitbox;
+import com.mygdx.game_project.utils.Input;
 
 public class Player {
     // Base stats
     Vector2 position;
-    private float width, height, speed, strenght, armor, hp;
+    private float width, height, speed, strength, armor, hp;
     private Body body;
 
     TextureAtlas playerTextureAtlas = new TextureAtlas("Player/Samurai.atlas");
@@ -21,16 +22,16 @@ public class Player {
     Animation<TextureAtlas.AtlasRegion> playerSprite;
     float time;
 
-    public Player(World world, Vector2 position, float width, float height, float speed, float strenght, float armor, float hp) {
+    public Player(World world, Vector2 position, float width, float height, float speed, float strength, float armor, float hp) {
         this.position = position;
         this.width = width;
         this.height = height;
         this.speed = speed;
-        this.strenght = strenght;
+        this.strength = strength;
         this.armor = armor;
         this.hp = hp;
         body = CreateHitbox.createBox(world, position, (int)width, (int)height, 10, false, true);
-        playerSprite = new Animation<>(.2f,
+        playerSprite = new Animation<>(.3f,
                 playerTextureAtlas.findRegion("samurai-idle"),
                 playerTextureAtlas.findRegion("samurai-idle2"),
                 playerTextureAtlas.findRegion("samurai-idle3"),
@@ -40,11 +41,10 @@ public class Player {
     public void draw(Batch batch) {
         time += Gdx.graphics.getDeltaTime();
         actualFrame = playerSprite.getKeyFrame(time, true);
-        batch.draw(actualFrame, position.x, position.y, width, height);
-    }
-
-    public void updateDraw(float delta) {
-
+        if (Input.dir == Input.direction.LEFT) batch.draw(actualFrame, position.x, position.y, 60, 60);
+        if (Input.dir == Input.direction.RIGHT) batch.draw(actualFrame, position.x, position.y, 30, 30, 60, 60, 1,1, 90);
+        if (Input.dir == Input.direction.UP) batch.draw(actualFrame, position.x, position.y, 60, 60);
+        if (Input.dir == Input.direction.DOWN) batch.draw(actualFrame, position.x, position.y, 60, 60);
     }
 
     //region $setters&getters
@@ -81,12 +81,12 @@ public class Player {
         this.speed = speed;
     }
 
-    public float getStrenght() {
-        return strenght;
+    public float getStrength() {
+        return strength;
     }
 
-    public void setStrenght(float strenght) {
-        this.strenght = strenght;
+    public void setStrength(float strength) {
+        this.strength = strength;
     }
 
     public float getArmor() {

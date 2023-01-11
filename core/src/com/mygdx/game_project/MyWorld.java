@@ -70,8 +70,12 @@ public class MyWorld extends ApplicationAdapter {
 		tmr = new OrthogonalTiledMapRenderer(tiledMap, 3);
 		TiledCollisions.parseTiledObject(world, tiledMap.getLayers().get("collisions").getObjects());
 
+		System.out.println(camera.position.x + " : " + camera.position.y);
+		System.out.println(camera.position.x + " : " + camera.position.y);
+
+		System.out.println(camera.position.x + " : " + camera.position.y);
 		player = new Player(world, new Vector2(camera.position.x, camera.position.y),
-				24,24, 1, 1, 3, 10);
+				32,32, 1, 1, 3, 10);
 		enemy = new Enemy(world, new Vector2(400, 400),
 				36,16, 1, 1, 3, 10);
 		objects = new Objects(world, new Vector2(200,100), 0f,0f, 5f);
@@ -102,7 +106,10 @@ public class MyWorld extends ApplicationAdapter {
 		camera.update();
 		tmr.setView((OrthographicCamera) viewport.getCamera());
 
-		Input.updateInput(delta, player.getBody());
+		Input.updateInput(delta, player);
+
+		//System.out.println(objects.getPosition().x + " : " + objects.getPosition().y);
+		//System.out.println(enemy.getBody().getPosition().x*32 + " : " + enemy.getBody().getPosition().y*32);
 	}
 
 	@Override
