@@ -58,8 +58,8 @@ public class Input {
         if (!Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.SPACE)) {
             player.getBody().setLinearVelocity(horizontalForce * 5f, verticalForce * 5f);
         }
-        System.out.println(player.getBody().getPosition().x*32*1.5+35 + " : " + player.getBody().getPosition().y*32*1.5f+25);
-        //System.out.println(player.getPosition().x + " : " + player.getPosition().y);
+        // System.out.println(player.getBody().getPosition().x*32*1.5+35 + " : " + player.getBody().getPosition().y*32*1.5f+25);
+        // System.out.println(player.getPosition().x + " : " + player.getPosition().y);
         player.setPosition(new Vector2(player.getBody().getPosition().x * 48 + 35, player.getBody().getPosition().y * 48 - 25));
     }
 }

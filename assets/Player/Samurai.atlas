@@ -1,33 +1,61 @@
 
 Samurai.png
-size: 128, 32
+size: 512, 64
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-samurai-idle
+samurai-idle-left
   rotate: false
-  xy: 32, 0
+  xy: 70, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-samurai-idle2
+samurai-idle-left2
   rotate: false
-  xy: 96, 0
+  xy: 240, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-samurai-idle3
+samurai-idle-left3
   rotate: false
-  xy: 64, 0
+  xy: 172, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-samurai-idle4
+samurai-idle-left4
   rotate: false
-  xy: 0, 0
+  xy: 36, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+samurai-idle-right
+  rotate: false
+  xy: 104, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+samurai-idle-right2
+  rotate: false
+  xy: 206, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+samurai-idle-right3
+  rotate: false
+  xy: 138, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+samurai-idle-right4
+  rotate: false
+  xy: 2, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
