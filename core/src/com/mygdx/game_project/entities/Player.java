@@ -8,10 +8,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game_project.utils.CreateHitbox;
 import com.mygdx.game_project.utils.Input;
 
-public class Player {
+public class Player extends Actor {
     // Base stats
     Vector2 position;
     private float width, height, speed, strength, armor, hp;
