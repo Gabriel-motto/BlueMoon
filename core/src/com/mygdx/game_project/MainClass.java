@@ -1,6 +1,7 @@
 package com.mygdx.game_project;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -16,7 +17,7 @@ public class MainClass extends Game {
     public void create () {
         batch = new SpriteBatch();
         font = new BitmapFont();
-        this.setScreen(new MainMenuScreen(this));
+        setScreen(new MainMenuScreen(this));
     }
 
     @Override

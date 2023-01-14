@@ -22,6 +22,8 @@ public class Player extends Actor {
     TextureRegion actualFrame;
     Animation<TextureAtlas.AtlasRegion> playerSpriteLeft;
     Animation<TextureAtlas.AtlasRegion> playerSpriteRight;
+    Animation<TextureAtlas.AtlasRegion> playerSpriteUp;
+    Animation<TextureAtlas.AtlasRegion> playerSpriteDown;
     float time;
 
     public Player(World world, Vector2 position, float width, float height, float speed, float strength, float armor, float hp) {
@@ -43,26 +45,41 @@ public class Player extends Actor {
                 playerTextureAtlas.findRegion("samurai-idle-right2"),
                 playerTextureAtlas.findRegion("samurai-idle-right3"),
                 playerTextureAtlas.findRegion("samurai-idle-right4"));
+        playerSpriteUp = new Animation<>(.3f,
+                playerTextureAtlas.findRegion("samurai-run-up"),
+                playerTextureAtlas.findRegion("samurai-run-up2"),
+                playerTextureAtlas.findRegion("samurai-run-up3"),
+                playerTextureAtlas.findRegion("samurai-run-up4"));
+        playerSpriteDown = new Animation<>(.3f,
+                playerTextureAtlas.findRegion("samurai-run-down"),
+                playerTextureAtlas.findRegion("samurai-run-down2"),
+                playerTextureAtlas.findRegion("samurai-run-down3"),
+                playerTextureAtlas.findRegion("samurai-run-down4"));
     }
 
+    float dir = 0;
     public void draw(Batch batch) {
         time += Gdx.graphics.getDeltaTime();
         if (Input.dir == Input.direction.LEFT) {
             actualFrame = playerSpriteLeft.getKeyFrame(time, true);
             batch.draw(actualFrame, position.x, position.y, 60, 60);
+            dir = 0;
         }
         if (Input.dir == Input.direction.RIGHT) {
             actualFrame = playerSpriteRight.getKeyFrame(time, true);
             batch.draw(actualFrame, position.x, position.y, 60, 60);
+            dir = 1;
         }
         if (Input.dir == Input.direction.UP) {
-            actualFrame = playerSpriteRight.getKeyFrame(time, true);
+            actualFrame = playerSpriteUp.getKeyFrame(time, true);
             batch.draw(actualFrame, position.x, position.y, 60, 60);
         }
         if (Input.dir == Input.direction.DOWN) {
-            actualFrame = playerSpriteRight.getKeyFrame(time, true);
+            actualFrame = playerSpriteDown.getKeyFrame(time, true);
             batch.draw(actualFrame, position.x, position.y, 60, 60);
         }
+        if (dir == 0) Input.dir = Input.direction.LEFT;
+        else Input.dir = Input.direction.RIGHT;
     }
 
     //region $setters&getters

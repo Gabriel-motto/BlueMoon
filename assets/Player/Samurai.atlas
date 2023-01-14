@@ -1,61 +1,117 @@
 
 Samurai.png
-size: 512, 64
+size: 512, 32
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 samurai-idle-left
   rotate: false
-  xy: 70, 2
+  xy: 96, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 samurai-idle-left2
   rotate: false
-  xy: 240, 2
+  xy: 416, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 samurai-idle-left3
   rotate: false
-  xy: 172, 2
+  xy: 288, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 samurai-idle-left4
   rotate: false
-  xy: 36, 2
+  xy: 32, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 samurai-idle-right
   rotate: false
-  xy: 104, 2
+  xy: 192, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 samurai-idle-right2
   rotate: false
-  xy: 206, 2
+  xy: 384, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 samurai-idle-right3
   rotate: false
-  xy: 138, 2
+  xy: 256, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 samurai-idle-right4
   rotate: false
-  xy: 2, 2
+  xy: 0, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+samurai-run-down
+  rotate: false
+  xy: 128, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+samurai-run-down2
+  rotate: false
+  xy: 160, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+samurai-run-down3
+  rotate: false
+  xy: 448, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+samurai-run-down4
+  rotate: false
+  xy: 320, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+samurai-run-up
+  rotate: false
+  xy: 480, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+samurai-run-up2
+  rotate: false
+  xy: 64, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+samurai-run-up3
+  rotate: false
+  xy: 352, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+samurai-run-up4
+  rotate: false
+  xy: 224, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
