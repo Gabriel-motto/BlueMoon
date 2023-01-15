@@ -3,15 +3,25 @@ package com.mygdx.game_project.utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game_project.entities.Enemy;
+import com.mygdx.game_project.entities.Objects;
 import com.mygdx.game_project.entities.Player;
 
-public class Input {
+import java.util.ArrayList;
 
+public class Input {
     public enum direction {
         UP, DOWN, RIGHT, LEFT
     }
     public static direction dir = direction.LEFT;
-    public static void updateInput(float delta, Player player) {
+
+    /**
+     *
+     * @param delta Tiempo en segundos desde el último render.
+     * @param player Jugador al que se le aplica las fuerzas para el movimiento.
+     */
+    public static void movementInput(float delta, Player player) {
         int horizontalForce = 0;
         int verticalForce = 0;
 
@@ -62,4 +72,41 @@ public class Input {
         // System.out.println(player.getPosition().x + " : " + player.getPosition().y);
         player.setPosition(new Vector2(player.getBody().getPosition().x * 48 + 35, player.getBody().getPosition().y * 48 - 25));
     }
+
+    private static ArrayList<Objects> bullets;
+    private static ArrayList<Objects> delBullets;
+    /**
+     *
+     * @param delta Tiempo en segundos desde el último render.
+     * @param player Jugador que ataca.
+     * @param world Mundo en el que se crean los ataques.
+     */
+    public static void atackInput(float delta, Player player, Enemy enemy, World world) {
+        bullets = new ArrayList<>();
+        delBullets = new ArrayList<>();
+
+        if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.A)) {
+            bullets.add(new Objects(world, player.getPosition(), 5));
+
+            for (Objects bullet : bullets) {
+                if (bullet.isAlive()) bullet.getBody().applyForce(new Vector2(50f,50f), enemy.getPosition(), true);
+                //else delBullets.add(bullet);
+            }
+            bullets.removeAll(delBullets);
+        }
+
+        //Gdx.app.log("INFO",String.format(enemy.getPosition().x + " : " + enemy.getPosition().y));
+    }
+
+    //region $setter&getters
+
+    public static ArrayList<Objects> getBullets() {
+        return bullets;
+    }
+
+    public static void setBullets(ArrayList<Objects> bullets) {
+        Input.bullets = bullets;
+    }
+
+    //endregion
 }

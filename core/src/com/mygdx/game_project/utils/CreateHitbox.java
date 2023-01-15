@@ -9,34 +9,39 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class CreateHitbox {
-    public static Body createBox(World world, Vector2 position, int width, int height, float damping, boolean isStatic, boolean cantRotate) {
-        Body body;
-        BodyDef def = new BodyDef();
+public abstract class CreateHitbox {
+    protected Body body;
+    protected Fixture fixture;
+    protected BodyDef bodyDef;
+    public CreateHitbox(World world, Vector2 position, float width, float height, float damping, boolean isStatic, boolean cantRotate, boolean isPlayer) {
+        bodyDef = new BodyDef();
         PolygonShape shape = new PolygonShape();
 
-        if (isStatic) def.type = BodyDef.BodyType.StaticBody;
-        else def.type = BodyDef.BodyType.DynamicBody;
+        if (isStatic) bodyDef.type = BodyDef.BodyType.StaticBody;
+        else bodyDef.type = BodyDef.BodyType.DynamicBody;
 
-        def.position.set(position.x / 32f, position.y / 32f);
-        def.fixedRotation = cantRotate;
-        body = world.createBody(def);
+        bodyDef.position.set(position.x / 32f, position.y / 32f);
+        bodyDef.fixedRotation = cantRotate;
+        body = world.createBody(bodyDef);
 
         shape.setAsBox(width / 2f / 32f, height / 2f / 32f);
 
-        body.createFixture(shape, 1.0f);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.density = 1.0f;
+
+        if (isPlayer) fixture = body.createFixture(fixtureDef);
+        else fixture = body.createFixture(fixtureDef);
         body.setLinearDamping(damping);
         shape.dispose();
-
-        return body;
     }
 
-    public static Body createCircle(World world, Vector2 position, float radius, float damping, float bounce) {
-        BodyDef bodyDef = new BodyDef();
+    public CreateHitbox(World world, Vector2 position, float radius, float damping, float bounce) {
+        bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(position.x / 32f, position.y / 32f);
 
-        Body body = world.createBody(bodyDef);
+        body = world.createBody(bodyDef);
         body.setLinearDamping(damping);
 
         CircleShape circle = new CircleShape();
@@ -47,9 +52,9 @@ public class CreateHitbox {
         fixtureDef.density = 1.0f;
         fixtureDef.restitution = bounce;
 
-        Fixture fixture = body.createFixture(fixtureDef);
+        fixture = body.createFixture(fixtureDef);
         circle.dispose();
-
-        return  body;
     }
+
+    public abstract void onHit();
 }

@@ -16,6 +16,7 @@ import com.mygdx.game_project.MainClass;
 import com.mygdx.game_project.entities.Enemy;
 import com.mygdx.game_project.entities.Objects;
 import com.mygdx.game_project.entities.Player;
+import com.mygdx.game_project.utils.CollisionListener;
 import com.mygdx.game_project.utils.Input;
 import com.mygdx.game_project.utils.TiledCollisions;
 import static com.mygdx.game_project.constants.Constant.*;
@@ -49,10 +50,8 @@ public class GameScreen implements Screen {
 	private TiledMap tiledMap;
 
 	//endregion
-
 	public GameScreen(MainClass mainClass) {
 		this.mainClass = mainClass;
-
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, WORLD_WIDTH+125, WORLD_HEIGHT);
@@ -61,6 +60,7 @@ public class GameScreen implements Screen {
 
 		gravity = new Vector2(0,0);
 		world = new World(gravity, false);
+		world.setContactListener(new CollisionListener());
 
 		tiledMap = new TmxMapLoader().load("Map1.tmx");
 		tmr = new OrthogonalTiledMapRenderer(tiledMap, 3);
@@ -70,13 +70,12 @@ public class GameScreen implements Screen {
 				32,32, 1, 1, 3, 10);
 		enemy = new Enemy(world, new Vector2(400, 400),
 				36,16, 1, 1, 3, 10);
-		objects = new Objects(world, new Vector2(200,100), 0f,0f, 5f);
+		//objects = new Objects(world, new Vector2(200,100), 5f);
 
 		batch = new SpriteBatch();
 
 		System.out.println(camera.position.x + " : " + camera.position.y);
 	}
-
 	@Override
 	public void render (float delta) {
 		update(Gdx.graphics.getDeltaTime());
@@ -94,13 +93,18 @@ public class GameScreen implements Screen {
 		batch.end();
 	}
 
+	/**
+	 *
+	 * @param delta Tiempo en segundos desde el último render.
+	 */
 	public void update(float delta) {
 		world.step(1 / 60f, 6, 2);
 
 		camera.update();
 		tmr.setView((OrthographicCamera) viewport.getCamera());
 
-		Input.updateInput(delta, player);
+		Input.movementInput(delta, player);
+		Input.atackInput(delta, player, enemy, world);
 
 		//System.out.println(objects.getPosition().x + " : " + objects.getPosition().y);
 		//System.out.println(enemy.getBody().getPosition().x*32 + " : " + enemy.getBody().getPosition().y*32);

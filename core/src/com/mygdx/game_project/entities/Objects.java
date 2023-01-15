@@ -1,19 +1,41 @@
 package com.mygdx.game_project.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game_project.utils.CreateHitbox;
 
-public class Objects {
+public class Objects extends CreateHitbox{
     Vector2 position;
-    private float width, height, radius;
+    private float radius, width, height;
+    private Body body;
 
-    public Objects(World world, Vector2 position, float width, float height, float radius) {
+    private boolean alive = true;
+
+    public Objects(World world, Vector2 position, float radius) {
+        super(world, position, radius / 32, .5f, 1.0f);
+        fixture.setUserData(this);
+        this.position = position;
+        this.radius = radius;
+        this.body = super.body;
+        body.setBullet(true);
+    }
+
+    public Objects(World world, Vector2 position, int width, int height, float radius) {
+        super(world, position, width, height, 0.5f, false, false, false);
+        fixture.setUserData("object");
         this.position = position;
         this.width = width;
         this.height = height;
         this.radius = radius;
-        CreateHitbox.createCircle(world, position, radius / 32, .5f, 1f).setBullet(true);
+        this.body = super.body;
+    }
+
+    @Override
+    public void onHit() {
+        Gdx.app.log("BULLET","Dead");
+        setAlive(false);
     }
 
     //region $setter&getters
@@ -48,6 +70,22 @@ public class Objects {
 
     public void setRadius(float radius) {
         this.radius = radius;
+    }
+
+    public Body getBody() {
+        return body;
+    }
+
+    public void setBody(Body body) {
+        this.body = body;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
 
     //endregion

@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game_project.utils.CreateHitbox;
 import com.mygdx.game_project.utils.Input;
 
-public class Player extends Actor {
+public class Player extends CreateHitbox {
     // Base stats
     Vector2 position;
     private float width, height, speed, strength, armor, hp;
@@ -27,6 +27,8 @@ public class Player extends Actor {
     float time;
 
     public Player(World world, Vector2 position, float width, float height, float speed, float strength, float armor, float hp) {
+        super(world, position, (int)width, (int)height, 10, false, true, true);
+        fixture.setUserData(this);
         this.position = position;
         this.width = width;
         this.height = height;
@@ -34,7 +36,7 @@ public class Player extends Actor {
         this.strength = strength;
         this.armor = armor;
         this.hp = hp;
-        body = CreateHitbox.createBox(world, position, (int)width, (int)height, 10, false, true);
+        this.body = super.body;
         playerSpriteLeft = new Animation<>(.3f,
                 playerTextureAtlas.findRegion("samurai-idle-left"),
                 playerTextureAtlas.findRegion("samurai-idle-left2"),
@@ -80,6 +82,11 @@ public class Player extends Actor {
         }
         if (dir == 0) Input.dir = Input.direction.LEFT;
         else Input.dir = Input.direction.RIGHT;
+    }
+
+    @Override
+    public void onHit() {
+        hp -= 1/armor;
     }
 
     //region $setters&getters
