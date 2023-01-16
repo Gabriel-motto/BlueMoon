@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game_project.entities.Enemy;
 import com.mygdx.game_project.entities.Objects;
+import com.mygdx.game_project.entities.Player;
 
 public class CollisionListener implements ContactListener {
     @Override
@@ -13,24 +14,29 @@ public class CollisionListener implements ContactListener {
 
         // Gdx.app.log("CONTACT", "Contact");
 
-        if (Objects.class.isAssignableFrom(fixA.getUserData().getClass()) || Objects.class.isAssignableFrom(fixB.getUserData().getClass())) {
-            Fixture bullet = Objects.class.isAssignableFrom(fixA.getUserData().getClass()) ? fixA : fixB;
-            Fixture enemy = bullet == fixA ? fixB : fixA;
+        if (fixA.getUserData() instanceof Objects || fixB.getUserData() instanceof Objects) {
+            Fixture bullet = fixA.getUserData() instanceof Objects ? fixA : fixB;
+            Fixture body2 = bullet == fixA ? fixB : fixA;
 
-            if (enemy.getUserData() != null && CreateHitbox.class.isAssignableFrom(enemy.getUserData().getClass())) {
+            if (body2.getUserData() != null && body2.getUserData() instanceof Enemy) {
                 Gdx.app.log("INFO","bullet-enemy");
-                ((CreateHitbox) enemy.getUserData()).onHit();
-                //((CreateHitbox) bullet.getUserData()).onHit();
+                ((CreateHitbox) body2.getUserData()).onHit(((CreateHitbox) bullet.getUserData()).dmg);
+                ((CreateHitbox) bullet.getUserData()).onHit(0);
             }
-            else {
+            if (body2.getUserData() == null){
                 Gdx.app.log("INFO", "object-wall");
-                //((CreateHitbox) bullet.getUserData()).onHit();
+                ((CreateHitbox) bullet.getUserData()).onHit(0);
             }
         }
 
-//        if (fixA.getUserData() == "player" || fixB.getUserData() == "player") {
-//            if (fixA.getUserData() == "enemy" || fixB.getUserData() == "enemy") Gdx.app.log("CONTACT","Enemy");
-//            if (fixA.getUserData() == "object" || fixB.getUserData() == "object") Gdx.app.log("CONTACT","Object");
+//        if (fixA.getUserData() instanceof Player || fixB.getUserData() instanceof Player) {
+//            Fixture player = fixA.getUserData() instanceof Player ? fixA : fixB;
+//            Fixture body2 = player == fixA ? fixB : fixA;
+//
+//            if (body2 != null && body2.getUserData() instanceof Enemy) {
+//                Gdx.app.log("CONTACT","Enemy");
+//                ((CreateHitbox) player.getUserData()).onHit(((CreateHitbox) body2.getUserData()).dmg);
+//            }
 //        }
     }
 

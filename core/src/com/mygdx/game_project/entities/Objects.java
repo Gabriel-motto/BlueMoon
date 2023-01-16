@@ -8,32 +8,36 @@ import com.mygdx.game_project.utils.CreateHitbox;
 
 public class Objects extends CreateHitbox{
     Vector2 position;
-    private float radius, width, height;
+    private float radius, width, height, damping, dmg, speed;
     private Body body;
-
     private boolean alive = true;
+    private boolean moved = false;
 
-    public Objects(World world, Vector2 position, float radius) {
-        super(world, position, radius / 32, .5f, 1.0f);
+    public Objects(World world, Vector2 position, float radius, float dmg, float speed) {
+        super(world, position, radius / 32, .5f, 1.0f, category.NO_COLLISION.bits(), dmg);
+        this.speed = speed;
         fixture.setUserData(this);
         this.position = position;
         this.radius = radius;
         this.body = super.body;
+        this.dmg = dmg;
         body.setBullet(true);
     }
 
-    public Objects(World world, Vector2 position, int width, int height, float radius) {
-        super(world, position, width, height, 0.5f, false, false, false);
-        fixture.setUserData("object");
+    public Objects(World world, Vector2 position, int width, int height, float damping, float dmg, float speed) {
+        super(world, position, width, height, 0.5f, false, false, false, category.NO_COLLISION.bits(), dmg);
+        this.speed = speed;
+        fixture.setUserData(this);
         this.position = position;
         this.width = width;
         this.height = height;
-        this.radius = radius;
+        this.damping = damping;
         this.body = super.body;
+        this.dmg = dmg;
     }
 
     @Override
-    public void onHit() {
+    public void onHit(float dmg) {
         Gdx.app.log("BULLET","Dead");
         setAlive(false);
     }
@@ -86,6 +90,38 @@ public class Objects extends CreateHitbox{
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    public float getDamping() {
+        return damping;
+    }
+
+    public void setDamping(float damping) {
+        this.damping = damping;
+    }
+
+    public boolean isMoved() {
+        return moved;
+    }
+
+    public void setMoved(boolean moved) {
+        this.moved = moved;
+    }
+
+    public float getDmg() {
+        return dmg;
+    }
+
+    public void setDmg(float dmg) {
+        this.dmg = dmg;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
     }
 
     //endregion

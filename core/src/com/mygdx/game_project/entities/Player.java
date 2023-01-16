@@ -15,9 +15,9 @@ import com.mygdx.game_project.utils.Input;
 public class Player extends CreateHitbox {
     // Base stats
     Vector2 position;
-    private float width, height, speed, strength, armor, hp;
+    private float width, height, speed, dmg, armor, hp;
     private Body body;
-
+    private boolean alive = true;
     TextureAtlas playerTextureAtlas = new TextureAtlas("Player/Samurai.atlas");
     TextureRegion actualFrame;
     Animation<TextureAtlas.AtlasRegion> playerSpriteLeft;
@@ -26,14 +26,14 @@ public class Player extends CreateHitbox {
     Animation<TextureAtlas.AtlasRegion> playerSpriteDown;
     float time;
 
-    public Player(World world, Vector2 position, float width, float height, float speed, float strength, float armor, float hp) {
-        super(world, position, (int)width, (int)height, 10, false, true, true);
+    public Player(World world, Vector2 position, float width, float height, float speed, float dmg, float armor, float hp) {
+        super(world, position, width, height, 10, false, true, true, category.NO_COLLISION.bits(), dmg);
         fixture.setUserData(this);
         this.position = position;
         this.width = width;
         this.height = height;
         this.speed = speed;
-        this.strength = strength;
+        this.dmg = dmg;
         this.armor = armor;
         this.hp = hp;
         this.body = super.body;
@@ -85,8 +85,9 @@ public class Player extends CreateHitbox {
     }
 
     @Override
-    public void onHit() {
-        hp -= 1/armor;
+    public void onHit(float dmg) {
+        hp -= dmg/armor;
+        if (hp <= 0) setAlive(false);
     }
 
     //region $setters&getters
@@ -123,12 +124,12 @@ public class Player extends CreateHitbox {
         this.speed = speed;
     }
 
-    public float getStrength() {
-        return strength;
+    public float getDmg() {
+        return dmg;
     }
 
-    public void setStrength(float strength) {
-        this.strength = strength;
+    public void setDmg(float dmg) {
+        this.dmg = dmg;
     }
 
     public float getArmor() {
@@ -153,6 +154,14 @@ public class Player extends CreateHitbox {
 
     public void setBody(Body body) {
         this.body = body;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
 
     //endregion

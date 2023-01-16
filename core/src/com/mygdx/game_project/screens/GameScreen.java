@@ -19,6 +19,9 @@ import com.mygdx.game_project.entities.Player;
 import com.mygdx.game_project.utils.CollisionListener;
 import com.mygdx.game_project.utils.Input;
 import com.mygdx.game_project.utils.TiledCollisions;
+
+import java.util.ArrayList;
+
 import static com.mygdx.game_project.constants.Constant.*;
 
 /**
@@ -43,9 +46,8 @@ public class GameScreen implements Screen {
 
 	// Entities
 	public Player player;
-	public Enemy enemy;
+	public ArrayList<Enemy> enemies;
 	public Objects objects;
-
 	private OrthogonalTiledMapRenderer tmr;
 	private TiledMap tiledMap;
 
@@ -67,9 +69,13 @@ public class GameScreen implements Screen {
 		TiledCollisions.parseTiledObject(world, tiledMap.getLayers().get("collisions").getObjects());
 
 		player = new Player(world, new Vector2(camera.position.x, camera.position.y),
-				32,32, 1, 1, 3, 10);
-		enemy = new Enemy(world, new Vector2(400, 400),
-				36,16, 1, 1, 3, 10);
+				32,32, 5, 1, 3, 10);
+
+		enemies = new ArrayList<>();
+		enemies.add(new Enemy(world, new Vector2(400, 400),
+				36,16, 1, 1, 1, 10));
+		enemies.add(new Enemy(world, new Vector2(200, 100),
+				36,16, 1, 1, 2, 10));
 		//objects = new Objects(world, new Vector2(200,100), 5f);
 
 		batch = new SpriteBatch();
@@ -104,7 +110,9 @@ public class GameScreen implements Screen {
 		tmr.setView((OrthographicCamera) viewport.getCamera());
 
 		Input.movementInput(delta, player);
-		Input.atackInput(delta, player, enemy, world);
+		Input.atackInput(delta, player, enemies, world);
+		Input.deleteBullets(world);
+		Input.deleteEnemies(world, enemies, player);
 
 		//System.out.println(objects.getPosition().x + " : " + objects.getPosition().y);
 		//System.out.println(enemy.getBody().getPosition().x*32 + " : " + enemy.getBody().getPosition().y*32);

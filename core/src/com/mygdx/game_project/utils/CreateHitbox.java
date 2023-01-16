@@ -13,7 +13,21 @@ public abstract class CreateHitbox {
     protected Body body;
     protected Fixture fixture;
     protected BodyDef bodyDef;
-    public CreateHitbox(World world, Vector2 position, float width, float height, float damping, boolean isStatic, boolean cantRotate, boolean isPlayer) {
+    protected float dmg;
+    protected enum category {
+        NO_COLLISION((short)-1),
+        COLLISION((short)1),
+        NEUTRAL((short)0);
+
+        private final short bits;
+        category(short bits) {
+            this.bits = bits;
+        }
+        public short bits() {
+            return bits;
+        }
+    }
+    public CreateHitbox(World world, Vector2 position, float width, float height, float damping, boolean isStatic, boolean cantRotate, boolean isPlayer, short group, float dmg) {
         bodyDef = new BodyDef();
         PolygonShape shape = new PolygonShape();
 
@@ -29,14 +43,17 @@ public abstract class CreateHitbox {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1.0f;
+        fixtureDef.filter.groupIndex = group;
 
         if (isPlayer) fixture = body.createFixture(fixtureDef);
         else fixture = body.createFixture(fixtureDef);
         body.setLinearDamping(damping);
         shape.dispose();
+
+        this.dmg = dmg;
     }
 
-    public CreateHitbox(World world, Vector2 position, float radius, float damping, float bounce) {
+    public CreateHitbox(World world, Vector2 position, float radius, float damping, float bounce, short group, float dmg) {
         bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(position.x / 32f, position.y / 32f);
@@ -51,10 +68,13 @@ public abstract class CreateHitbox {
         fixtureDef.shape = circle;
         fixtureDef.density = 1.0f;
         fixtureDef.restitution = bounce;
+        fixtureDef.filter.groupIndex = group;
 
         fixture = body.createFixture(fixtureDef);
         circle.dispose();
+
+        this.dmg = dmg;
     }
 
-    public abstract void onHit();
+    public abstract void onHit(float dmg);
 }
