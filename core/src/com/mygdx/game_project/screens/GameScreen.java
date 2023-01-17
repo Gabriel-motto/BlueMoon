@@ -14,7 +14,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mygdx.game_project.MainClass;
 import com.mygdx.game_project.entities.Enemy;
-import com.mygdx.game_project.entities.Objects;
+import com.mygdx.game_project.entities.Bullets;
 import com.mygdx.game_project.entities.Player;
 import com.mygdx.game_project.utils.CollisionListener;
 import com.mygdx.game_project.utils.Input;
@@ -47,9 +47,10 @@ public class GameScreen implements Screen {
 	// Entities
 	public Player player;
 	public ArrayList<Enemy> enemies;
-	public Objects objects;
+	public Bullets objects;
 	private OrthogonalTiledMapRenderer tmr;
 	private TiledMap tiledMap;
+	private String mapRoute = "Maps\\Map1.tmx";
 
 	//endregion
 	public GameScreen(MainClass mainClass) {
@@ -64,7 +65,7 @@ public class GameScreen implements Screen {
 		world = new World(gravity, false);
 		world.setContactListener(new CollisionListener());
 
-		tiledMap = new TmxMapLoader().load("Map1.tmx");
+		tiledMap = new TmxMapLoader().load(mapRoute);
 		tmr = new OrthogonalTiledMapRenderer(tiledMap, 3);
 		TiledCollisions.parseTiledObject(world, tiledMap.getLayers().get("collisions").getObjects());
 
@@ -73,9 +74,9 @@ public class GameScreen implements Screen {
 
 		enemies = new ArrayList<>();
 		enemies.add(new Enemy(world, new Vector2(400, 400),
-				36,16, 1, 1, 1, 10));
+				36,16, 3, 1, 1, 10, Enemy.states.HOSTILE));
 		enemies.add(new Enemy(world, new Vector2(200, 100),
-				36,16, 1, 1, 2, 10));
+				36,16, 5, 1, 2, 10, Enemy.states.SLEEP));
 		//objects = new Objects(world, new Vector2(200,100), 5f);
 
 		batch = new SpriteBatch();
@@ -114,6 +115,18 @@ public class GameScreen implements Screen {
 		Input.deleteBullets(world);
 		Input.deleteEnemies(world, enemies, player);
 
+		for (Enemy enemy : enemies) {
+			enemy.updateBehavior(delta, player);
+		}
+
+		if (enemies.isEmpty()) {
+			TiledCollisions.parseTiledObject(world, tiledMap.getLayers().get("doors").getObjects());
+		}
+
+		if (!player.isAlive()) {
+			mainClass.setScreen(new EndScreen(mainClass));
+			dispose();
+		}
 		//System.out.println(objects.getPosition().x + " : " + objects.getPosition().y);
 		//System.out.println(enemy.getBody().getPosition().x*32 + " : " + enemy.getBody().getPosition().y*32);
 	}

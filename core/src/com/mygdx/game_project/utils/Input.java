@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game_project.entities.Enemy;
-import com.mygdx.game_project.entities.Objects;
+import com.mygdx.game_project.entities.Bullets;
 import com.mygdx.game_project.entities.Player;
 
 import java.util.ArrayList;
@@ -75,8 +75,8 @@ public class Input {
         player.setPosition(new Vector2(player.getBody().getPosition().x * 48 + 35, player.getBody().getPosition().y * 48 - 25));
     }
 
-    private static ArrayList<Objects> bullets = new ArrayList<>();
-    private static ArrayList<Objects> delBullets = new ArrayList<>();
+    private static ArrayList<Bullets> bullets = new ArrayList<>();
+    private static ArrayList<Bullets> delBullets = new ArrayList<>();
     private static Vector2 bulletDir;
     private static Enemy closestEnemy;
     /**
@@ -88,9 +88,9 @@ public class Input {
     public static void atackInput(float delta, Player player, ArrayList<Enemy> enemies, World world) {
         getClosestEnemy(enemies, player);
         if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.A) && !enemies.isEmpty()) {
-            bullets.add(new Objects(world, new Vector2(player.getPosition().x/1.59f, player.getPosition().y/1.41f), 5, player.getDmg(), 10));
+            bullets.add(new Bullets(world, new Vector2(player.getPosition().x/1.59f, player.getPosition().y/1.41f), 5, player.getDmg(), 10));
 
-            for (Objects bullet : bullets) {
+            for (Bullets bullet : bullets) {
                 if (bullet.isAlive() && !bullet.isMoved()) {
                     Gdx.app.log("POSITION", "Enemy: " + closestEnemy.getPosition().x + " : " + closestEnemy.getPosition().y);
                     Gdx.app.log("INFO", "Vel: " + ((closestEnemy.getBody().getPosition().x * 32 - bullet.getPosition().x) * 5f));
@@ -130,7 +130,7 @@ public class Input {
     }
 
     public static void deleteBullets(World world) {
-        for (Objects bullet : bullets) {
+        for (Bullets bullet : bullets) {
             if (!bullet.isAlive()) {
                 delBullets.add(bullet);
                 world.destroyBody(bullet.getBody());
@@ -155,11 +155,11 @@ public class Input {
 
     //region $setter&getters
 
-    public static ArrayList<Objects> getBullets() {
+    public static ArrayList<Bullets> getBullets() {
         return bullets;
     }
 
-    public static void setBullets(ArrayList<Objects> bullets) {
+    public static void setBullets(ArrayList<Bullets> bullets) {
         Input.bullets = bullets;
     }
 

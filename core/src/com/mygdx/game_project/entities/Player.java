@@ -86,8 +86,12 @@ public class Player extends CreateHitbox {
 
     @Override
     public void onHit(float dmg) {
-        hp -= dmg/armor;
-        if (hp <= 0) setAlive(false);
+        if (dmg > 0) {
+            hp -= dmg/armor;
+            if (hp <= 0) setAlive(false);
+        } else {
+            Gdx.app.log("INFO", "Door");
+        }
     }
 
     //region $setters&getters

@@ -6,14 +6,14 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game_project.utils.CreateHitbox;
 
-public class Objects extends CreateHitbox{
+public class Bullets extends CreateHitbox{
     Vector2 position;
     private float radius, width, height, damping, dmg, speed;
     private Body body;
     private boolean alive = true;
     private boolean moved = false;
 
-    public Objects(World world, Vector2 position, float radius, float dmg, float speed) {
+    public Bullets(World world, Vector2 position, float radius, float dmg, float speed) {
         super(world, position, radius / 32, .5f, 1.0f, category.NO_COLLISION.bits(), dmg);
         this.speed = speed;
         fixture.setUserData(this);
@@ -24,7 +24,7 @@ public class Objects extends CreateHitbox{
         body.setBullet(true);
     }
 
-    public Objects(World world, Vector2 position, int width, int height, float damping, float dmg, float speed) {
+    public Bullets(World world, Vector2 position, int width, int height, float damping, float dmg, float speed) {
         super(world, position, width, height, 0.5f, false, false, false, category.NO_COLLISION.bits(), dmg);
         this.speed = speed;
         fixture.setUserData(this);
