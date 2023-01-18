@@ -56,7 +56,7 @@ public class Enemy extends CreateHitbox {
                 case SLEEP:
                     float playerDistanceX = (player.getBody().getPosition().x - body.getPosition().x) > 0 ? (player.getBody().getPosition().x - body.getPosition().x) : -(player.getBody().getPosition().x - body.getPosition().x);
                     float playerDistanceY = (player.getBody().getPosition().y - body.getPosition().y) > 0 ? (player.getBody().getPosition().y - body.getPosition().y) : -(player.getBody().getPosition().y - body.getPosition().y);
-                    if (playerDistanceX + playerDistanceY < 10 || hp < maxHp) currentState = states.HOSTILE;
+                    if (playerDistanceX + playerDistanceY < 5 || hp < maxHp) currentState = states.HOSTILE;
                     break;
 
                 default:

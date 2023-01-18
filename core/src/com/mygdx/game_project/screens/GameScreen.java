@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -46,10 +47,12 @@ public class GameScreen implements Screen {
 
 	// Entities
 	public Player player;
+	public Vector2 playerPos;
 	public ArrayList<Enemy> enemies;
 	public Bullets objects;
 	private OrthogonalTiledMapRenderer tmr;
 	private TiledMap tiledMap;
+	private TiledCollisions tiledCollisions;
 	private String mapRoute = "Maps\\Map1.tmx";
 
 	//endregion
@@ -67,21 +70,28 @@ public class GameScreen implements Screen {
 
 		tiledMap = new TmxMapLoader().load(mapRoute);
 		tmr = new OrthogonalTiledMapRenderer(tiledMap, 3);
-		TiledCollisions.parseTiledObject(world, tiledMap.getLayers().get("collisions").getObjects());
+		tiledCollisions = new TiledCollisions(world, tiledMap.getLayers().get("collisions").getObjects());
 
-		player = new Player(world, new Vector2(camera.position.x, camera.position.y),
-				32,32, 5, 1, 3, 10);
+		player = new Player(world, PLAYER_INIT_POS,
+				32,32, 5, 1, 3, 10, mainClass);
 
 		enemies = new ArrayList<>();
-		enemies.add(new Enemy(world, new Vector2(400, 400),
-				36,16, 3, 1, 1, 10, Enemy.states.HOSTILE));
-		enemies.add(new Enemy(world, new Vector2(200, 100),
-				36,16, 5, 1, 2, 10, Enemy.states.SLEEP));
+//		enemies.add(new Enemy(world, new Vector2(400, 400),
+//				36,16, 3, 1, 1, 10, Enemy.states.HOSTILE));
+//		enemies.add(new Enemy(world, new Vector2(200, 100),
+//				36,16, 5, 1, 2, 10, Enemy.states.SLEEP));
 		//objects = new Objects(world, new Vector2(200,100), 5f);
 
 		batch = new SpriteBatch();
 
 		System.out.println(camera.position.x + " : " + camera.position.y);
+	}
+
+	public void spawnEnemies(int width, int height, float speed, float dmg, float armor, float hp, Enemy.states currentState) {
+		for (MapObject mapObject : tiledMap.getLayers().get("enemies").getObjects()) {
+			enemies.add(new Enemy(world, new Vector2(mapObject.getProperties().get("x", Float.class) * 3, mapObject.getProperties().get("y", Float.class) * 3),
+					width, height, speed, dmg, armor, hp, currentState));
+		}
 	}
 	@Override
 	public void render (float delta) {
@@ -119,8 +129,8 @@ public class GameScreen implements Screen {
 			enemy.updateBehavior(delta, player);
 		}
 
-		if (enemies.isEmpty()) {
-			TiledCollisions.parseTiledObject(world, tiledMap.getLayers().get("doors").getObjects());
+		if (enemies.isEmpty() && !tiledCollisions.isDoorCreated) {
+			tiledCollisions = new TiledCollisions(world, tiledMap.getLayers().get("doors").getObjects());
 		}
 
 		if (!player.isAlive()) {
@@ -130,7 +140,6 @@ public class GameScreen implements Screen {
 		//System.out.println(objects.getPosition().x + " : " + objects.getPosition().y);
 		//System.out.println(enemy.getBody().getPosition().x*32 + " : " + enemy.getBody().getPosition().y*32);
 	}
-
 	@Override
 	public void dispose () {
 		world.dispose();

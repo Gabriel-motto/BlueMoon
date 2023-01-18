@@ -33,11 +33,14 @@ public class CollisionListener implements ContactListener {
             Fixture player = fixA.getUserData() instanceof Player ? fixA : fixB;
             Fixture body2 = player == fixA ? fixB : fixA;
 
+            Gdx.app.log("INFO", "userdata: " + body2.getUserData());
+
             if (body2 != null && body2.getUserData() instanceof Enemy) {
                 Gdx.app.log("CONTACT","Enemy");
                 ((CreateHitbox) player.getUserData()).onHit(((CreateHitbox) body2.getUserData()).dmg);
             }
             if (body2 != null && body2.getUserData() instanceof TiledCollisions) {
+                Gdx.app.log("CONTACT", "Door");
                 ((CreateHitbox) player.getUserData()).onHit(0);
             }
         }

@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mygdx.game_project.MainClass;
+import com.mygdx.game_project.screens.GameScreen;
 import com.mygdx.game_project.utils.CreateHitbox;
 import com.mygdx.game_project.utils.Input;
 
@@ -26,8 +28,11 @@ public class Player extends CreateHitbox {
     Animation<TextureAtlas.AtlasRegion> playerSpriteDown;
     float time;
 
-    public Player(World world, Vector2 position, float width, float height, float speed, float dmg, float armor, float hp) {
+    final MainClass mainClass;
+
+    public Player(World world, Vector2 position, float width, float height, float speed, float dmg, float armor, float hp, MainClass mainClass) {
         super(world, position, width, height, 10, false, true, true, category.NO_COLLISION.bits(), dmg);
+        this.mainClass = mainClass;
         fixture.setUserData(this);
         this.position = position;
         this.width = width;
@@ -88,9 +93,11 @@ public class Player extends CreateHitbox {
     public void onHit(float dmg) {
         if (dmg > 0) {
             hp -= dmg/armor;
+            Gdx.app.log("INFO","Player hp: " + hp);
             if (hp <= 0) setAlive(false);
         } else {
-            Gdx.app.log("INFO", "Door");
+            Gdx.app.log("INFO", "Hit");
+            mainClass.setScreen(new GameScreen(mainClass));
         }
     }
 
