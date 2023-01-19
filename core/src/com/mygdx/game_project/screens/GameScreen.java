@@ -10,16 +10,16 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mygdx.game_project.MainClass;
 import com.mygdx.game_project.entities.Enemy;
 import com.mygdx.game_project.entities.Bullets;
 import com.mygdx.game_project.entities.Player;
-import com.mygdx.game_project.utils.CollisionListener;
-import com.mygdx.game_project.utils.Input;
-import com.mygdx.game_project.utils.TiledCollisions;
+import com.mygdx.game_project.utils.*;
 
 import java.util.ArrayList;
 
@@ -44,6 +44,8 @@ public class GameScreen implements Screen {
 	private Vector2 gravity;
 	private Box2DDebugRenderer debugRenderer;
 	private SpriteBatch batch;
+	private Stage stage;
+	private Controller controller;
 
 	// Entities
 	public Player player;
@@ -63,6 +65,10 @@ public class GameScreen implements Screen {
 		camera.setToOrtho(false, WORLD_WIDTH+125, WORLD_HEIGHT);
 		viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 		debugRenderer = new Box2DDebugRenderer();
+
+		stage = new Stage(viewport);
+		controller = new Controller(5);
+		controller.setPosition(100,100);
 
 		gravity = new Vector2(0,0);
 		world = new World(gravity, false);
@@ -85,6 +91,8 @@ public class GameScreen implements Screen {
 		batch = new SpriteBatch();
 
 		System.out.println(camera.position.x + " : " + camera.position.y);
+
+		stage.addActor(controller);
 	}
 
 	public void spawnEnemies(int width, int height, float speed, float dmg, float armor, float hp, Enemy.states currentState) {
@@ -95,7 +103,7 @@ public class GameScreen implements Screen {
 	}
 	@Override
 	public void render (float delta) {
-		update(Gdx.graphics.getDeltaTime());
+		update(delta);
 
 		Gdx.gl.glClearColor(0f,0f,0f,1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -119,6 +127,9 @@ public class GameScreen implements Screen {
 
 		camera.update();
 		tmr.setView((OrthographicCamera) viewport.getCamera());
+		stage.getCamera().position.x = WORLD_WIDTH + .1f / 2f;
+		stage.getCamera().position.y = WORLD_HEIGHT / 2f;
+		stage.getCamera().update();
 
 		Input.movementInput(delta, player);
 		Input.atackInput(delta, player, enemies, world);
@@ -137,6 +148,10 @@ public class GameScreen implements Screen {
 			mainClass.setScreen(new EndScreen(mainClass));
 			dispose();
 		}
+
+		stage.getViewport().apply();
+		stage.act(delta);
+		stage.draw();
 		//System.out.println(objects.getPosition().x + " : " + objects.getPosition().y);
 		//System.out.println(enemy.getBody().getPosition().x*32 + " : " + enemy.getBody().getPosition().y*32);
 	}
@@ -146,6 +161,7 @@ public class GameScreen implements Screen {
 		tiledMap.dispose();
 		tmr.dispose();
 		batch.dispose();
+		stage.dispose();
 	}
 
 	@Override
@@ -156,6 +172,7 @@ public class GameScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		viewport.update(width, height);
+		stage.getViewport().update(width, height);
 	}
 
 	@Override

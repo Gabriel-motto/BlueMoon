@@ -1,0 +1,55 @@
+
+Touchpad.png
+size: 1024, 512
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Touchpad
+  rotate: false
+  xy: 356, 196
+  size: 300, 300
+  orig: 300, 300
+  offset: 0, 0
+  index: -1
+TouchpadSplitted
+  rotate: false
+  xy: 0, 140
+  size: 356, 356
+  orig: 356, 356
+  offset: 0, 0
+  index: -1
+LargeKnobFilled
+  rotate: false
+  xy: 656, 288
+  size: 208, 208
+  orig: 208, 208
+  offset: 0, 0
+  index: -1
+LargeknobFilledGrey
+  rotate: false
+  xy: 0, 0
+  size: 140, 140
+  orig: 140, 140
+  offset: 0, 0
+  index: -1
+SmallKnob
+  rotate: false
+  xy: 864, 396
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+SmallKnobFilled
+  rotate: false
+  xy: 864, 296
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+SmallKnobFilledGrey
+  rotate: false
+  xy: 140, 40
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
