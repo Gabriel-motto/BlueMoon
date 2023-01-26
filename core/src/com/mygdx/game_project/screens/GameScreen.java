@@ -43,26 +43,26 @@ public class GameScreen implements Screen {
 	//region $Variables
 
 	final MainClass mainClass;
-	private OrthographicCamera camera;
-	private ExtendViewport viewport;
-	private World world;
-	private Vector2 gravity;
-	private Box2DDebugRenderer debugRenderer;
-	private SpriteBatch batch;
-	private Stage stage;
-	private Controller controller;
-	private Touchpad touchpad;
-	private Input input;
+	public OrthographicCamera camera;
+	public ExtendViewport viewport;
+	public World world;
+	public Vector2 gravity;
+	public Box2DDebugRenderer debugRenderer;
+	public SpriteBatch batch;
+	public Stage stage;
+	public Controller controller;
+	public Touchpad touchpad;
+	public Input input;
 
 	// Entities
 	public Player player;
 	public Vector2 playerPos;
 	public ArrayList<Enemy> enemies;
 	public Bullets objects;
-	private OrthogonalTiledMapRenderer tmr;
-	private TiledMap tiledMap;
-	private TiledCollisions tiledCollisions;
-	private String mapRoute = "Maps\\Map1.tmx";
+	public OrthogonalTiledMapRenderer tmr;
+	public TiledMap tiledMap;
+	public TiledCollisions tiledCollisions;
+	public String mapRoute = "Maps\\Map1.tmx";
 
 	//endregion
 	public GameScreen(MainClass mainClass) {
@@ -99,6 +99,7 @@ public class GameScreen implements Screen {
 		batch = new SpriteBatch();
 
 		System.out.println(camera.position.x + " : " + camera.position.y);
+		Gdx.app.log("INFO",Gdx.graphics.getWidth() + " : " + Gdx.graphics.getHeight());
 
 		touchpad = controller.createTouchpad();
 		stage.addActor(touchpad);

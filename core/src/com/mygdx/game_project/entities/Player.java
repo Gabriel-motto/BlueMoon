@@ -1,6 +1,7 @@
 package com.mygdx.game_project.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -13,6 +14,8 @@ import com.mygdx.game_project.MainClass;
 import com.mygdx.game_project.screens.GameScreen;
 import com.mygdx.game_project.utils.CreateHitbox;
 import com.mygdx.game_project.utils.Input;
+
+import static com.mygdx.game_project.constants.Constant.PLAYER_INIT_POS;
 
 public class Player extends CreateHitbox {
     // Base stats
@@ -27,7 +30,7 @@ public class Player extends CreateHitbox {
     Animation<TextureAtlas.AtlasRegion> playerSpriteUp;
     Animation<TextureAtlas.AtlasRegion> playerSpriteDown;
     float time;
-
+    private Camera camera;
     final MainClass mainClass;
 
     public Player(World world, Vector2 position, float width, float height, float speed, float dmg, float armor, float hp, MainClass mainClass) {
@@ -69,7 +72,7 @@ public class Player extends CreateHitbox {
         time += Gdx.graphics.getDeltaTime();
         if (Input.dir == Input.direction.LEFT) {
             actualFrame = playerSpriteLeft.getKeyFrame(time, true);
-            batch.draw(actualFrame, body.getWorldCenter().x * 64 * 1.5f, body.getWorldCenter().y * 64, width*3, height*3);
+            batch.draw(actualFrame, body.getPosition().x * Gdx.graphics.getDensity(), body.getPosition().y * Gdx.graphics.getDensity(), width*3, height*3);
             dir = 0;
         }
         if (Input.dir == Input.direction.RIGHT) {
@@ -87,6 +90,8 @@ public class Player extends CreateHitbox {
         }
         if (dir == 0) Input.dir = Input.direction.LEFT;
         else Input.dir = Input.direction.RIGHT;
+
+        Gdx.app.log("INFO/POSITION", "" + position);
     }
 
     @Override

@@ -101,7 +101,11 @@ public class Input extends InputAdapter{
         // System.out.println(player.getBody().getPosition().x*32*1.5+35 + " : " + player.getBody().getPosition().y*32*1.5f+25);
         // System.out.println(player.getPosition().x + " : " + player.getPosition().y);
 
-        player.setPosition(new Vector2(player.getBody().getPosition().x * 46 + 35, player.getBody().getPosition().y * 46 - 25));
+        Gdx.app.log("INFO",player.getBody().getPosition().x + " : " + player.getBody().getPosition().y);
+        Gdx.app.log("INFO",player.getBody().getPosition().x*32 + " : " + player.getBody().getPosition().y*32);
+
+
+        player.setPosition(new Vector2(player.getBody().getPosition().x * 32f, player.getBody().getPosition().y * 32f));
     }
 
     private static ArrayList<Bullets> bullets = new ArrayList<>();
