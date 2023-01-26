@@ -1,36 +1,44 @@
 package com.mygdx.game_project.utils;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
-public class Controller extends Touchpad {
+public class Controller extends Actor {
     private static Skin touchpadSkin;
-    private static TouchpadStyle touchpadStyle;
-    private static TextureAtlas touchpadAtlas = new TextureAtlas("Touchpad/Touchpad.atlas");
+    private static Touchpad.TouchpadStyle touchpadStyle;
+    private static Touchpad touchpad;
+    public Controller() {
 
-    public Controller(float deadzoneRadius) {
-        super(deadzoneRadius, getTouchpadStyle());
-        setBounds(100,100,touchpadAtlas.findRegion("Touchpad").getRegionWidth(), touchpadAtlas.findRegion("Touchpad").getRegionHeight());
     }
 
-    public static TouchpadStyle getTouchpadStyle() {
+    public Touchpad createTouchpad() {
         touchpadSkin = new Skin();
-        touchpadSkin.add("touchBackground", touchpadAtlas.findRegion("Touchpad"));
-        touchpadSkin.add("touchKnob", touchpadAtlas.findRegion("SmallKnob"));
+        touchpadSkin.add("touchBackground", new Texture("Touchpad/Joystick.png"));
+        touchpadSkin.add("touchKnob", new Texture("Touchpad/SmallHandle.png"));
 
-        touchpadStyle = new TouchpadStyle();
-        touchpadStyle.background = (Drawable) touchpadAtlas.findRegion("touchBackground");
-        touchpadStyle.knob = (Drawable) touchpadAtlas.findRegion("touchKnob");
-        return touchpadStyle;
-    }
+        Gdx.app.log("INFO", "Creating touchpad");
 
-    @Override
-    public void act(float delta) {
-        super.act(delta);
-        if (isTouched()) {
+        touchpadStyle = new Touchpad.TouchpadStyle();
+        Drawable D_background = touchpadSkin.getDrawable("touchBackground");
+        Drawable D_knob = touchpadSkin.getDrawable("touchKnob");
 
-        }
+        D_background.setMinHeight(40);
+        D_background.setMinWidth(40);
+
+        D_knob.setMinHeight(35);
+        D_knob.setMinWidth(35);
+
+        touchpadStyle.background = D_background;
+        touchpadStyle.knob = D_knob;
+
+        touchpad = new Touchpad(5, touchpadStyle);
+        touchpad.setBounds(50, 50, 125, 125);
+
+        return touchpad;
     }
 }

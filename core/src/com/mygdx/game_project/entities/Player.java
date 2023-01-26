@@ -69,21 +69,21 @@ public class Player extends CreateHitbox {
         time += Gdx.graphics.getDeltaTime();
         if (Input.dir == Input.direction.LEFT) {
             actualFrame = playerSpriteLeft.getKeyFrame(time, true);
-            batch.draw(actualFrame, position.x, position.y, 60, 60);
+            batch.draw(actualFrame, body.getWorldCenter().x * 64 * 1.5f, body.getWorldCenter().y * 64, width*3, height*3);
             dir = 0;
         }
         if (Input.dir == Input.direction.RIGHT) {
             actualFrame = playerSpriteRight.getKeyFrame(time, true);
-            batch.draw(actualFrame, position.x, position.y, 60, 60);
+            batch.draw(actualFrame, body.getWorldCenter().x * 64 * 1.5f, body.getWorldCenter().y * 64, width*3, height*3);
             dir = 1;
         }
         if (Input.dir == Input.direction.UP) {
             actualFrame = playerSpriteUp.getKeyFrame(time, true);
-            batch.draw(actualFrame, position.x, position.y, 60, 60);
+            batch.draw(actualFrame, body.getWorldCenter().x * 64 * 1.5f, body.getWorldCenter().y * 64, width*3, height*3);
         }
         if (Input.dir == Input.direction.DOWN) {
             actualFrame = playerSpriteDown.getKeyFrame(time, true);
-            batch.draw(actualFrame, position.x, position.y, 60, 60);
+            batch.draw(actualFrame, body.getWorldCenter().x * 64 * 1.5f, body.getWorldCenter().y * 64, width*3, height*3);
         }
         if (dir == 0) Input.dir = Input.direction.LEFT;
         else Input.dir = Input.direction.RIGHT;

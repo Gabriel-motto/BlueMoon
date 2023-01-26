@@ -7,7 +7,7 @@ public class UIStage extends Stage {
     private boolean visible = true;
     private Controller controller;
     public UIStage() {
-        controller = new Controller(5);
+        controller = new Controller();
 
         addActor(controller);
     }

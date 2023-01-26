@@ -1,28 +1,49 @@
 package com.mygdx.game_project.utils;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.mygdx.game_project.entities.Enemy;
 import com.mygdx.game_project.entities.Bullets;
 import com.mygdx.game_project.entities.Player;
 
 import java.util.ArrayList;
 
-public class Input {
+public class Input extends InputAdapter{
     public enum direction {
         UP, DOWN, RIGHT, LEFT
     }
     public static direction dir = direction.LEFT;
+    public static boolean isTouchpad = false;
+    private World world;
+    private Player player;
+    private ArrayList<Enemy> enemies;
+    private Stage stage;
+
+    public Input(World world, Player player, ArrayList<Enemy> enemies, Stage stage) {
+        this.world = world;
+        this.player = player;
+        this.enemies = enemies;
+        this.stage = stage;
+
+        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(stage);
+        inputMultiplexer.addProcessor(this);
+        Gdx.input.setInputProcessor(inputMultiplexer);
+    }
 
     /**
      *
      * @param delta Tiempo en segundos desde el último render.
      * @param player Jugador al que se le aplica las fuerzas para el movimiento.
      */
-    public static void movementInput(float delta, Player player) {
-        int horizontalForce = 0;
-        int verticalForce = 0;
+    public static void movementInput(float delta, Player player, Touchpad touchpad) {
+        float horizontalForce = 0;
+        float verticalForce = 0;
 
         if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.LEFT) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.J)) {
             if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.SPACE)) {
@@ -68,24 +89,54 @@ public class Input {
             player.getBody().setLinearVelocity(horizontalForce * player.getSpeed(), verticalForce * player.getSpeed());
         }
 
+        if (touchpad.isTouched()) {
+            horizontalForce = touchpad.getKnobPercentX();
+            verticalForce = touchpad.getKnobPercentY();
+            player.getBody().setLinearVelocity(horizontalForce * player.getSpeed(), verticalForce * player.getSpeed());
+        }
+
+        // Gdx.app.log("INFO","" + horizontalForce);
+
         // Gdx.app.log("INFO", "Vel: " + horizontalForce * 5f + " : " + verticalForce * 5f);
         // System.out.println(player.getBody().getPosition().x*32*1.5+35 + " : " + player.getBody().getPosition().y*32*1.5f+25);
         // System.out.println(player.getPosition().x + " : " + player.getPosition().y);
 
-        player.setPosition(new Vector2(player.getBody().getPosition().x * 48 + 35, player.getBody().getPosition().y * 48 - 25));
+        player.setPosition(new Vector2(player.getBody().getPosition().x * 46 + 35, player.getBody().getPosition().y * 46 - 25));
     }
 
     private static ArrayList<Bullets> bullets = new ArrayList<>();
     private static ArrayList<Bullets> delBullets = new ArrayList<>();
     private static Vector2 bulletDir;
     private static Enemy closestEnemy;
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        getClosestEnemy(enemies, player);
+        if (!enemies.isEmpty()) {
+            bullets.add(new Bullets(world, new Vector2(player.getBody().getWorldCenter().x * 32, player.getBody().getWorldCenter().y * 32), 5, player.getDmg(), 10));
+
+            for (Bullets bullet : bullets) {
+                if (bullet.isAlive() && !bullet.isMoved()) {
+                    Gdx.app.log("POSITION", "Enemy: " + closestEnemy.getPosition().x + " : " + closestEnemy.getPosition().y);
+                    Gdx.app.log("INFO", "Vel: " + ((closestEnemy.getBody().getPosition().x * 32 - bullet.getPosition().x) * 5f));
+
+                    bulletDir = new Vector2((closestEnemy.getBody().getPosition().x * 32 - bullet.getPosition().x), (closestEnemy.getBody().getPosition().y * 32 - bullet.getPosition().y)).nor();
+
+                    bullet.getBody().setLinearVelocity(new Vector2(bullet.getSpeed() * bulletDir.x, bullet.getSpeed() * bulletDir.y));
+                    bullet.setMoved(true);
+                }
+            }
+        }
+        return true;
+    }
+
     /**
      *
      * @param delta Tiempo en segundos desde el último render.
      * @param player Jugador que ataca.
      * @param world Mundo en el que se crean los ataques.
      */
-    public static void atackInput(float delta, Player player, ArrayList<Enemy> enemies, World world) {
+    public static void atackInput(float delta, final Player player, ArrayList<Enemy> enemies, final World world) {
         getClosestEnemy(enemies, player);
         if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.A) && !enemies.isEmpty()) {
             bullets.add(new Bullets(world, new Vector2(player.getPosition().x/1.59f, player.getPosition().y/1.41f), 5, player.getDmg(), 10));

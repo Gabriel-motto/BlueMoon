@@ -23,7 +23,7 @@ public class CollisionListener implements ContactListener {
                 ((CreateHitbox) body2.getUserData()).onHit(((CreateHitbox) bullet.getUserData()).dmg);
                 ((CreateHitbox) bullet.getUserData()).onHit(0);
             }
-            if (body2.getUserData() == null){
+            if (body2.getUserData() == null || body2.getUserData() instanceof TiledCollisions){
                 Gdx.app.log("INFO", "object-wall");
                 ((CreateHitbox) bullet.getUserData()).onHit(0);
             }
