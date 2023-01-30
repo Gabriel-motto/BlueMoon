@@ -1,23 +1,20 @@
 package com.mygdx.game_project.screens;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mygdx.game_project.MainClass;
 import com.mygdx.game_project.entities.Enemy;
@@ -69,12 +66,12 @@ public class GameScreen implements Screen {
 		this.mainClass = mainClass;
 
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, WORLD_WIDTH+125, WORLD_HEIGHT);
+		camera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT);
 		viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 		debugRenderer = new Box2DDebugRenderer();
 
 		stage = new Stage(viewport);
-		stage.getCamera().position.x = (WORLD_WIDTH+125) / 2f;
+		stage.getCamera().position.x = (WORLD_WIDTH) / 2f;
 		controller = new Controller();
 
 		gravity = new Vector2(0,0);
@@ -86,10 +83,10 @@ public class GameScreen implements Screen {
 		tiledCollisions = new TiledCollisions(world, tiledMap.getLayers().get("collisions").getObjects());
 
 		player = new Player(world, PLAYER_INIT_POS,
-				32,32, 5, 1, 3, 10, mainClass);
+				50,50, 5, 1, 3, 10, camera, mainClass);
 
 		enemies = new ArrayList<>();
-		spawnEnemies(36,16, 3, 1, 1, 10, Enemy.states.HOSTILE);
+		spawnEntities(36,16, 3, 1, 1, 10, Enemy.states.HOSTILE);
 //		enemies.add(new Enemy(world, new Vector2(400, 400),
 //				36,16, 3, 1, 1, 10, Enemy.states.HOSTILE));
 //		enemies.add(new Enemy(world, new Vector2(200, 100),
@@ -99,19 +96,28 @@ public class GameScreen implements Screen {
 		batch = new SpriteBatch();
 
 		System.out.println(camera.position.x + " : " + camera.position.y);
-		Gdx.app.log("INFO",Gdx.graphics.getWidth() + " : " + Gdx.graphics.getHeight());
+
+		Gdx.app.log("INFO/DIMENSIONS",Gdx.graphics.getWidth() + " : " + Gdx.graphics.getHeight());
+		Gdx.app.log("INFO/PPU", "" + PPU);
 
 		touchpad = controller.createTouchpad();
 		stage.addActor(touchpad);
 
+		TextureAtlas hpBarAtlas = new TextureAtlas("HpBar/hpBar.atlas");
+		Image hpBar = new Image(hpBarAtlas.findRegion("hp10"));
+		hpBar.setBounds((WORLD_WIDTH)-75*PPU, (WORLD_HEIGHT)-25*PPU, 64*PPU, 16*PPU);
+		stage.addActor(hpBar);
+
 		input = new Input(world, player, enemies, stage);
 	}
-
-	public void spawnEnemies(int width, int height, float speed, float dmg, float armor, float hp, Enemy.states currentState) {
+	public void spawnEntities(int width, int height, float speed, float dmg, float armor, float hp, Enemy.states currentState) {
 		for (MapObject mapObject : tiledMap.getLayers().get("enemies").getObjects()) {
 			enemies.add(new Enemy(world, new Vector2(mapObject.getProperties().get("x", Float.class) * 3, mapObject.getProperties().get("y", Float.class) * 3),
 					width, height, speed, dmg, armor, hp, currentState));
 		}
+	}
+	public void InitUI() {
+
 	}
 	@Override
 	public void render (float delta) {

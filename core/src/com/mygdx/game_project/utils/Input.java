@@ -3,15 +3,17 @@ package com.mygdx.game_project.utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.mygdx.game_project.entities.Enemy;
 import com.mygdx.game_project.entities.Bullets;
 import com.mygdx.game_project.entities.Player;
-
 import java.util.ArrayList;
+import static com.mygdx.game_project.constants.Constant.*;
 
 public class Input extends InputAdapter{
     public enum direction {
@@ -102,10 +104,9 @@ public class Input extends InputAdapter{
         // System.out.println(player.getPosition().x + " : " + player.getPosition().y);
 
         Gdx.app.log("INFO",player.getBody().getPosition().x + " : " + player.getBody().getPosition().y);
-        Gdx.app.log("INFO",player.getBody().getPosition().x*32 + " : " + player.getBody().getPosition().y*32);
+        Gdx.app.log("INFO",player.getBody().getWorldCenter().x*32 + " : " + player.getBody().getWorldCenter().y*32);
 
-
-        player.setPosition(new Vector2(player.getBody().getPosition().x * 32f, player.getBody().getPosition().y * 32f));
+        player.setPosition(new Vector2(player.getBody().getWorldCenter().x*32, player.getBody().getWorldCenter().y*32));
     }
 
     private static ArrayList<Bullets> bullets = new ArrayList<>();
@@ -117,7 +118,7 @@ public class Input extends InputAdapter{
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         getClosestEnemy(enemies, player);
         if (!enemies.isEmpty()) {
-            bullets.add(new Bullets(world, new Vector2(player.getBody().getWorldCenter().x * 32, player.getBody().getWorldCenter().y * 32), 5, player.getDmg(), 10));
+            bullets.add(new Bullets(world, player.getPosition(), 7, player.getDmg(), 10));
 
             for (Bullets bullet : bullets) {
                 if (bullet.isAlive() && !bullet.isMoved()) {
@@ -143,7 +144,7 @@ public class Input extends InputAdapter{
     public static void atackInput(float delta, final Player player, ArrayList<Enemy> enemies, final World world) {
         getClosestEnemy(enemies, player);
         if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.A) && !enemies.isEmpty()) {
-            bullets.add(new Bullets(world, new Vector2(player.getPosition().x/1.59f, player.getPosition().y/1.41f), 5, player.getDmg(), 10));
+            bullets.add(new Bullets(world, player.getPosition(), 7, player.getDmg(), 10));
 
             for (Bullets bullet : bullets) {
                 if (bullet.isAlive() && !bullet.isMoved()) {

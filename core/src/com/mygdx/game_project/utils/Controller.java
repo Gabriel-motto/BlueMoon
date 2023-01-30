@@ -30,14 +30,14 @@ public class Controller extends Actor {
         D_background.setMinHeight(40);
         D_background.setMinWidth(40);
 
-        D_knob.setMinHeight(35);
-        D_knob.setMinWidth(35);
+        D_knob.setMinHeight(45);
+        D_knob.setMinWidth(45);
 
         touchpadStyle.background = D_background;
         touchpadStyle.knob = D_knob;
 
         touchpad = new Touchpad(5, touchpadStyle);
-        touchpad.setBounds(50, 50, 125, 125);
+        touchpad.setBounds(50, 50, 150, 150);
 
         return touchpad;
     }

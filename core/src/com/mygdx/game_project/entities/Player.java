@@ -9,13 +9,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game_project.MainClass;
 import com.mygdx.game_project.screens.GameScreen;
 import com.mygdx.game_project.utils.CreateHitbox;
 import com.mygdx.game_project.utils.Input;
-
-import static com.mygdx.game_project.constants.Constant.PLAYER_INIT_POS;
+import static com.mygdx.game_project.constants.Constant.*;
 
 public class Player extends CreateHitbox {
     // Base stats
@@ -33,8 +31,9 @@ public class Player extends CreateHitbox {
     private Camera camera;
     final MainClass mainClass;
 
-    public Player(World world, Vector2 position, float width, float height, float speed, float dmg, float armor, float hp, MainClass mainClass) {
+    public Player(World world, Vector2 position, float width, float height, float speed, float dmg, float armor, float hp, Camera camera, MainClass mainClass) {
         super(world, position, width, height, 10, false, true, true, category.NO_COLLISION.bits(), dmg);
+        this.camera = camera;
         this.mainClass = mainClass;
         fixture.setUserData(this);
         this.position = position;
@@ -72,26 +71,27 @@ public class Player extends CreateHitbox {
         time += Gdx.graphics.getDeltaTime();
         if (Input.dir == Input.direction.LEFT) {
             actualFrame = playerSpriteLeft.getKeyFrame(time, true);
-            batch.draw(actualFrame, body.getPosition().x * Gdx.graphics.getDensity(), body.getPosition().y * Gdx.graphics.getDensity(), width*3, height*3);
+            batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*PPU, height*PPU);
             dir = 0;
         }
         if (Input.dir == Input.direction.RIGHT) {
             actualFrame = playerSpriteRight.getKeyFrame(time, true);
-            batch.draw(actualFrame, body.getWorldCenter().x * 64 * 1.5f, body.getWorldCenter().y * 64, width*3, height*3);
+            batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*PPU, height*PPU);
             dir = 1;
         }
         if (Input.dir == Input.direction.UP) {
             actualFrame = playerSpriteUp.getKeyFrame(time, true);
-            batch.draw(actualFrame, body.getWorldCenter().x * 64 * 1.5f, body.getWorldCenter().y * 64, width*3, height*3);
+            batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*PPU, height*PPU);
         }
         if (Input.dir == Input.direction.DOWN) {
             actualFrame = playerSpriteDown.getKeyFrame(time, true);
-            batch.draw(actualFrame, body.getWorldCenter().x * 64 * 1.5f, body.getWorldCenter().y * 64, width*3, height*3);
+            batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*PPU, height*PPU);
         }
         if (dir == 0) Input.dir = Input.direction.LEFT;
         else Input.dir = Input.direction.RIGHT;
 
-        Gdx.app.log("INFO/POSITION", "" + position);
+        Gdx.app.log("INFO/POSITION",position.x*PPU + " : " + position.y*PPU);
+        Gdx.app.log("INFO/BODYPOS", "" + body.getPosition());
     }
 
     @Override
@@ -178,6 +178,14 @@ public class Player extends CreateHitbox {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
+    public void setCamera(Camera camera) {
+        this.camera = camera;
     }
 
     //endregion
