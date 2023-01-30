@@ -90,8 +90,8 @@ public class Player extends CreateHitbox {
         if (dir == 0) Input.dir = Input.direction.LEFT;
         else Input.dir = Input.direction.RIGHT;
 
-        Gdx.app.log("INFO/POSITION",position.x*PPU + " : " + position.y*PPU);
-        Gdx.app.log("INFO/BODYPOS", "" + body.getPosition());
+//        Gdx.app.log("INFO/POSITION",position.x*PPU + " : " + position.y*PPU);
+//        Gdx.app.log("INFO/BODYPOS", "" + body.getPosition());
     }
 
     @Override

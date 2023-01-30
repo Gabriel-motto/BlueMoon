@@ -103,8 +103,8 @@ public class Input extends InputAdapter{
         // System.out.println(player.getBody().getPosition().x*32*1.5+35 + " : " + player.getBody().getPosition().y*32*1.5f+25);
         // System.out.println(player.getPosition().x + " : " + player.getPosition().y);
 
-        Gdx.app.log("INFO",player.getBody().getPosition().x + " : " + player.getBody().getPosition().y);
-        Gdx.app.log("INFO",player.getBody().getWorldCenter().x*32 + " : " + player.getBody().getWorldCenter().y*32);
+//        Gdx.app.log("INFO",player.getBody().getPosition().x + " : " + player.getBody().getPosition().y);
+//        Gdx.app.log("INFO",player.getBody().getWorldCenter().x*32 + " : " + player.getBody().getWorldCenter().y*32);
 
         player.setPosition(new Vector2(player.getBody().getWorldCenter().x*32, player.getBody().getWorldCenter().y*32));
     }

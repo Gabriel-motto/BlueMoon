@@ -15,6 +15,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mygdx.game_project.MainClass;
 import com.mygdx.game_project.entities.Enemy;
@@ -60,6 +62,8 @@ public class GameScreen implements Screen {
 	public TiledMap tiledMap;
 	public TiledCollisions tiledCollisions;
 	public String mapRoute = "Maps\\Map1.tmx";
+	public Image hpBar;
+	TextureAtlas hpBarAtlas = new TextureAtlas("HpBar/hpBar.atlas");
 
 	//endregion
 	public GameScreen(MainClass mainClass) {
@@ -102,11 +106,7 @@ public class GameScreen implements Screen {
 
 		touchpad = controller.createTouchpad();
 		stage.addActor(touchpad);
-
-		TextureAtlas hpBarAtlas = new TextureAtlas("HpBar/hpBar.atlas");
-		Image hpBar = new Image(hpBarAtlas.findRegion("hp10"));
-		hpBar.setBounds((WORLD_WIDTH)-75*PPU, (WORLD_HEIGHT)-25*PPU, 64*PPU, 16*PPU);
-		stage.addActor(hpBar);
+		initUI();
 
 		input = new Input(world, player, enemies, stage);
 	}
@@ -116,12 +116,15 @@ public class GameScreen implements Screen {
 					width, height, speed, dmg, armor, hp, currentState));
 		}
 	}
-	public void InitUI() {
-
+	public void initUI() {
+		hpBar = new Image(hpBarAtlas.findRegion("hp10"));
+		hpBar.setBounds((WORLD_WIDTH)-75*PPU, (WORLD_HEIGHT)-25*PPU, 64*PPU, 16*PPU);
+		stage.addActor(hpBar);
 	}
 	@Override
 	public void render (float delta) {
 		update(delta);
+		updateUI();
 
 		Gdx.gl.glClearColor(0f,0f,0f,1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -171,6 +174,49 @@ public class GameScreen implements Screen {
 
 		//System.out.println(objects.getPosition().x + " : " + objects.getPosition().y);
 		//System.out.println(enemy.getBody().getPosition().x*32 + " : " + enemy.getBody().getPosition().y*32);
+	}
+	public void updateUI() {
+		switch ((int) Math.ceil(player.getHp())) {
+			case 1:
+				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp1")));
+				break;
+
+			case 2:
+				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp2")));
+				break;
+
+			case 3:
+				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp3")));
+				break;
+
+			case 4:
+				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp4")));
+				break;
+
+			case 5:
+				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp5")));
+				break;
+
+			case 6:
+				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp6")));
+				break;
+
+			case 7:
+				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp7")));
+				break;
+
+			case 8:
+				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp8")));
+				break;
+
+			case 9:
+				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp9")));
+				break;
+
+			case 10:
+				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp10")));
+				break;
+		}
 	}
 	@Override
 	public void dispose () {
