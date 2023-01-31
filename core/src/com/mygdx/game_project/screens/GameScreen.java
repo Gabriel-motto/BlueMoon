@@ -55,6 +55,7 @@ public class GameScreen implements Screen {
 
 	// Entities
 	public Player player;
+	public float playerHp = 0;
 	public Vector2 playerPos;
 	public ArrayList<Enemy> enemies;
 	public Bullets objects;
@@ -86,11 +87,8 @@ public class GameScreen implements Screen {
 		tmr = new OrthogonalTiledMapRenderer(tiledMap, 3);
 		tiledCollisions = new TiledCollisions(world, tiledMap.getLayers().get("collisions").getObjects());
 
-		player = new Player(world, PLAYER_INIT_POS,
-				50,50, 5, 1, 3, 10, camera, mainClass);
-
 		enemies = new ArrayList<>();
-		spawnEntities(36,16, 3, 1, 1, 10, Enemy.states.HOSTILE);
+		spawnEntities();
 //		enemies.add(new Enemy(world, new Vector2(400, 400),
 //				36,16, 3, 1, 1, 10, Enemy.states.HOSTILE));
 //		enemies.add(new Enemy(world, new Vector2(200, 100),
@@ -110,10 +108,18 @@ public class GameScreen implements Screen {
 
 		input = new Input(world, player, enemies, stage);
 	}
-	public void spawnEntities(int width, int height, float speed, float dmg, float armor, float hp, Enemy.states currentState) {
+	public void spawnEntities() {
 		for (MapObject mapObject : tiledMap.getLayers().get("enemies").getObjects()) {
 			enemies.add(new Enemy(world, new Vector2(mapObject.getProperties().get("x", Float.class) * 3, mapObject.getProperties().get("y", Float.class) * 3),
-					width, height, speed, dmg, armor, hp, currentState));
+					mapObject.getProperties().get("width", Integer.class), mapObject.getProperties().get("height", Integer.class),
+					mapObject.getProperties().get("speed", Float.class), mapObject.getProperties().get("dmg", Float.class),
+					mapObject.getProperties().get("armor", Float.class), mapObject.getProperties().get("hp", Float.class)));
+		}
+		if (playerHp != 0) {
+			player = new Player(world, camera, mainClass);
+		} else {
+			player = new Player(world, PLAYER_INIT_POS,
+					50,50, 5, 1, 3, 10, camera, mainClass);
 		}
 	}
 	public void initUI() {
@@ -165,6 +171,7 @@ public class GameScreen implements Screen {
 
 		if (enemies.isEmpty() && !tiledCollisions.isDoorCreated) {
 			tiledCollisions = new TiledCollisions(world, tiledMap.getLayers().get("doors").getObjects());
+			playerHp = player.getHp();
 		}
 
 		if (!player.isAlive()) {

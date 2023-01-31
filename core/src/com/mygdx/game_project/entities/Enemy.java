@@ -1,23 +1,35 @@
 package com.mygdx.game_project.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game_project.utils.CreateHitbox;
+
+import java.util.HashMap;
+import java.util.Random;
 
 public class Enemy extends CreateHitbox {
     Vector2 position;
     private float width, height, speed, dmg, armor, hp, maxHp;
     private Body body;
     private boolean alive = true;
+    private TextureAtlas goblinAtlas = new TextureAtlas("Enemies\\Goblin\\Goblin.atlas");
+    private TextureAtlas wraithAtlas = new TextureAtlas("Enemies\\Wraith\\Wraith.atlas");
+    private TextureAtlas mummyAtlas = new TextureAtlas("Enemies\\Mummy\\Mummy.atlas");
+    private HashMap<String, Animation<TextureAtlas.AtlasRegion>> animation;
+    private TextureRegion actualFrame;
+    private float time;
     public enum states {
         SLEEP,
         HOSTILE,
         AVOID;
     }
     private states currentState;
-    public Enemy(World world, Vector2 position, int width, int height, float speed, float dmg, float armor, float hp, states currentState) {
+    public Enemy(World world, Vector2 position, int width, int height, float speed, float dmg, float armor, float hp) {
         super(world, position, width, height, 10f, false, false, false, category.COLLISION.bits(), dmg);
         fixture.setUserData(this);
         this.position = position;
@@ -29,9 +41,71 @@ public class Enemy extends CreateHitbox {
         this.hp = hp;
         this.maxHp = hp;
         this.body = super.body;
-        this.currentState = currentState;
-    }
+        int rand = (int)Math.floor(Math.random() * 2);
+        switch (rand) {
+            case 0:
+                this.currentState = states.SLEEP;
+                break;
 
+            case 1:
+                this.currentState = states.HOSTILE;
+
+                break;
+
+            case 2:
+                this.currentState = states.AVOID;
+                break;
+        }
+        animate();
+    }
+    public void animate() {
+        animation = new HashMap<>();
+        switch (currentState) {
+            case HOSTILE:
+                animation.put("iddle", new Animation<>(.3f,
+                        goblinAtlas.findRegion("goblin-idle(1)"),
+                        goblinAtlas.findRegion("goblin-idle(2)"),
+                        goblinAtlas.findRegion("goblin-idle(3)"),
+                        goblinAtlas.findRegion("goblin-idle(4)")));
+                animation.put("attackLeft", new Animation<>(.3f,
+                        goblinAtlas.findRegion("goblin-attack(1)"),
+                        goblinAtlas.findRegion("goblin-attack(2)"),
+                        goblinAtlas.findRegion("goblin-attack(3)"),
+                        goblinAtlas.findRegion("goblin-attack(4)")));
+                animation.put("attackRight", new Animation<>(.3f,
+                        goblinAtlas.findRegion("goblin-attack(5)"),
+                        goblinAtlas.findRegion("goblin-attack(6)"),
+                        goblinAtlas.findRegion("goblin-attack(7)"),
+                        goblinAtlas.findRegion("goblin-attack(8)")));
+                animation.put("runLeft", new Animation<>(.3f,
+                        goblinAtlas.findRegion("goblin-run(1)"),
+                        goblinAtlas.findRegion("goblin-run(2)"),
+                        goblinAtlas.findRegion("goblin-run(3)"),
+                        goblinAtlas.findRegion("goblin-run(4)")));
+                animation.put("runRight", new Animation<>(.3f,
+                        goblinAtlas.findRegion("goblin-run(5)"),
+                        goblinAtlas.findRegion("goblin-run(6)"),
+                        goblinAtlas.findRegion("goblin-run(7)"),
+                        goblinAtlas.findRegion("goblin-run(8)")));
+                animation.put("deathLeft", new Animation<>(.3f,
+                        goblinAtlas.findRegion("goblin-death(1)"),
+                        goblinAtlas.findRegion("goblin-death(2)"),
+                        goblinAtlas.findRegion("goblin-death(3)"),
+                        goblinAtlas.findRegion("goblin-death(4)")));
+                animation.put("deathRight", new Animation<>(.3f,
+                        goblinAtlas.findRegion("goblin-death(5)"),
+                        goblinAtlas.findRegion("goblin-death(6)"),
+                        goblinAtlas.findRegion("goblin-death(7)"),
+                        goblinAtlas.findRegion("goblin-death(8)")));
+                break;
+
+            case AVOID:
+                break;
+
+            case SLEEP:
+                break;
+        }
+    }
     @Override
     public void onHit(float dmg) {
         hp -= dmg/armor;

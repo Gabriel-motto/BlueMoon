@@ -31,6 +31,21 @@ public class Player extends CreateHitbox {
     private Camera camera;
     final MainClass mainClass;
 
+    public Player(World world, Camera camera, MainClass mainClass) {
+        super(world, PLAYER_INIT_POS, 50,50,10,false,false,true,category.NO_COLLISION.bits(), 1);
+        fixture.setUserData(this);
+        this.camera = camera;
+        this.mainClass = mainClass;
+        this.position = PLAYER_INIT_POS;
+        this.width = 50;
+        this.height = 50;
+        this.speed = 5;
+        this.dmg = 1;
+        this.armor = 3;
+        this.hp = 10;
+        this.body = super.body;
+        animate();
+    }
     public Player(World world, Vector2 position, float width, float height, float speed, float dmg, float armor, float hp, Camera camera, MainClass mainClass) {
         super(world, position, width, height, 10, false, true, true, category.NO_COLLISION.bits(), dmg);
         this.camera = camera;
@@ -44,6 +59,9 @@ public class Player extends CreateHitbox {
         this.armor = armor;
         this.hp = hp;
         this.body = super.body;
+        animate();
+    }
+    public void animate() {
         playerSpriteLeft = new Animation<>(.3f,
                 playerTextureAtlas.findRegion("samurai-idle-left"),
                 playerTextureAtlas.findRegion("samurai-idle-left2"),
@@ -65,7 +83,6 @@ public class Player extends CreateHitbox {
                 playerTextureAtlas.findRegion("samurai-run-down3"),
                 playerTextureAtlas.findRegion("samurai-run-down4"));
     }
-
     float dir = 0;
     public void draw(Batch batch) {
         time += Gdx.graphics.getDeltaTime();
