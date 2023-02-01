@@ -44,7 +44,8 @@ public class Enemy extends CreateHitbox {
         this.hp = hp;
         this.maxHp = hp;
         this.body = super.body;
-        int rand = (int)Math.floor(Math.random() * 1);
+        int rand = (int)Math.floor(Math.random() * 3);
+        Gdx.app.log("INFO/RAND", "" + rand);
         switch (rand) {
             case 0:
                 this.currentState = states.SLEEP;
@@ -52,7 +53,6 @@ public class Enemy extends CreateHitbox {
 
             case 1:
                 this.currentState = states.HOSTILE;
-
                 break;
 
             case 2:
@@ -103,6 +103,41 @@ public class Enemy extends CreateHitbox {
                 break;
 
             case AVOID:
+                animation.put("idle", new Animation<>(.3f,
+                        mummyAtlas.findRegion("mummy-idle(1)"),
+                        mummyAtlas.findRegion("mummy-idle(2)"),
+                        mummyAtlas.findRegion("mummy-idle(3)"),
+                        mummyAtlas.findRegion("mummy-idle(4)")));
+                animation.put("attackLeft", new Animation<>(.3f,
+                        mummyAtlas.findRegion("mummy-attack(1)"),
+                        mummyAtlas.findRegion("mummy-attack(2)"),
+                        mummyAtlas.findRegion("mummy-attack(3)"),
+                        mummyAtlas.findRegion("mummy-attack(4)")));
+                animation.put("attackRight", new Animation<>(.3f,
+                        mummyAtlas.findRegion("mummy-attack(5)"),
+                        mummyAtlas.findRegion("mummy-attack(6)"),
+                        mummyAtlas.findRegion("mummy-attack(7)"),
+                        mummyAtlas.findRegion("mummy-attack(8)")));
+                animation.put("runLeft", new Animation<>(.3f,
+                        mummyAtlas.findRegion("mummy-run(1)"),
+                        mummyAtlas.findRegion("mummy-run(2)"),
+                        mummyAtlas.findRegion("mummy-run(3)"),
+                        mummyAtlas.findRegion("mummy-run(4)")));
+                animation.put("runRight", new Animation<>(.3f,
+                        mummyAtlas.findRegion("mummy-run(5)"),
+                        mummyAtlas.findRegion("mummy-run(6)"),
+                        mummyAtlas.findRegion("mummy-run(7)"),
+                        mummyAtlas.findRegion("mummy-run(8)")));
+                animation.put("deathLeft", new Animation<>(.3f,
+                        mummyAtlas.findRegion("mummy-death(1)"),
+                        mummyAtlas.findRegion("mummy-death(2)"),
+                        mummyAtlas.findRegion("mummy-death(3)"),
+                        mummyAtlas.findRegion("mummy-death(4)")));
+                animation.put("deathRight", new Animation<>(.3f,
+                        mummyAtlas.findRegion("mummy-death(5)"),
+                        mummyAtlas.findRegion("mummy-death(6)"),
+                        mummyAtlas.findRegion("mummy-death(7)"),
+                        mummyAtlas.findRegion("mummy-death(8)")));
                 break;
 
             case SLEEP:
@@ -147,16 +182,16 @@ public class Enemy extends CreateHitbox {
     public void draw(Batch batch) {
         time += Gdx.graphics.getDeltaTime();
         if (body.getLinearVelocity().x > 0) {
-            actualFrame = animation.get("runRight").getKeyFrame(time, true);
-            batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*PPU, height*PPU);
+            actualFrame = animation.get("runLeft").getKeyFrame(time, true);
+            batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
         }
         if (body.getLinearVelocity().x < 0) {
-            actualFrame = animation.get("runLeft").getKeyFrame(time, true);
-            batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*PPU, height*PPU);
+            actualFrame = animation.get("runRight").getKeyFrame(time, true);
+            batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
         }
         if (body.getLinearVelocity().x == 0) {
             actualFrame = animation.get("idle").getKeyFrame(time, true);
-            batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*PPU, height*PPU);
+            batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
         }
     }
     @Override
@@ -166,28 +201,36 @@ public class Enemy extends CreateHitbox {
         if (hp <= 0) setAlive(false);
     }
 
+    float randDirX = (float) (Math.random() * 2) - 1;
+    float randDirY = (float) (Math.random() * 2) - 1;
     public void updateBehavior(float delta, Player player) {
         if (isAlive()) {
+            Vector2 enemyDir = new Vector2((player.getBody().getPosition().x * 32 - body.getPosition().x * 32), (player.getBody().getPosition().y * 32 - body.getPosition().y * 32)).nor();
+            float playerDistanceX = (player.getBody().getPosition().x - body.getPosition().x) > 0 ? (player.getBody().getPosition().x - body.getPosition().x) : -(player.getBody().getPosition().x - body.getPosition().x);
+            float playerDistanceY = (player.getBody().getPosition().y - body.getPosition().y) > 0 ? (player.getBody().getPosition().y - body.getPosition().y) : -(player.getBody().getPosition().y - body.getPosition().y);
             switch (currentState) {
                 case HOSTILE:
-                    Vector2 enemyDir = new Vector2((player.getBody().getPosition().x * 32 - body.getPosition().x * 32), (player.getBody().getPosition().y * 32 - body.getPosition().y * 32)).nor();
-
                     body.setLinearVelocity(new Vector2(speed * enemyDir.x, speed * enemyDir.y));
                     break;
 
                 case AVOID:
-
+                    if (playerDistanceX + playerDistanceY < 7) {
+                        body.setLinearVelocity(new Vector2(speed * -enemyDir.x, speed * -enemyDir.y));
+                        randDirX = (float) (Math.random() * 2) - 1;
+                        randDirY = (float) (Math.random() * 2) - 1;
+                    } else {
+                        body.setLinearVelocity(new Vector2(speed * randDirX, speed * randDirY));
+                    }
                     break;
 
                 case SLEEP:
-                    float playerDistanceX = (player.getBody().getPosition().x - body.getPosition().x) > 0 ? (player.getBody().getPosition().x - body.getPosition().x) : -(player.getBody().getPosition().x - body.getPosition().x);
-                    float playerDistanceY = (player.getBody().getPosition().y - body.getPosition().y) > 0 ? (player.getBody().getPosition().y - body.getPosition().y) : -(player.getBody().getPosition().y - body.getPosition().y);
                     if (playerDistanceX + playerDistanceY < 5 || hp < maxHp) currentState = states.HOSTILE;
                     break;
 
                 default:
                     break;
             }
+            position = new Vector2(body.getPosition().x * 32, body.getPosition().y * 32);
         }
     }
 

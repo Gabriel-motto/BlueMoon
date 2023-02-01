@@ -116,6 +116,7 @@ public class Input extends InputAdapter{
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        stage.touchDown(screenX, screenY, pointer, button);
         getClosestEnemy(enemies, player);
         if (!enemies.isEmpty()) {
             bullets.add(new Bullets(world, player.getPosition(), 7, player.getDmg(), 10));
@@ -167,8 +168,8 @@ public class Input extends InputAdapter{
         float distanceX;
         float distanceY;
         for (int i = 0; i < enemies.size(); i++) {
-            distanceX = (enemies.get(i).getBody().getPosition().x - player.getBody().getPosition().x) > 0 ? (enemies.get(i).getBody().getPosition().x - player.getBody().getPosition().x) : -(enemies.get(i).getBody().getPosition().x - player.getBody().getPosition().x);
-            distanceY = (enemies.get(i).getBody().getPosition().y - player.getBody().getPosition().y) > 0 ? (enemies.get(i).getBody().getPosition().y - player.getBody().getPosition().y) : -(enemies.get(i).getBody().getPosition().y - player.getBody().getPosition().y);
+            distanceX = (enemies.get(i).getBody().getWorldCenter().x - player.getBody().getWorldCenter().x) > 0 ? (enemies.get(i).getBody().getWorldCenter().x - player.getBody().getWorldCenter().x) : -(enemies.get(i).getBody().getWorldCenter().x - player.getBody().getWorldCenter().x);
+            distanceY = (enemies.get(i).getBody().getWorldCenter().y - player.getBody().getWorldCenter().y) > 0 ? (enemies.get(i).getBody().getWorldCenter().y - player.getBody().getWorldCenter().y) : -(enemies.get(i).getBody().getWorldCenter().y - player.getBody().getWorldCenter().y);
 
 //            Gdx.app.log("INFO", "xPos: " + distanceX);
 //            Gdx.app.log("INFO", "yPos: " + distanceY);

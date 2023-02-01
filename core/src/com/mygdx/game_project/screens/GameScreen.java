@@ -111,7 +111,7 @@ public class GameScreen implements Screen {
 	public void spawnEntities() {
 		for (MapObject mapObject : tiledMap.getLayers().get("enemies").getObjects()) {
 			enemies.add(new Enemy(world, new Vector2(mapObject.getProperties().get("x", Float.class) * 3, mapObject.getProperties().get("y", Float.class) * 3),
-					mapObject.getProperties().get("width", Integer.class), mapObject.getProperties().get("height", Integer.class),
+					32,32,
 					mapObject.getProperties().get("speed", Float.class), mapObject.getProperties().get("dmg", Float.class),
 					mapObject.getProperties().get("armor", Float.class), mapObject.getProperties().get("hp", Float.class)));
 		}
