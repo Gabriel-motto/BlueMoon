@@ -9,10 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game_project.utils.CreateHitbox;
-
 import java.util.HashMap;
-import java.util.Random;
-
 import static com.mygdx.game_project.constants.Constant.PPU;
 
 public class Enemy extends CreateHitbox {
@@ -38,25 +35,35 @@ public class Enemy extends CreateHitbox {
         this.position = position;
         this.width = width;
         this.height = height;
-        this.speed = speed;
-        this.dmg = dmg;
-        this.armor = armor;
-        this.hp = hp;
-        this.maxHp = hp;
         this.body = super.body;
         int rand = (int)Math.floor(Math.random() * 3);
         Gdx.app.log("INFO/RAND", "" + rand);
         switch (rand) {
             case 0:
                 this.currentState = states.SLEEP;
+                this.speed = speed;
+                this.dmg = dmg + 1;
+                this.armor = armor;
+                this.hp = hp - 4;
+                this.maxHp = hp;
                 break;
 
             case 1:
                 this.currentState = states.HOSTILE;
+                this.speed = speed;
+                this.dmg = dmg;
+                this.armor = armor + 2;
+                this.hp = hp;
+                this.maxHp = hp;
                 break;
 
             case 2:
                 this.currentState = states.AVOID;
+                this.speed = speed;
+                this.dmg = dmg;
+                this.armor = armor;
+                this.hp = hp;
+                this.maxHp = hp;
                 break;
         }
         animate();
@@ -224,6 +231,7 @@ public class Enemy extends CreateHitbox {
                     break;
 
                 case SLEEP:
+                    this.speed += 0.25f;
                     if (playerDistanceX + playerDistanceY < 5 || hp < maxHp) currentState = states.HOSTILE;
                     break;
 
