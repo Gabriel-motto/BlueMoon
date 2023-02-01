@@ -32,7 +32,7 @@ public class Player extends CreateHitbox {
     final MainClass mainClass;
 
     public Player(World world, Camera camera, MainClass mainClass) {
-        super(world, PLAYER_INIT_POS, 50,50,10,false,false,true,category.NO_COLLISION.bits(), 1);
+        super(world, PLAYER_INIT_POS, 50,50,10,false,true,true,category.NO_COLLISION.bits(), 1);
         fixture.setUserData(this);
         this.camera = camera;
         this.mainClass = mainClass;
@@ -119,7 +119,7 @@ public class Player extends CreateHitbox {
             if (hp <= 0) setAlive(false);
         } else {
             Gdx.app.log("INFO", "Hit");
-            mainClass.setScreen(new GameScreen(mainClass));
+            mainClass.setScreen(new GameScreen(mainClass, false));
         }
     }
 

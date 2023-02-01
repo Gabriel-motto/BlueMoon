@@ -69,11 +69,11 @@
    <properties>
     <property name="armor" type="float" value="4"/>
     <property name="dmg" type="float" value="1"/>
-    <property name="height" type="int" value="32"/>
+    <property name="height" type="int" value="24"/>
     <property name="hp" type="float" value="15"/>
     <property name="speed" type="float" value="1"/>
     <property name="state" type="int" value="1"/>
-    <property name="width" type="int" value="16"/>
+    <property name="width" type="int" value="24"/>
    </properties>
    <point/>
   </object>
@@ -81,11 +81,11 @@
    <properties>
     <property name="armor" type="float" value="2"/>
     <property name="dmg" type="float" value="1"/>
-    <property name="height" type="int" value="32"/>
+    <property name="height" type="int" value="24"/>
     <property name="hp" type="float" value="10"/>
     <property name="speed" type="float" value="1"/>
     <property name="state" type="int" value="1"/>
-    <property name="width" type="int" value="16"/>
+    <property name="width" type="int" value="24"/>
    </properties>
    <point/>
   </object>
@@ -93,11 +93,11 @@
    <properties>
     <property name="armor" type="float" value="1"/>
     <property name="dmg" type="float" value="2"/>
-    <property name="height" type="int" value="32"/>
+    <property name="height" type="int" value="24"/>
     <property name="hp" type="float" value="6"/>
     <property name="speed" type="float" value="4"/>
     <property name="state" type="int" value="0"/>
-    <property name="width" type="int" value="16"/>
+    <property name="width" type="int" value="24"/>
    </properties>
    <point/>
   </object>

@@ -203,7 +203,6 @@ public class Input extends InputAdapter{
             if (!enemy.isAlive()) {
                 delEnemies.add(enemy);
                 world.destroyBody(enemy.getBody());
-                player.setDmg(player.getDmg() + 1);
             }
         }
         enemies.removeAll(delEnemies);

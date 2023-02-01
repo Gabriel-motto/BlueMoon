@@ -22,6 +22,7 @@ import com.mygdx.game_project.MainClass;
 import com.mygdx.game_project.entities.Enemy;
 import com.mygdx.game_project.entities.Bullets;
 import com.mygdx.game_project.entities.Player;
+import com.mygdx.game_project.entities.PlayerData;
 import com.mygdx.game_project.utils.*;
 import com.mygdx.game_project.utils.Input;
 
@@ -52,13 +53,11 @@ public class GameScreen implements Screen {
 	public Controller controller;
 	public Touchpad touchpad;
 	public Input input;
+	public boolean isFirst;
 
 	// Entities
 	public Player player;
-	public float playerHp = 0;
-	public Vector2 playerPos;
 	public ArrayList<Enemy> enemies;
-	public Bullets objects;
 	public OrthogonalTiledMapRenderer tmr;
 	public TiledMap tiledMap;
 	public TiledCollisions tiledCollisions;
@@ -67,8 +66,9 @@ public class GameScreen implements Screen {
 	TextureAtlas hpBarAtlas = new TextureAtlas("HpBar/hpBar.atlas");
 
 	//endregion
-	public GameScreen(MainClass mainClass) {
+	public GameScreen(MainClass mainClass, boolean isFirst) {
 		this.mainClass = mainClass;
+		this.isFirst = isFirst;
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT);
@@ -115,11 +115,12 @@ public class GameScreen implements Screen {
 					mapObject.getProperties().get("speed", Float.class), mapObject.getProperties().get("dmg", Float.class),
 					mapObject.getProperties().get("armor", Float.class), mapObject.getProperties().get("hp", Float.class)));
 		}
-		if (playerHp != 0) {
+		if (isFirst) {
 			player = new Player(world, camera, mainClass);
 		} else {
-			player = new Player(world, PLAYER_INIT_POS,
-					50,50, 5, 1, 3, 10, camera, mainClass);
+			player = new Player(world, PLAYER_INIT_POS, 50,50,
+					PlayerData.speed, PlayerData.dmg, PlayerData.armor, PlayerData.hp,
+					camera, mainClass);
 		}
 	}
 	public void initUI() {
@@ -146,6 +147,9 @@ public class GameScreen implements Screen {
 		batch.begin();
 
 		player.draw(batch);
+		for (Enemy enemy : enemies) {
+			enemy.draw(batch);
+		}
 
 		batch.end();
 	}
@@ -171,7 +175,7 @@ public class GameScreen implements Screen {
 
 		if (enemies.isEmpty() && !tiledCollisions.isDoorCreated) {
 			tiledCollisions = new TiledCollisions(world, tiledMap.getLayers().get("doors").getObjects());
-			playerHp = player.getHp();
+			PlayerData.saveData(player.getPosition(), player.getSpeed(), player.getDmg(), player.getArmor(), player.getHp());
 		}
 
 		if (!player.isAlive()) {
