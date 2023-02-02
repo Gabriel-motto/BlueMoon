@@ -40,7 +40,7 @@ public class Player extends CreateHitbox {
         this.width = 50;
         this.height = 50;
         this.speed = 5;
-        this.dmg = 1;
+        this.dmg = 3;
         this.armor = 3;
         this.hp = 10;
         this.body = super.body;

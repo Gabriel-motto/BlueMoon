@@ -3,6 +3,7 @@ package com.mygdx.game_project.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
@@ -115,6 +116,9 @@ public class GameScreen implements Screen {
 					mapObject.getProperties().get("speed", Float.class), mapObject.getProperties().get("dmg", Float.class),
 					mapObject.getProperties().get("armor", Float.class), mapObject.getProperties().get("hp", Float.class)));
 		}
+//		for (MapObject mapObject : tiledMap.getLayers().get("chest").getObjects()) {
+//
+//		}
 		if (isFirst) {
 			player = new Player(world, camera, mainClass);
 		} else {
@@ -167,7 +171,7 @@ public class GameScreen implements Screen {
 		Input.movementInput(delta, player, touchpad);
 		Input.atackInput(delta, player, enemies, world);
 		Input.deleteBullets(world);
-		Input.deleteEnemies(world, enemies, player);
+		Input.deleteEnemies(world, enemies);
 
 		for (Enemy enemy : enemies) {
 			enemy.updateBehavior(delta, player);

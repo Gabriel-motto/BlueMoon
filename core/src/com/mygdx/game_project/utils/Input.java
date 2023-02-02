@@ -194,11 +194,9 @@ public class Input extends InputAdapter{
             }
         }
         bullets.removeAll(delBullets);
-
     }
-
     private static ArrayList<Enemy> delEnemies;
-    public static void deleteEnemies(World world, ArrayList<Enemy> enemies, Player player) {
+    public static void deleteEnemies(World world, ArrayList<Enemy> enemies) {
         delEnemies = new ArrayList<>();
         for (Enemy enemy : enemies) {
             if (!enemy.isAlive()) {
@@ -217,6 +215,14 @@ public class Input extends InputAdapter{
 
     public static void setBullets(ArrayList<Bullets> bullets) {
         Input.bullets = bullets;
+    }
+
+    public static ArrayList<Enemy> getDelEnemies() {
+        return delEnemies;
+    }
+
+    public static void setDelEnemies(ArrayList<Enemy> delEnemies) {
+        Input.delEnemies = delEnemies;
     }
 
     //endregion
