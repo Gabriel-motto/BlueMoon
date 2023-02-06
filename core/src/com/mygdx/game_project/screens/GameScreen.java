@@ -3,9 +3,10 @@ package com.mygdx.game_project.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.*;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -16,12 +17,11 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mygdx.game_project.MainClass;
 import com.mygdx.game_project.entities.Enemy;
-import com.mygdx.game_project.entities.Bullets;
+import com.mygdx.game_project.entities.Objects;
 import com.mygdx.game_project.entities.Player;
 import com.mygdx.game_project.entities.PlayerData;
 import com.mygdx.game_project.utils.*;
@@ -55,10 +55,14 @@ public class GameScreen implements Screen {
 	public Touchpad touchpad;
 	public Input input;
 	public boolean isFirst;
+	public FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Minecraftia-Regular.ttf"));
+	public FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 
 	// Entities
 	public Player player;
+	public PlayerData pd;
 	public ArrayList<Enemy> enemies;
+	public ArrayList<Objects> objects;
 	public OrthogonalTiledMapRenderer tmr;
 	public TiledMap tiledMap;
 	public TiledCollisions tiledCollisions;
@@ -89,12 +93,8 @@ public class GameScreen implements Screen {
 		tiledCollisions = new TiledCollisions(world, tiledMap.getLayers().get("collisions").getObjects());
 
 		enemies = new ArrayList<>();
+		objects = new ArrayList<>();
 		spawnEntities();
-//		enemies.add(new Enemy(world, new Vector2(400, 400),
-//				36,16, 3, 1, 1, 10, Enemy.states.HOSTILE));
-//		enemies.add(new Enemy(world, new Vector2(200, 100),
-//				36,16, 5, 1, 2, 10, Enemy.states.SLEEP));
-		//objects = new Objects(world, new Vector2(200,100), 5f);
 
 		batch = new SpriteBatch();
 
@@ -116,14 +116,11 @@ public class GameScreen implements Screen {
 					mapObject.getProperties().get("speed", Float.class), mapObject.getProperties().get("dmg", Float.class),
 					mapObject.getProperties().get("armor", Float.class), mapObject.getProperties().get("hp", Float.class)));
 		}
-//		for (MapObject mapObject : tiledMap.getLayers().get("chest").getObjects()) {
-//
-//		}
 		if (isFirst) {
 			player = new Player(world, camera, mainClass);
 		} else {
 			player = new Player(world, PLAYER_INIT_POS, 50,50,
-					PlayerData.speed, PlayerData.dmg, PlayerData.armor, PlayerData.hp,
+					pd.getSpeed(), pd.getDmg(), pd.getArmor(), pd.getHp(),
 					camera, mainClass);
 		}
 	}
@@ -154,6 +151,11 @@ public class GameScreen implements Screen {
 		for (Enemy enemy : enemies) {
 			enemy.draw(batch);
 		}
+		if (!objects.isEmpty()) {
+			for (Objects object : objects) {
+				object.draw(batch);
+			}
+		}
 
 		batch.end();
 	}
@@ -173,13 +175,18 @@ public class GameScreen implements Screen {
 		Input.deleteBullets(world);
 		Input.deleteEnemies(world, enemies);
 
+		pd = new PlayerData(player.getSpeed(), player.getDmg(), player.getArmor(), player.getHp());
+
 		for (Enemy enemy : enemies) {
 			enemy.updateBehavior(delta, player);
 		}
 
 		if (enemies.isEmpty() && !tiledCollisions.isDoorCreated) {
 			tiledCollisions = new TiledCollisions(world, tiledMap.getLayers().get("doors").getObjects());
-			PlayerData.saveData(player.getPosition(), player.getSpeed(), player.getDmg(), player.getArmor(), player.getHp());
+			for (MapObject mapObject : tiledMap.getLayers().get("chest").getObjects()) {
+				objects.add(new Objects(world, new Vector2(mapObject.getProperties().get("x", Float.class), mapObject.getProperties().get("y", Float.class)),
+						32, 32));
+			}
 		}
 
 		if (!player.isAlive()) {

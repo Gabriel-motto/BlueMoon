@@ -76,5 +76,5 @@ public abstract class CreateHitbox {
         this.dmg = dmg;
     }
 
-    public abstract void onHit(float dmg);
+    public abstract void onHit(Object object);
 }

@@ -30,6 +30,7 @@ public class Player extends CreateHitbox {
     float time;
     private Camera camera;
     final MainClass mainClass;
+    private PlayerData pd;
 
     public Player(World world, Camera camera, MainClass mainClass) {
         super(world, PLAYER_INIT_POS, 50,50,10,false,true,true,category.NO_COLLISION.bits(), 1);
@@ -112,13 +113,15 @@ public class Player extends CreateHitbox {
     }
 
     @Override
-    public void onHit(float dmg) {
-        if (dmg > 0) {
-            hp -= dmg/armor;
+    public void onHit(Object object) {
+        if ((float) object > 0) {
+            hp -= (float) object /armor;
             Gdx.app.log("INFO","Player hp: " + hp);
             if (hp <= 0) setAlive(false);
-        } else {
+        }
+        if (object instanceof Objects) {
             Gdx.app.log("INFO", "Hit");
+            pd = new PlayerData(this.speed, this.dmg, this.armor, this.hp);
             mainClass.setScreen(new GameScreen(mainClass, false));
         }
     }

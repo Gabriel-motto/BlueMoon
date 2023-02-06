@@ -225,8 +225,8 @@ public class Enemy extends CreateHitbox {
         }
     }
     @Override
-    public void onHit(float dmg) {
-        hp -= dmg/armor;
+    public void onHit(Object object) {
+        hp -= (float) object /armor;
         Gdx.app.log("INFO", "Enemy hp: " + hp);
         if (hp <= 0) setDieing(true);
     }

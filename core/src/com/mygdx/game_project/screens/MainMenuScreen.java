@@ -18,6 +18,8 @@ import com.mygdx.game_project.MainClass;
 import static com.mygdx.game_project.constants.Constant.*;
 
 public class MainMenuScreen implements Screen {
+    // region $Vars
+
     final MainClass mainClass;
     private OrthographicCamera camera;
     private TextButton textButton;
@@ -27,6 +29,8 @@ public class MainMenuScreen implements Screen {
     private Stage stage;
     private BitmapFont font;
     private ExtendViewport viewport;
+
+    // endregion
     public MainMenuScreen(final MainClass mainClass) {
         this.mainClass = mainClass;
 
@@ -44,7 +48,7 @@ public class MainMenuScreen implements Screen {
         textButtonStyle.font = font;
         textButtonStyle.up = skin.getDrawable("button");
         textButtonStyle.down = skin.getDrawable("buttonpress");
-        textButton = new TextButton("Button1", textButtonStyle);
+        textButton = new TextButton("Start", textButtonStyle);
         textButton.setBounds(WORLD_WIDTH - 200, 5, 128, 128);
         stage.addActor(textButton);
 

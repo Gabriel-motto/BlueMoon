@@ -37,7 +37,7 @@ public class Bullets extends CreateHitbox{
     }
 
     @Override
-    public void onHit(float dmg) {
+    public void onHit(Object object) {
         Gdx.app.log("BULLET","Dead");
         setAlive(false);
     }

@@ -1,16 +1,33 @@
 package com.mygdx.game_project.entities;
 
-import com.badlogic.gdx.math.Vector2;
+public final class PlayerData {
+    private final float speed, dmg, armor, hp;
 
-public class PlayerData {
-    public static Vector2 position;
-    public static float speed, dmg, armor, hp;
-
-    public static void saveData(Vector2 position, float speed, float dmg, float armor, float hp) {
-        PlayerData.position = position;
-        PlayerData.speed = speed;
-        PlayerData.dmg = dmg;
-        PlayerData.armor = armor;
-        PlayerData.hp = hp;
+    public PlayerData(float speed, float dmg, float armor, float hp) {
+        this.speed = speed;
+        this.dmg = dmg;
+        this.armor = armor;
+        this.hp = hp;
     }
+
+    //region $Getters
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public float getDmg() {
+        return dmg;
+    }
+
+    public float getArmor() {
+        return armor;
+    }
+
+    public float getHp() {
+        return hp;
+    }
+
+
+    //endregion
 }
