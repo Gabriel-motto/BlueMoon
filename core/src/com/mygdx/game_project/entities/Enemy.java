@@ -18,6 +18,7 @@ public class Enemy extends CreateHitbox {
     private Body body;
     private boolean alive = true;
     private boolean dieing = false;
+    private boolean focusable = true;
     private TextureAtlas goblinAtlas = new TextureAtlas("Enemies\\Goblin\\Goblin.atlas");
     private TextureAtlas wraithAtlas = new TextureAtlas("Enemies\\Wraith\\Wraith.atlas");
     private TextureAtlas mummyAtlas = new TextureAtlas("Enemies\\Mummy\\Mummy.atlas");
@@ -66,7 +67,6 @@ public class Enemy extends CreateHitbox {
                 this.currentState = states.AVOID;
                 break;
         }
-        animate();
     }
     public void animate() {
         animation = new HashMap<>();
@@ -102,7 +102,7 @@ public class Enemy extends CreateHitbox {
                         goblinAtlas.findRegion("goblin-death(2)"),
                         goblinAtlas.findRegion("goblin-death(3)"),
                         goblinAtlas.findRegion("goblin-death(4)")));
-                animation.put("deathLeft", new Animation<>(1,
+                animation.put("deathLeft", new Animation<>(.80f,
                         goblinAtlas.findRegion("goblin-death(5)"),
                         goblinAtlas.findRegion("goblin-death(6)"),
                         goblinAtlas.findRegion("goblin-death(7)"),
@@ -140,7 +140,7 @@ public class Enemy extends CreateHitbox {
                         mummyAtlas.findRegion("mummy-death(2)"),
                         mummyAtlas.findRegion("mummy-death(3)"),
                         mummyAtlas.findRegion("mummy-death(4)")));
-                animation.put("deathLeft", new Animation<>(1,
+                animation.put("deathLeft", new Animation<>(.80f,
                         mummyAtlas.findRegion("mummy-death(5)"),
                         mummyAtlas.findRegion("mummy-death(6)"),
                         mummyAtlas.findRegion("mummy-death(7)"),
@@ -178,7 +178,7 @@ public class Enemy extends CreateHitbox {
                         wraithAtlas.findRegion("wraith-death(2)"),
                         wraithAtlas.findRegion("wraith-death(3)"),
                         wraithAtlas.findRegion("wraith-death(4)")));
-                animation.put("deathLeft", new Animation<>(1,
+                animation.put("deathLeft", new Animation<>(.80f,
                         wraithAtlas.findRegion("wraith-death(5)"),
                         wraithAtlas.findRegion("wraith-death(6)"),
                         wraithAtlas.findRegion("wraith-death(7)"),
@@ -202,14 +202,14 @@ public class Enemy extends CreateHitbox {
                 batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
             }
         } else {
+            super.fixture.getFilterData().groupIndex = category.NO_COLLISION.bits();
+            setFocusable(false);
             if (body.getLinearVelocity().x < 0) {
                 actualFrame = animation.get("deathLeft").getKeyFrame(time, false);
                 body.setLinearVelocity(0,0);
                 batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
                 if (animation.get("deathLeft").isAnimationFinished(time)) {
                     setAlive(false);
-                    setDieing(false);
-                    time = 0;
                 }
             }
             if (body.getLinearVelocity().x > 0) {
@@ -218,8 +218,6 @@ public class Enemy extends CreateHitbox {
                 batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
                 if (animation.get("deathRight").isAnimationFinished(time)) {
                     setAlive(false);
-                    setDieing(false);
-                    time = 0;
                 }
             }
         }
@@ -234,6 +232,8 @@ public class Enemy extends CreateHitbox {
     float randDirX = (float) (Math.random() * 2) - 1;
     float randDirY = (float) (Math.random() * 2) - 1;
     public void updateBehavior(float delta, Player player) {
+        animate();
+
         if (isAlive()) {
             Vector2 enemyDir;
             float playerDistanceX;
@@ -258,7 +258,7 @@ public class Enemy extends CreateHitbox {
                     break;
 
                 case SLEEP:
-                    this.speed += 0.25f;
+                    //this.speed += 0.25f;
                     playerDistanceX = (player.getBody().getPosition().x - body.getPosition().x) > 0 ? (player.getBody().getPosition().x - body.getPosition().x) : -(player.getBody().getPosition().x - body.getPosition().x);
                     playerDistanceY = (player.getBody().getPosition().y - body.getPosition().y) > 0 ? (player.getBody().getPosition().y - body.getPosition().y) : -(player.getBody().getPosition().y - body.getPosition().y);
                     if (playerDistanceX + playerDistanceY < 2 || hp < maxHp) currentState = states.HOSTILE;
@@ -353,5 +353,13 @@ public class Enemy extends CreateHitbox {
         this.dieing = dieing;
     }
 
-//endregion
+    public boolean isFocusable() {
+        return focusable;
+    }
+
+    public void setFocusable(boolean focusable) {
+        this.focusable = focusable;
+    }
+
+    //endregion
 }

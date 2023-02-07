@@ -14,7 +14,7 @@ public abstract class CreateHitbox {
     protected Fixture fixture;
     protected BodyDef bodyDef;
     protected float dmg;
-    protected enum category {
+    public enum category {
         NO_COLLISION((short)-1),
         COLLISION((short)1),
         NEUTRAL((short)0);

@@ -118,6 +118,7 @@ public class Input extends InputAdapter{
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         stage.touchDown(screenX, screenY, pointer, button);
         getClosestEnemy(enemies, player);
+
         if (!enemies.isEmpty()) {
             bullets.add(new Bullets(world, player.getPosition(), 7, player.getDmg(), 10));
 
@@ -144,7 +145,7 @@ public class Input extends InputAdapter{
      */
     public static void atackInput(float delta, final Player player, ArrayList<Enemy> enemies, final World world) {
         getClosestEnemy(enemies, player);
-        if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.A) && !enemies.isEmpty()) {
+        if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.A) && !enemies.isEmpty()) {
             bullets.add(new Bullets(world, player.getPosition(), 7, player.getDmg(), 10));
 
             for (Bullets bullet : bullets) {
@@ -168,19 +169,27 @@ public class Input extends InputAdapter{
         float distanceX;
         float distanceY;
         for (int i = 0; i < enemies.size(); i++) {
-            distanceX = (enemies.get(i).getBody().getWorldCenter().x - player.getBody().getWorldCenter().x) > 0 ? (enemies.get(i).getBody().getWorldCenter().x - player.getBody().getWorldCenter().x) : -(enemies.get(i).getBody().getWorldCenter().x - player.getBody().getWorldCenter().x);
-            distanceY = (enemies.get(i).getBody().getWorldCenter().y - player.getBody().getWorldCenter().y) > 0 ? (enemies.get(i).getBody().getWorldCenter().y - player.getBody().getWorldCenter().y) : -(enemies.get(i).getBody().getWorldCenter().y - player.getBody().getWorldCenter().y);
+            if (enemies.get(i).isFocusable()) {
+                distanceX = (enemies.get(i).getBody().getWorldCenter().x - player.getBody().getWorldCenter().x) > 0 ? (enemies.get(i).getBody().getWorldCenter().x - player.getBody().getWorldCenter().x) : -(enemies.get(i).getBody().getWorldCenter().x - player.getBody().getWorldCenter().x);
+                distanceY = (enemies.get(i).getBody().getWorldCenter().y - player.getBody().getWorldCenter().y) > 0 ? (enemies.get(i).getBody().getWorldCenter().y - player.getBody().getWorldCenter().y) : -(enemies.get(i).getBody().getWorldCenter().y - player.getBody().getWorldCenter().y);
 
-//            Gdx.app.log("INFO", "xPos: " + distanceX);
-//            Gdx.app.log("INFO", "yPos: " + distanceY);
+    //            Gdx.app.log("INFO", "xPos: " + distanceX);
+    //            Gdx.app.log("INFO", "yPos: " + distanceY);
 
-            if (i == 0) {
-                distanceClosestEnemy = distanceX + distanceY;
-                closestEnemy = enemies.get(i);
-            } else {
-                if ((distanceX + distanceY) < distanceClosestEnemy) {
+                if (i == 0) {
                     distanceClosestEnemy = distanceX + distanceY;
                     closestEnemy = enemies.get(i);
+                } else {
+                    if ((distanceX + distanceY) < distanceClosestEnemy) {
+                        distanceClosestEnemy = distanceX + distanceY;
+                        closestEnemy = enemies.get(i);
+                    }
+                }
+            } else {
+                for (int j = 0; j < enemies.size(); j++) {
+                    if (enemies.get(j).isFocusable()) {
+                        closestEnemy = enemies.get(j);
+                    }
                 }
             }
         }
@@ -201,8 +210,10 @@ public class Input extends InputAdapter{
         for (Enemy enemy : enemies) {
             if (!enemy.isAlive()) {
                 delEnemies.add(enemy);
-                world.destroyBody(enemy.getBody());
             }
+        }
+        for (Enemy delEnemy : delEnemies) {
+            world.destroyBody(delEnemy.getBody());
         }
         enemies.removeAll(delEnemies);
     }

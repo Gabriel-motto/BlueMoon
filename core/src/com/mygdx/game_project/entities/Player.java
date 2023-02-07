@@ -18,7 +18,7 @@ import static com.mygdx.game_project.constants.Constant.*;
 public class Player extends CreateHitbox {
     // Base stats
     Vector2 position;
-    private float width, height, speed, dmg, armor, hp;
+    private float width, height, speed, dmg, armor, hp, atkSpeed;
     private Body body;
     private boolean alive = true;
     TextureAtlas playerTextureAtlas = new TextureAtlas("Player/Samurai.atlas");
@@ -44,14 +44,15 @@ public class Player extends CreateHitbox {
         this.dmg = 3;
         this.armor = 3;
         this.hp = 10;
+        this.atkSpeed = 1;
         this.body = super.body;
         animate();
     }
-    public Player(World world, Vector2 position, float width, float height, float speed, float dmg, float armor, float hp, Camera camera, MainClass mainClass) {
+    public Player(World world, Vector2 position, float width, float height, float speed, float dmg, float armor, float hp, Camera camera, MainClass mainClass, float atkSpeed) {
         super(world, position, width, height, 10, false, true, true, category.NO_COLLISION.bits(), dmg);
+        fixture.setUserData(this);
         this.camera = camera;
         this.mainClass = mainClass;
-        fixture.setUserData(this);
         this.position = position;
         this.width = width;
         this.height = height;
@@ -60,6 +61,7 @@ public class Player extends CreateHitbox {
         this.armor = armor;
         this.hp = hp;
         this.body = super.body;
+        this.atkSpeed = atkSpeed;
         animate();
     }
     public void animate() {
@@ -114,15 +116,96 @@ public class Player extends CreateHitbox {
 
     @Override
     public void onHit(Object object) {
-        if ((float) object > 0) {
+        if (object instanceof Float && (float) object > 0) {
             hp -= (float) object /armor;
             Gdx.app.log("INFO","Player hp: " + hp);
             if (hp <= 0) setAlive(false);
         }
-        if (object instanceof Objects) {
-            Gdx.app.log("INFO", "Hit");
-            pd = new PlayerData(this.speed, this.dmg, this.armor, this.hp);
+        if (object instanceof String && object.equals("door")) {
+            // Gdx.app.log("INFO", "Hit");
+            // pd = new PlayerData(this.speed, this.dmg, this.armor, this.hp);
             mainClass.setScreen(new GameScreen(mainClass, false));
+        }
+        if (object instanceof Objects) {
+            Gdx.app.log("STATS", "Hp: " + hp + " Atk: " + dmg + " Speed: " + speed + " AtkSpeed: " + atkSpeed + " Armor: " + armor);
+            powerUp((Objects) object);
+        }
+    }
+
+    public void powerUp(Objects object) {
+        int stat1 = (int) (Math.random() * 5);
+        int stat2 = (int) (Math.random() * 5);
+        int stat3 = (int) (Math.random() * 5);
+
+        if (object.getRareness() == Objects.Rareness.EXOTIC) {
+            switch (stat3) {
+                case 0:
+                    speed += .3f;
+                    break;
+
+                case 1:
+                    dmg += .5f;
+                    break;
+
+                case 2:
+                    armor += .5f;
+                    break;
+
+                case 3:
+                    if (hp < 10) hp++;
+                    else armor += .5f;
+                    break;
+
+                case 4:
+                    atkSpeed -= .10f;
+                    break;
+            }
+        }
+        if (object.getRareness() == Objects.Rareness.EXOTIC || object.getRareness() == Objects.Rareness.RARE) {
+            switch (stat2) {
+                case 0:
+                    speed += .3f;
+                    break;
+
+                case 1:
+                    dmg += .5f;
+                    break;
+
+                case 2:
+                    armor += .5f;
+                    break;
+
+                case 3:
+                    if (hp < 10) hp++;
+                    else armor += .5f;
+                    break;
+
+                case 4:
+                    atkSpeed -= .10f;
+                    break;
+            }
+        }
+        switch (stat1) {
+            case 0:
+                speed += .3f;
+                break;
+
+            case 1:
+                dmg += .5f;
+                break;
+
+            case 2:
+                armor += .5f;
+                break;
+
+            case 3:
+                if (hp < 10) hp++;
+                else armor += .5f;
+                break;
+
+            case 4:
+                atkSpeed -= .10f;
+                break;
         }
     }
 
@@ -208,5 +291,12 @@ public class Player extends CreateHitbox {
         this.camera = camera;
     }
 
+    public float getAtkSpeed() {
+        return atkSpeed;
+    }
+
+    public void setAtkSpeed(float atkSpeed) {
+        this.atkSpeed = atkSpeed;
+    }
     //endregion
 }

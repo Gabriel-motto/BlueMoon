@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game_project.entities.Enemy;
 import com.mygdx.game_project.entities.Bullets;
+import com.mygdx.game_project.entities.Objects;
 import com.mygdx.game_project.entities.Player;
 
 public class CollisionListener implements ContactListener {
@@ -41,7 +42,12 @@ public class CollisionListener implements ContactListener {
             }
             if (body2 != null && body2.getUserData() instanceof TiledCollisions) {
                 Gdx.app.log("CONTACT", "Door");
-                ((CreateHitbox) player.getUserData()).onHit(0);
+                ((CreateHitbox) player.getUserData()).onHit("door");
+            }
+            if (body2 != null && body2.getUserData() instanceof Objects) {
+                Gdx.app.log("CONTACT", "Chest");
+                ((CreateHitbox) player.getUserData()).onHit(body2.getUserData());
+                ((CreateHitbox) body2.getUserData()).onHit(player.getUserData());
             }
         }
     }

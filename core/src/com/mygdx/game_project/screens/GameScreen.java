@@ -120,8 +120,8 @@ public class GameScreen implements Screen {
 			player = new Player(world, camera, mainClass);
 		} else {
 			player = new Player(world, PLAYER_INIT_POS, 50,50,
-					pd.getSpeed(), pd.getDmg(), pd.getArmor(), pd.getHp(),
-					camera, mainClass);
+					PlayerData.speed, PlayerData.dmg, PlayerData.armor, PlayerData.hp,
+					camera, mainClass, PlayerData.atkSpeed);
 		}
 	}
 	public void initUI() {
@@ -175,11 +175,22 @@ public class GameScreen implements Screen {
 		Input.deleteBullets(world);
 		Input.deleteEnemies(world, enemies);
 
-		pd = new PlayerData(player.getSpeed(), player.getDmg(), player.getArmor(), player.getHp());
+		PlayerData.setData(player.getSpeed(), player.getDmg(), player.getArmor(), player.getHp(), player.getAtkSpeed());
 
 		for (Enemy enemy : enemies) {
 			enemy.updateBehavior(delta, player);
 		}
+
+		ArrayList<Objects> delObjects = new ArrayList<>();
+		for (Objects object : objects) {
+			if (!object.isAlive()) {
+				delObjects.add(object);
+			}
+		}
+		for (Objects delObject : delObjects) {
+			world.destroyBody(delObject.getBody());
+		}
+		objects.removeAll(delObjects);
 
 		if (enemies.isEmpty() && !tiledCollisions.isDoorCreated) {
 			tiledCollisions = new TiledCollisions(world, tiledMap.getLayers().get("doors").getObjects());
