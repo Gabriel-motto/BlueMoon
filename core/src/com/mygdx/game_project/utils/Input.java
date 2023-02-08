@@ -3,6 +3,7 @@ package com.mygdx.game_project.utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -94,7 +95,19 @@ public class Input extends InputAdapter{
         if (touchpad.isTouched()) {
             horizontalForce = touchpad.getKnobPercentX();
             verticalForce = touchpad.getKnobPercentY();
+
+            Gdx.app.log("KNOBPER", touchpad.getKnobPercentX() + " : " + touchpad.getKnobPercentY());
+
             player.getBody().setLinearVelocity(horizontalForce * player.getSpeed(), verticalForce * player.getSpeed());
+            isTouchpad = true;
+            if (touchpad.getKnobPercentY() < .5f && touchpad.getKnobPercentY() > -.5f) {
+                if (touchpad.getKnobPercentX() < 0) dir = direction.LEFT;
+                if (touchpad.getKnobPercentX() > 0) dir = direction.RIGHT;
+            }
+            if (touchpad.getKnobPercentX() < .5f && touchpad.getKnobPercentX() > -.5f) {
+                if (touchpad.getKnobPercentY() < 0) dir = direction.DOWN;
+                if (touchpad.getKnobPercentY() > 0) dir = direction.UP;
+            }
         }
 
         // Gdx.app.log("INFO","" + horizontalForce);
@@ -116,26 +129,11 @@ public class Input extends InputAdapter{
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        stage.touchDown(screenX, screenY, pointer, button);
-        getClosestEnemy(enemies, player);
-
-        if (!enemies.isEmpty()) {
-            bullets.add(new Bullets(world, player.getPosition(), 7, player.getDmg(), 10));
-
-            for (Bullets bullet : bullets) {
-                if (bullet.isAlive() && !bullet.isMoved()) {
-                    Gdx.app.log("POSITION", "Enemy: " + closestEnemy.getPosition().x + " : " + closestEnemy.getPosition().y);
-                    Gdx.app.log("INFO", "Vel: " + ((closestEnemy.getBody().getPosition().x * 32 - bullet.getPosition().x) * 5f));
-
-                    bulletDir = new Vector2((closestEnemy.getBody().getPosition().x * 32 - bullet.getPosition().x), (closestEnemy.getBody().getPosition().y * 32 - bullet.getPosition().y)).nor();
-
-                    bullet.getBody().setLinearVelocity(new Vector2(bullet.getSpeed() * bulletDir.x, bullet.getSpeed() * bulletDir.y));
-                    bullet.setMoved(true);
-                }
-            }
-        }
+        isTouchpad = false;
         return true;
     }
+
+    private static float timer = 0f;
 
     /**
      *
@@ -143,25 +141,38 @@ public class Input extends InputAdapter{
      * @param player Jugador que ataca.
      * @param world Mundo en el que se crean los ataques.
      */
-    public static void atackInput(float delta, final Player player, ArrayList<Enemy> enemies, final World world) {
-        getClosestEnemy(enemies, player);
-        if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.A) && !enemies.isEmpty()) {
-            bullets.add(new Bullets(world, player.getPosition(), 7, player.getDmg(), 10));
-
-            for (Bullets bullet : bullets) {
-                if (bullet.isAlive() && !bullet.isMoved()) {
-                    Gdx.app.log("POSITION", "Enemy: " + closestEnemy.getPosition().x + " : " + closestEnemy.getPosition().y);
-                    Gdx.app.log("INFO", "Vel: " + ((closestEnemy.getBody().getPosition().x * 32 - bullet.getPosition().x) * 5f));
-
-                    bulletDir = new Vector2((closestEnemy.getBody().getPosition().x * 32 - bullet.getPosition().x), (closestEnemy.getBody().getPosition().y * 32 - bullet.getPosition().y)).nor();
-
-                    bullet.getBody().setLinearVelocity(new Vector2(bullet.getSpeed() * bulletDir.x, bullet.getSpeed() * bulletDir.y));
-                    bullet.setMoved(true);
+    public static void atackInput(float delta, final Player player, float atkSpeed, ArrayList<Enemy> enemies, final World world) {
+        timer += delta;
+        if (timer > atkSpeed) {
+            timer -= atkSpeed;
+            getClosestEnemy(enemies, player);
+            if ((Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.A)) && !enemies.isEmpty()) {
+                atack(player, atkSpeed, enemies, world);
+            }
+            for (int i = 0; i < 1; i++) {
+                if (Gdx.input.isTouched(i) && Gdx.input.getX(i) > Gdx.graphics.getWidth()/2) {
+                    atack(player, atkSpeed, enemies, world);
                 }
             }
         }
 
         //Gdx.app.log("INFO",String.format(enemy.getPosition().x + " : " + enemy.getPosition().y));
+    }
+
+    public static void atack(final Player player, float atkSpeed, ArrayList<Enemy> enemies, final World world) {
+        bullets.add(new Bullets(world, player.getPosition(), 7, player.getDmg(), 10));
+
+        for (Bullets bullet : bullets) {
+            if (bullet.isAlive() && !bullet.isMoved()) {
+                Gdx.app.log("POSITION", "Enemy: " + closestEnemy.getPosition().x + " : " + closestEnemy.getPosition().y);
+                Gdx.app.log("INFO", "Vel: " + ((closestEnemy.getBody().getPosition().x * 32 - bullet.getPosition().x) * 5f));
+
+                bulletDir = new Vector2((closestEnemy.getBody().getPosition().x * 32 - bullet.getPosition().x), (closestEnemy.getBody().getPosition().y * 32 - bullet.getPosition().y)).nor();
+
+                bullet.getBody().setLinearVelocity(new Vector2(bullet.getSpeed() * bulletDir.x, bullet.getSpeed() * bulletDir.y));
+                bullet.setMoved(true);
+            }
+        }
     }
 
     private static float distanceClosestEnemy;
@@ -205,10 +216,11 @@ public class Input extends InputAdapter{
         bullets.removeAll(delBullets);
     }
     private static ArrayList<Enemy> delEnemies;
-    public static void deleteEnemies(World world, ArrayList<Enemy> enemies) {
+    public static void deleteEnemies(World world, ArrayList<Enemy> enemies, Preferences prefs) {
         delEnemies = new ArrayList<>();
         for (Enemy enemy : enemies) {
             if (!enemy.isAlive()) {
+                prefs.putInteger("enemiesKilled", prefs.getInteger("enemiesKilled")+1);
                 delEnemies.add(enemy);
             }
         }

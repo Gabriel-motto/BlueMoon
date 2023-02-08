@@ -4,9 +4,6 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.*;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -15,9 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mygdx.game_project.MainClass;
 import com.mygdx.game_project.entities.Enemy;
@@ -32,8 +27,8 @@ import java.util.ArrayList;
 import static com.mygdx.game_project.constants.Constant.*;
 
 /**
- * @// TODO: 22/12/2022 CollisionListener
- * @// TODO: 22/12/2022
+ * @// TODO: Menus and UI's
+ * @// TODO: Boss room
  */
 
 /**
@@ -55,20 +50,21 @@ public class GameScreen implements Screen {
 	public Touchpad touchpad;
 	public Input input;
 	public boolean isFirst;
-	public FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Minecraftia-Regular.ttf"));
-	public FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+	public Preferences prefs = Gdx.app.getPreferences("Scores");
 
 	// Entities
 	public Player player;
-	public PlayerData pd;
 	public ArrayList<Enemy> enemies;
 	public ArrayList<Objects> objects;
 	public OrthogonalTiledMapRenderer tmr;
 	public TiledMap tiledMap;
 	public TiledCollisions tiledCollisions;
 	public String mapRoute = "Maps\\Map1.tmx";
-	public Image hpBar;
-	TextureAtlas hpBarAtlas = new TextureAtlas("HpBar/hpBar.atlas");
+	public enum State {
+		RUNNING,
+		PAUSED
+	}
+	public State state = State.RUNNING;
 
 	//endregion
 	public GameScreen(MainClass mainClass, boolean isFirst) {
@@ -105,7 +101,7 @@ public class GameScreen implements Screen {
 
 		touchpad = controller.createTouchpad();
 		stage.addActor(touchpad);
-		initUI();
+		UIScreen.initUI(stage);
 
 		input = new Input(world, player, enemies, stage);
 	}
@@ -124,18 +120,63 @@ public class GameScreen implements Screen {
 					camera, mainClass, PlayerData.atkSpeed);
 		}
 	}
-	public void initUI() {
-		hpBar = new Image(hpBarAtlas.findRegion("hp10"));
-		hpBar.setBounds((WORLD_WIDTH)-75*PPU, (WORLD_HEIGHT)-25*PPU, 64*PPU, 16*PPU);
-		stage.addActor(hpBar);
-	}
+
 	@Override
 	public void render (float delta) {
-		update(delta);
-		updateUI();
+		world.step(1 / 60f, 6, 2);
 
+		camera.update();
+		tmr.setView((OrthographicCamera) viewport.getCamera());
 		Gdx.gl.glClearColor(0f,0f,0f,1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		switch (state) {
+			case RUNNING:
+				update(delta);
+				break;
+
+			case PAUSED:
+				PauseScreen.render(delta, prefs);
+				break;
+		}
+	}
+
+	public void update(float delta) {
+		Input.movementInput(delta, player, touchpad);
+		Input.atackInput(delta, player, player.getAtkSpeed(), enemies, world);
+		Input.deleteBullets(world);
+		Input.deleteEnemies(world, enemies, prefs);
+
+		PlayerData.setData(player.getSpeed(), player.getDmg(), player.getArmor(), player.getHp(), player.getAtkSpeed());
+
+		for (Enemy enemy : enemies) {
+			enemy.updateBehavior(delta, player);
+		}
+
+		ArrayList<Objects> delObjects = new ArrayList<>();
+		for (Objects object : objects) {
+			if (!object.isAlive()) {
+				delObjects.add(object);
+			}
+		}
+		for (Objects delObject : delObjects) {
+			world.destroyBody(delObject.getBody());
+		}
+		objects.removeAll(delObjects);
+
+		if (enemies.isEmpty() && !tiledCollisions.isDoorCreated) {
+			tiledCollisions = new TiledCollisions(world, tiledMap.getLayers().get("doors").getObjects());
+			for (MapObject mapObject : tiledMap.getLayers().get("chest").getObjects()) {
+				objects.add(new Objects(world, new Vector2(mapObject.getProperties().get("x", Float.class) * 3, mapObject.getProperties().get("y", Float.class) * 3),
+						32, 32));
+			}
+		}
+
+		if (!player.isAlive()) {
+			mainClass.setScreen(new EndScreen(mainClass));
+			dispose();
+		}
+
+		UIScreen.updateUI(player);
 
 		tmr.render();
 		debugRenderer.render(world, viewport.getCamera().combined.scl(32));
@@ -160,97 +201,6 @@ public class GameScreen implements Screen {
 		batch.end();
 	}
 
-	/**
-	 *
-	 * @param delta Tiempo en segundos desde el último render.
-	 */
-	public void update(float delta) {
-		world.step(1 / 60f, 6, 2);
-
-		camera.update();
-		tmr.setView((OrthographicCamera) viewport.getCamera());
-
-		Input.movementInput(delta, player, touchpad);
-		Input.atackInput(delta, player, enemies, world);
-		Input.deleteBullets(world);
-		Input.deleteEnemies(world, enemies);
-
-		PlayerData.setData(player.getSpeed(), player.getDmg(), player.getArmor(), player.getHp(), player.getAtkSpeed());
-
-		for (Enemy enemy : enemies) {
-			enemy.updateBehavior(delta, player);
-		}
-
-		ArrayList<Objects> delObjects = new ArrayList<>();
-		for (Objects object : objects) {
-			if (!object.isAlive()) {
-				delObjects.add(object);
-			}
-		}
-		for (Objects delObject : delObjects) {
-			world.destroyBody(delObject.getBody());
-		}
-		objects.removeAll(delObjects);
-
-		if (enemies.isEmpty() && !tiledCollisions.isDoorCreated) {
-			tiledCollisions = new TiledCollisions(world, tiledMap.getLayers().get("doors").getObjects());
-			for (MapObject mapObject : tiledMap.getLayers().get("chest").getObjects()) {
-				objects.add(new Objects(world, new Vector2(mapObject.getProperties().get("x", Float.class), mapObject.getProperties().get("y", Float.class)),
-						32, 32));
-			}
-		}
-
-		if (!player.isAlive()) {
-			mainClass.setScreen(new EndScreen(mainClass));
-			dispose();
-		}
-
-		//System.out.println(objects.getPosition().x + " : " + objects.getPosition().y);
-		//System.out.println(enemy.getBody().getPosition().x*32 + " : " + enemy.getBody().getPosition().y*32);
-	}
-	public void updateUI() {
-		switch ((int) Math.ceil(player.getHp())) {
-			case 1:
-				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp1")));
-				break;
-
-			case 2:
-				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp2")));
-				break;
-
-			case 3:
-				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp3")));
-				break;
-
-			case 4:
-				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp4")));
-				break;
-
-			case 5:
-				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp5")));
-				break;
-
-			case 6:
-				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp6")));
-				break;
-
-			case 7:
-				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp7")));
-				break;
-
-			case 8:
-				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp8")));
-				break;
-
-			case 9:
-				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp9")));
-				break;
-
-			case 10:
-				hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp10")));
-				break;
-		}
-	}
 	@Override
 	public void dispose () {
 		world.dispose();
@@ -258,6 +208,7 @@ public class GameScreen implements Screen {
 		tmr.dispose();
 		batch.dispose();
 		stage.dispose();
+		UIScreen.dispose();
 		Gdx.input.setInputProcessor(null);
 	}
 

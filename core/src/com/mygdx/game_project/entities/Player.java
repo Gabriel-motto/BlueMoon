@@ -127,8 +127,8 @@ public class Player extends CreateHitbox {
             mainClass.setScreen(new GameScreen(mainClass, false));
         }
         if (object instanceof Objects) {
-            Gdx.app.log("STATS", "Hp: " + hp + " Atk: " + dmg + " Speed: " + speed + " AtkSpeed: " + atkSpeed + " Armor: " + armor);
             powerUp((Objects) object);
+            Gdx.app.log("STATS", "Hp: " + hp + " Atk: " + dmg + " Speed: " + speed + " AtkSpeed: " + atkSpeed + " Armor: " + armor);
         }
     }
 
