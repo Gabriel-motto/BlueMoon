@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -20,6 +21,9 @@ import static com.mygdx.game_project.constants.Constant.*;
 public class MainMenuScreen implements Screen {
     // region $Vars
 
+    private FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/Minecraftia-Regular.ttf"));
+    private FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+    private BitmapFont font;
     final MainClass mainClass;
     private OrthographicCamera camera;
     private TextButton textButton;
@@ -27,12 +31,14 @@ public class MainMenuScreen implements Screen {
     private Skin skin;
     private TextureAtlas buttonAtlas;
     private Stage stage;
-    private BitmapFont font;
     private ExtendViewport viewport;
 
     // endregion
     public MainMenuScreen(final MainClass mainClass) {
         this.mainClass = mainClass;
+
+        parameter.size = 12;
+        font = generator.generateFont(parameter);
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT);
@@ -40,7 +46,6 @@ public class MainMenuScreen implements Screen {
 
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
-        font = new BitmapFont();
         skin = new Skin();
         buttonAtlas = new TextureAtlas("Buttons\\Buttons.atlas");
         skin.addRegions(buttonAtlas);

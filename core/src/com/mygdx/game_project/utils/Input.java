@@ -4,9 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
@@ -14,7 +12,6 @@ import com.mygdx.game_project.entities.Enemy;
 import com.mygdx.game_project.entities.Bullets;
 import com.mygdx.game_project.entities.Player;
 import java.util.ArrayList;
-import static com.mygdx.game_project.constants.Constant.*;
 
 public class Input extends InputAdapter{
     public enum direction {
@@ -96,7 +93,7 @@ public class Input extends InputAdapter{
             horizontalForce = touchpad.getKnobPercentX();
             verticalForce = touchpad.getKnobPercentY();
 
-            Gdx.app.log("KNOBPER", touchpad.getKnobPercentX() + " : " + touchpad.getKnobPercentY());
+            //Gdx.app.log("KNOBPER", touchpad.getKnobPercentX() + " : " + touchpad.getKnobPercentY());
 
             player.getBody().setLinearVelocity(horizontalForce * player.getSpeed(), verticalForce * player.getSpeed());
             isTouchpad = true;
@@ -126,14 +123,21 @@ public class Input extends InputAdapter{
     private static ArrayList<Bullets> delBullets = new ArrayList<>();
     private static Vector2 bulletDir;
     private static Enemy closestEnemy;
+    private static float timer = 0f;
+    private static boolean isTouchDown = false;
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        isTouchpad = false;
+        isTouchDown = true;
         return true;
     }
 
-    private static float timer = 0f;
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        isTouchDown = false;
+        return true;
+        //return super.touchUp(screenX, screenY, pointer, button);
+    }
 
     /**
      *
@@ -146,12 +150,14 @@ public class Input extends InputAdapter{
         if (timer > atkSpeed) {
             timer -= atkSpeed;
             getClosestEnemy(enemies, player);
-            if ((Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.A)) && !enemies.isEmpty()) {
-                atack(player, atkSpeed, enemies, world);
-            }
-            for (int i = 0; i < 1; i++) {
-                if (Gdx.input.isTouched(i) && Gdx.input.getX(i) > Gdx.graphics.getWidth()/2) {
-                    atack(player, atkSpeed, enemies, world);
+            if (!enemies.isEmpty()) {
+                if ((Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.A))) {
+                    atack(player, world);
+                }
+                for (int i = 0; i < 1; i++) {
+                    if ((Gdx.input.isTouched(i) && Gdx.input.getX(i) > Gdx.graphics.getWidth()/2) && isTouchDown) {
+                        atack(player, world);
+                    }
                 }
             }
         }
@@ -159,7 +165,7 @@ public class Input extends InputAdapter{
         //Gdx.app.log("INFO",String.format(enemy.getPosition().x + " : " + enemy.getPosition().y));
     }
 
-    public static void atack(final Player player, float atkSpeed, ArrayList<Enemy> enemies, final World world) {
+    public static void atack(final Player player, final World world) {
         bullets.add(new Bullets(world, player.getPosition(), 7, player.getDmg(), 10));
 
         for (Bullets bullet : bullets) {

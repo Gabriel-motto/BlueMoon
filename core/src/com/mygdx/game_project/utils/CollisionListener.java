@@ -39,6 +39,7 @@ public class CollisionListener implements ContactListener {
             if (body2 != null && body2.getUserData() instanceof Enemy) {
                 Gdx.app.log("CONTACT","Enemy");
                 ((CreateHitbox) player.getUserData()).onHit(((CreateHitbox) body2.getUserData()).dmg);
+                ((CreateHitbox) body2.getUserData()).onHit(player.getUserData());
             }
             if (body2 != null && body2.getUserData() instanceof TiledCollisions) {
                 Gdx.app.log("CONTACT", "Door");

@@ -64,7 +64,9 @@ public class GameScreen implements Screen {
 		RUNNING,
 		PAUSED
 	}
-	public State state = State.RUNNING;
+	public static State state = State.RUNNING;
+	public PauseScreen pauseScreen;
+	public InputMultiplexer inputMultiplexer;
 
 	//endregion
 	public GameScreen(MainClass mainClass, boolean isFirst) {
@@ -103,7 +105,7 @@ public class GameScreen implements Screen {
 		stage.addActor(touchpad);
 		UIScreen.initUI(stage);
 
-		input = new Input(world, player, enemies, stage);
+		pauseScreen = new PauseScreen(prefs, viewport);
 	}
 	public void spawnEntities() {
 		for (MapObject mapObject : tiledMap.getLayers().get("enemies").getObjects()) {
@@ -124,23 +126,25 @@ public class GameScreen implements Screen {
 	@Override
 	public void render (float delta) {
 		world.step(1 / 60f, 6, 2);
-
 		camera.update();
-		tmr.setView((OrthographicCamera) viewport.getCamera());
-		Gdx.gl.glClearColor(0f,0f,0f,1f);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 		switch (state) {
 			case RUNNING:
+				input = new Input(world, player, enemies, stage);
 				update(delta);
 				break;
 
 			case PAUSED:
-				PauseScreen.render(delta, prefs);
+				pauseScreen.render(delta);
 				break;
 		}
 	}
 
 	public void update(float delta) {
+		tmr.setView((OrthographicCamera) viewport.getCamera());
+		Gdx.gl.glClearColor(0f,0f,0f,1f);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 		Input.movementInput(delta, player, touchpad);
 		Input.atackInput(delta, player, player.getAtkSpeed(), enemies, world);
 		Input.deleteBullets(world);
@@ -209,6 +213,7 @@ public class GameScreen implements Screen {
 		batch.dispose();
 		stage.dispose();
 		UIScreen.dispose();
+		pauseScreen.dispose();
 		Gdx.input.setInputProcessor(null);
 	}
 

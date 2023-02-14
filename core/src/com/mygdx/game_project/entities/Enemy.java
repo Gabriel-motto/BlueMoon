@@ -18,12 +18,13 @@ public class Enemy extends CreateHitbox {
     private Body body;
     private boolean alive = true;
     private boolean focusable = true;
+    private boolean attacking = false;
     private TextureAtlas goblinAtlas = new TextureAtlas("Enemies\\Goblin\\Goblin.atlas");
     private TextureAtlas wraithAtlas = new TextureAtlas("Enemies\\Wraith\\Wraith.atlas");
     private TextureAtlas mummyAtlas = new TextureAtlas("Enemies\\Mummy\\Mummy.atlas");
     private HashMap<String, Animation<TextureAtlas.AtlasRegion>> animation;
     private TextureRegion actualFrame;
-    private float time;
+    private float time, delay;
     public enum states {
         SLEEP,
         HOSTILE,
@@ -78,12 +79,12 @@ public class Enemy extends CreateHitbox {
                         goblinAtlas.findRegion("goblin-idle(2)"),
                         goblinAtlas.findRegion("goblin-idle(3)"),
                         goblinAtlas.findRegion("goblin-idle(4)")));
-                animation.put("attackRight", new Animation<>(.3f,
+                animation.put("attackRight", new Animation<>(.5f,
                         goblinAtlas.findRegion("goblin-attack(1)"),
                         goblinAtlas.findRegion("goblin-attack(2)"),
                         goblinAtlas.findRegion("goblin-attack(3)"),
                         goblinAtlas.findRegion("goblin-attack(4)")));
-                animation.put("attackLeft", new Animation<>(.3f,
+                animation.put("attackLeft", new Animation<>(.5f,
                         goblinAtlas.findRegion("goblin-attack(5)"),
                         goblinAtlas.findRegion("goblin-attack(6)"),
                         goblinAtlas.findRegion("goblin-attack(7)"),
@@ -106,12 +107,12 @@ public class Enemy extends CreateHitbox {
                         mummyAtlas.findRegion("mummy-idle(2)"),
                         mummyAtlas.findRegion("mummy-idle(3)"),
                         mummyAtlas.findRegion("mummy-idle(4)")));
-                animation.put("attackRight", new Animation<>(.3f,
+                animation.put("attackRight", new Animation<>(.7f,
                         mummyAtlas.findRegion("mummy-attack(1)"),
                         mummyAtlas.findRegion("mummy-attack(2)"),
                         mummyAtlas.findRegion("mummy-attack(3)"),
                         mummyAtlas.findRegion("mummy-attack(4)")));
-                animation.put("attackLeft", new Animation<>(.3f,
+                animation.put("attackLeft", new Animation<>(.7f,
                         mummyAtlas.findRegion("mummy-attack(5)"),
                         mummyAtlas.findRegion("mummy-attack(6)"),
                         mummyAtlas.findRegion("mummy-attack(7)"),
@@ -134,12 +135,12 @@ public class Enemy extends CreateHitbox {
                         wraithAtlas.findRegion("wraith-idle(2)"),
                         wraithAtlas.findRegion("wraith-idle(3)"),
                         wraithAtlas.findRegion("wraith-idle(4)")));
-                animation.put("attackRight", new Animation<>(.3f,
+                animation.put("attackRight", new Animation<>(.7f,
                         wraithAtlas.findRegion("wraith-attack(1)"),
                         wraithAtlas.findRegion("wraith-attack(2)"),
                         wraithAtlas.findRegion("wraith-attack(3)"),
                         wraithAtlas.findRegion("wraith-attack(4)")));
-                animation.put("attackLeft", new Animation<>(.3f,
+                animation.put("attackLeft", new Animation<>(.7f,
                         wraithAtlas.findRegion("wraith-attack(5)"),
                         wraithAtlas.findRegion("wraith-attack(6)"),
                         wraithAtlas.findRegion("wraith-attack(7)"),
@@ -159,25 +160,53 @@ public class Enemy extends CreateHitbox {
     }
     public void draw(Batch batch) {
         time += Gdx.graphics.getDeltaTime();
+
         if (body.getLinearVelocity().x < 0) {
-            actualFrame = animation.get("runLeft").getKeyFrame(time, true);
-            batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
+            if (isAttacking()) {
+                delay += Gdx.graphics.getDeltaTime();
+                body.setLinearVelocity(0,0);
+                actualFrame = animation.get("attackLeft").getKeyFrame(time, false);
+                batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
+                if (delay > 1f) {
+                    setAttacking(false);
+                    delay -= 1f;
+                }
+            } else {
+                actualFrame = animation.get("runLeft").getKeyFrame(time, true);
+                batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
+            }
         }
         if (body.getLinearVelocity().x > 0) {
-            actualFrame = animation.get("runRight").getKeyFrame(time, true);
-            batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
+            if (isAttacking()) {
+                delay += Gdx.graphics.getDeltaTime();
+                body.setLinearVelocity(0,0);
+                actualFrame = animation.get("attackRight").getKeyFrame(time, false);
+                batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
+                if (delay > 1f) {
+                    setAttacking(false);
+                    delay -= 1f;
+                }
+            } else {
+                actualFrame = animation.get("runRight").getKeyFrame(time, true);
+                batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
+            }
         }
-        if (body.getLinearVelocity().x == 0) {
+        if (body.getLinearVelocity().x == 0 && !isAttacking()) {
             actualFrame = animation.get("idle").getKeyFrame(time, true);
             batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
         }
     }
     @Override
     public void onHit(Object object) {
-        hp -= (float) object /armor;
-        if (currentState == states.SLEEP) currentState = states.HOSTILE;
-        Gdx.app.log("INFO", "Enemy hp: " + hp);
-        if (hp <= 0) setAlive(false);
+        if (object instanceof Bullets) {
+            hp -= (float) object /armor;
+            if (currentState == states.SLEEP) currentState = states.HOSTILE;
+            Gdx.app.log("INFO", "Enemy hp: " + hp);
+            if (hp <= 0) setAlive(false);
+        }
+        if (object instanceof Player) {
+            setAttacking(true);
+        }
     }
 
     float randDirX = (float) (Math.random() * 2) - 1;
@@ -302,6 +331,14 @@ public class Enemy extends CreateHitbox {
 
     public void setFocusable(boolean focusable) {
         this.focusable = focusable;
+    }
+
+    public boolean isAttacking() {
+        return attacking;
+    }
+
+    public void setAttacking(boolean attacking) {
+        this.attacking = attacking;
     }
 
     //endregion

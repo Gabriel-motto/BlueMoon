@@ -18,7 +18,7 @@ import static com.mygdx.game_project.constants.Constant.*;
 public class Player extends CreateHitbox {
     // Base stats
     Vector2 position;
-    private float width, height, speed, dmg, armor, hp, atkSpeed;
+    private float speed, width, height, dmg, armor, hp, atkSpeed;
     private Body body;
     private boolean alive = true;
     TextureAtlas playerTextureAtlas = new TextureAtlas("Player/Samurai.atlas");
@@ -152,12 +152,16 @@ public class Player extends CreateHitbox {
                     break;
 
                 case 3:
-                    if (hp < 10) hp++;
+                    if (hp < 10) {
+                        hp++;
+                        if (hp > 10) hp = 10;
+                    }
                     else armor += .5f;
                     break;
 
                 case 4:
-                    atkSpeed -= .10f;
+                    if (atkSpeed > .1f) atkSpeed -= .1f;
+                    else dmg += .5f;
                     break;
             }
         }
@@ -181,7 +185,8 @@ public class Player extends CreateHitbox {
                     break;
 
                 case 4:
-                    atkSpeed -= .10f;
+                    if (atkSpeed > .1f) atkSpeed -= .1f;
+                    else dmg += .5f;
                     break;
             }
         }
@@ -204,7 +209,8 @@ public class Player extends CreateHitbox {
                 break;
 
             case 4:
-                atkSpeed -= .10f;
+                if (atkSpeed > .1f) atkSpeed -= .1f;
+                else dmg += .5f;
                 break;
         }
     }
