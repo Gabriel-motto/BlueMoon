@@ -1,0 +1,286 @@
+
+UIPack.png
+size: 256, 128
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Arrow Btn
+  rotate: false
+  xy: 49, 1
+  size: 14, 12
+  orig: 14, 12
+  offset: 0, 0
+  index: -1
+Arrow Icon
+  rotate: false
+  xy: 92, 27
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Arrow2 Icon
+  rotate: false
+  xy: 118, 36
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
+Bar Frame
+  rotate: false
+  xy: 1, 3
+  size: 47, 5
+  orig: 47, 5
+  offset: 0, 0
+  index: -1
+Big Dark Btn
+  rotate: false
+  xy: 195, 79
+  size: 48, 16
+  orig: 48, 16
+  offset: 0, 0
+  index: -1
+Big Wood 1 Btn
+  rotate: false
+  xy: 118, 47
+  size: 45, 13
+  orig: 45, 13
+  offset: 0, 0
+  index: -1
+Big Wood 2 Btn
+  rotate: false
+  xy: 195, 63
+  size: 48, 15
+  orig: 48, 15
+  offset: 0, 0
+  index: -1
+Blue Desc Frame
+  rotate: false
+  xy: 183, 37
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: -1
+Btn Frame
+  rotate: false
+  xy: 64, 1
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: -1
+Check Circle
+  rotate: false
+  xy: 252, 124
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
+Check Mark
+  rotate: false
+  xy: 244, 74
+  size: 5, 4
+  orig: 5, 4
+  offset: 0, 0
+  index: -1
+Checkbox Btn Frame
+  rotate: false
+  xy: 101, 20
+  size: 7, 7
+  orig: 7, 7
+  offset: 0, 0
+  index: -1
+Circular Btn
+  rotate: false
+  xy: 92, 18
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Cross Icon
+  rotate: false
+  xy: 109, 36
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Dialog Panel
+  rotate: false
+  xy: 1, 9
+  size: 44, 22
+  orig: 44, 22
+  offset: 0, 0
+  index: -1
+Dialog Tip 1
+  rotate: false
+  xy: 101, 28
+  size: 7, 7
+  orig: 7, 7
+  offset: 0, 0
+  index: -1
+Dialog Tip 2
+  rotate: false
+  xy: 109, 28
+  size: 5, 7
+  orig: 5, 7
+  offset: 0, 0
+  index: -1
+Gold Desc Frame
+  rotate: false
+  xy: 201, 37
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: -1
+HP Bar
+  rotate: false
+  xy: 183, 55
+  size: 43, 3
+  orig: 43, 3
+  offset: 0, 0
+  index: -1
+Input Field 1
+  rotate: false
+  xy: 1, 48
+  size: 86, 14
+  orig: 86, 14
+  offset: 0, 0
+  index: -1
+MGC Bar
+  rotate: false
+  xy: 192, 59
+  size: 43, 3
+  orig: 43, 3
+  offset: 0, 0
+  index: -1
+Panel
+  rotate: false
+  xy: 1, 63
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+Panel 2
+  rotate: false
+  xy: 66, 63
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+Progress Bar
+  rotate: false
+  xy: 131, 61
+  size: 60, 2
+  orig: 60, 2
+  offset: 0, 0
+  index: -1
+Progress Frame
+  rotate: false
+  xy: 1, 39
+  size: 66, 8
+  orig: 66, 8
+  offset: 0, 0
+  index: -1
+Question Icon
+  rotate: false
+  xy: 244, 79
+  size: 6, 8
+  orig: 6, 8
+  offset: 0, 0
+  index: -1
+Radio Btn Frame
+  rotate: false
+  xy: 244, 88
+  size: 7, 7
+  orig: 7, 7
+  offset: 0, 0
+  index: -1
+Rect Btn
+  rotate: false
+  xy: 68, 32
+  size: 6, 15
+  orig: 6, 15
+  offset: 0, 0
+  index: -1
+Red Desc Frame
+  rotate: false
+  xy: 219, 37
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: -1
+STM Bar
+  rotate: false
+  xy: 118, 43
+  size: 43, 3
+  orig: 43, 3
+  offset: 0, 0
+  index: -1
+Slider
+  rotate: false
+  xy: 1, 32
+  size: 66, 6
+  orig: 66, 6
+  offset: 0, 0
+  index: -1
+Slot
+  rotate: false
+  xy: 164, 42
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: -1
+Slot 2
+  rotate: false
+  xy: 75, 27
+  size: 16, 17
+  orig: 16, 17
+  offset: 0, 0
+  index: -1
+Tab Btn 1
+  rotate: false
+  xy: 88, 45
+  size: 29, 17
+  orig: 29, 17
+  offset: 0, 0
+  index: -1
+Tab Btn 2
+  rotate: false
+  xy: 46, 14
+  size: 28, 17
+  orig: 28, 17
+  offset: 0, 0
+  index: -1
+Title Panel 1
+  rotate: false
+  xy: 195, 110
+  size: 56, 17
+  orig: 56, 17
+  offset: 0, 0
+  index: -1
+Title Panel 2
+  rotate: false
+  xy: 195, 96
+  size: 56, 13
+  orig: 56, 13
+  offset: 0, 0
+  index: -1
+Toggle Off
+  rotate: false
+  xy: 92, 36
+  size: 16, 8
+  orig: 16, 8
+  offset: 0, 0
+  index: -1
+Toggle On
+  rotate: false
+  xy: 75, 18
+  size: 16, 8
+  orig: 16, 8
+  offset: 0, 0
+  index: -1
+Tooltips Panel
+  rotate: false
+  xy: 131, 64
+  size: 63, 63
+  orig: 63, 63
+  offset: 0, 0
+  index: -1

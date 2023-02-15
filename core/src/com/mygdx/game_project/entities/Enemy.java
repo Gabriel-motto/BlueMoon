@@ -198,7 +198,7 @@ public class Enemy extends CreateHitbox {
     }
     @Override
     public void onHit(Object object) {
-        if (object instanceof Bullets) {
+        if (object instanceof Float) {
             hp -= (float) object /armor;
             if (currentState == states.SLEEP) currentState = states.HOSTILE;
             Gdx.app.log("INFO", "Enemy hp: " + hp);

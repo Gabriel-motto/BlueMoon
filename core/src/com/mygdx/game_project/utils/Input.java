@@ -222,11 +222,10 @@ public class Input extends InputAdapter{
         bullets.removeAll(delBullets);
     }
     private static ArrayList<Enemy> delEnemies;
-    public static void deleteEnemies(World world, ArrayList<Enemy> enemies, Preferences prefs) {
+    public static void deleteEnemies(World world, ArrayList<Enemy> enemies) {
         delEnemies = new ArrayList<>();
         for (Enemy enemy : enemies) {
             if (!enemy.isAlive()) {
-                prefs.putInteger("enemiesKilled", prefs.getInteger("enemiesKilled")+1);
                 delEnemies.add(enemy);
             }
         }

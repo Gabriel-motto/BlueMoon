@@ -148,7 +148,13 @@ public class GameScreen implements Screen {
 		Input.movementInput(delta, player, touchpad);
 		Input.atackInput(delta, player, player.getAtkSpeed(), enemies, world);
 		Input.deleteBullets(world);
-		Input.deleteEnemies(world, enemies, prefs);
+		for (Enemy enemy : enemies) {
+			if (!enemy.isAlive()) {
+				prefs.putInteger("enemiesKilled", prefs.getInteger("enemiesKilled") + 1);
+			}
+		}
+		prefs.flush();
+		Input.deleteEnemies(world, enemies);
 
 		PlayerData.setData(player.getSpeed(), player.getDmg(), player.getArmor(), player.getHp(), player.getAtkSpeed());
 
