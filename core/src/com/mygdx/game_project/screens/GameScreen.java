@@ -105,7 +105,7 @@ public class GameScreen implements Screen {
 		stage.addActor(touchpad);
 		UIScreen.initUI(stage);
 
-		pauseScreen = new PauseScreen(prefs, viewport);
+		pauseScreen = new PauseScreen(prefs);
 	}
 	public void spawnEntities() {
 		for (MapObject mapObject : tiledMap.getLayers().get("enemies").getObjects()) {

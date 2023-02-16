@@ -2,8 +2,10 @@ package com.mygdx.game_project.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -21,26 +23,36 @@ import com.mygdx.game_project.utils.UICreator;
 
 import static com.mygdx.game_project.constants.Constant.*;
 
-public class PauseScreen {
+public class PauseScreen implements Screen {
     private Button btnIncrVol, btnDecVol, btnReturn;
     private TextureAtlas texures = new TextureAtlas("UIPack\\UIPack.atlas");
     private Skin skin;
     private Stage stage;
+    private OrthographicCamera camera;
+    private ExtendViewport viewport;
 
-    public PauseScreen(Preferences prefs, ExtendViewport viewport) {
+    public PauseScreen(Preferences prefs) {
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT);
+        viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
+
         stage = new Stage(viewport);
         stage.getCamera().position.x = (WORLD_WIDTH) / 2f;
         skin = new Skin();
         skin.addRegions(texures);
 
-        UICreator.createImage(new Vector2(50*PPU,25*PPU), WORLD_WIDTH-100*PPU, WORLD_HEIGHT-50*PPU,
+        Gdx.app.log("INFO/CAM", camera.position.x + " : " + camera.position.y);
+        Gdx.app.log("INFO/SCREEN",Gdx.graphics.getWidth() + " : " + Gdx.graphics.getHeight());
+        Gdx.app.log("INFO/PPU", "" + PPU);
+
+        UICreator.createImage(new Vector2(50*PPU,25*PPU), (WORLD_WIDTH)-100*PPU, (WORLD_HEIGHT)-50*PPU,
                 skin, "Panel 2", stage);
 
         UICreator.createLabel("Enemies Killed", 24, Color.WHITE,
-                new Vector2(WORLD_WIDTH - 250*PPU, WORLD_HEIGHT - 120*PPU), stage);
+                new Vector2((WORLD_WIDTH) - 250*PPU, (WORLD_HEIGHT) - 120*PPU), stage);
 
         UICreator.createLabel(String.format(""+prefs.getInteger("enemiesKilled")),32, Color.RED,
-                new Vector2(WORLD_WIDTH - 200*PPU, WORLD_HEIGHT - 200*PPU), stage);
+                new Vector2((WORLD_WIDTH) - 200*PPU, (WORLD_HEIGHT) - 200*PPU), stage);
 
 //        btnIncrVol = UICreator.createButton(new Vector2(150*PPU, WORLD_HEIGHT - 130*PPU), 64, 64,
 //                skin, "Btn Frame", stage);
@@ -63,17 +75,46 @@ public class PauseScreen {
             }
         });
     }
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0f,0f,0f,1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        stage.getCamera().position.x = WORLD_WIDTH / 2f;
         stage.getCamera().update();
         stage.getViewport().apply();
-        stage.act();
+        stage.act(delta);
         stage.draw();
         Gdx.input.setInputProcessor(stage);
     }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height);
+        stage.getViewport().update(width, height);
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
     public void dispose() {
         stage.dispose();
     }
