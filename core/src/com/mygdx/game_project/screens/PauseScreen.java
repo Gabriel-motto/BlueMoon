@@ -13,55 +13,50 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mygdx.game_project.utils.UICreator;
 
 import static com.mygdx.game_project.constants.Constant.*;
 
 public class PauseScreen implements Screen {
-    private Button btnIncrVol, btnDecVol, btnReturn;
+    private ImageButton btnIncrVol, btnDecVol, btnReturn;
+    private Image board;
     private TextureAtlas texures = new TextureAtlas("UIPack\\UIPack.atlas");
     private Skin skin;
     private Stage stage;
-    private OrthographicCamera camera;
-    private ExtendViewport viewport;
 
-    public PauseScreen(Preferences prefs) {
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT);
-        viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
-
+    public PauseScreen(Preferences prefs, ExtendViewport viewport) {
         stage = new Stage(viewport);
-        stage.getCamera().position.x = (WORLD_WIDTH) / 2f;
+        //stage.getCamera().position.x = (WORLD_WIDTH) / 2f;
         skin = new Skin();
         skin.addRegions(texures);
 
-        Gdx.app.log("INFO/CAM", camera.position.x + " : " + camera.position.y);
         Gdx.app.log("INFO/SCREEN",Gdx.graphics.getWidth() + " : " + Gdx.graphics.getHeight());
         Gdx.app.log("INFO/PPU", "" + PPU);
+        Gdx.app.log("INFO/WHWW", WORLD_WIDTH + " : " + WORLD_HEIGHT);
 
-        UICreator.createImage(new Vector2(50*PPU,25*PPU), (WORLD_WIDTH)-100*PPU, (WORLD_HEIGHT)-50*PPU,
-                skin, "Panel 2", stage);
+        board = UICreator.createImage(new Vector2(50f,40f), WORLD_WIDTH-100f, WORLD_HEIGHT-80f,
+                skin, "WidePanel", stage);
 
         UICreator.createLabel("Enemies Killed", 24, Color.WHITE,
-                new Vector2((WORLD_WIDTH) - 250*PPU, (WORLD_HEIGHT) - 120*PPU), stage);
+                new Vector2(board.getX()+board.getWidth()-300f, board.getY()+board.getHeight()-150f), stage);
 
         UICreator.createLabel(String.format(""+prefs.getInteger("enemiesKilled")),32, Color.RED,
-                new Vector2((WORLD_WIDTH) - 200*PPU, (WORLD_HEIGHT) - 200*PPU), stage);
+                new Vector2(board.getX()+board.getWidth()-220f, board.getY()+board.getHeight()-250f), stage);
 
-//        btnIncrVol = UICreator.createButton(new Vector2(150*PPU, WORLD_HEIGHT - 130*PPU), 64, 64,
-//                skin, "Btn Frame", stage);
-//
-//        btnDecVol = UICreator.createButton(new Vector2(200*PPU, WORLD_HEIGHT - 130*PPU), 64, 64,
-//                skin, "Btn Frame", stage);
+        btnDecVol = UICreator.createImageButton(new Vector2(board.getX()+100, board.getY() + 180),
+                48, 48, skin, "Slot", "Decrease", stage);
 
-        btnReturn = UICreator.createImageButton(new Vector2(WORLD_WIDTH - 110*PPU, WORLD_HEIGHT - 65*PPU), 32, 32,
-                skin, "Btn Frame", "Cross Icon", stage);
+        btnIncrVol = UICreator.createImageButton(new Vector2(board.getX()+300, board.getY() + 180),
+                48, 48, skin, "Slot", "Increase", stage);
+
+        Gdx.app.log("INFO/BOARD", board.getX() + " : " + board.getY());
+
+        btnReturn = UICreator.createImageButton(new Vector2(board.getX()+board.getWidth()-70f, board.getY()+board.getHeight()-70f),
+                32, 32, skin, "Btn Frame", "Cross Icon", stage);
 
         btnReturn.addListener(new InputListener() {
             @Override
@@ -86,8 +81,6 @@ public class PauseScreen implements Screen {
         Gdx.gl.glClearColor(0f,0f,0f,1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        stage.getCamera().update();
-        stage.getViewport().apply();
         stage.act(delta);
         stage.draw();
         Gdx.input.setInputProcessor(stage);
@@ -95,8 +88,7 @@ public class PauseScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height);
-        stage.getViewport().update(width, height);
+        stage.getViewport().update(width, height, true);
     }
 
     @Override

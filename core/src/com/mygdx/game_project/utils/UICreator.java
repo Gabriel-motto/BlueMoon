@@ -58,9 +58,10 @@ public class UICreator {
         label.setPosition(pos.x, pos.y);
         stage.addActor(label);
     }
-    public static void createImage(Vector2 pos, float width, float height, Skin skin, String drawable, Stage stage) {
+    public static Image createImage(Vector2 pos, float width, float height, Skin skin, String drawable, Stage stage) {
         Image image = new Image(skin, drawable);
         image.setBounds(pos.x, pos.y, width, height);
         stage.addActor(image);
+        return image;
     }
 }

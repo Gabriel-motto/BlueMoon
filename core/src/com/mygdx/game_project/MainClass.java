@@ -13,6 +13,8 @@ public class MainClass extends Game {
     public SpriteBatch batch;
     public BitmapFont font;
 
+
+
     @Override
     public void create () {
         batch = new SpriteBatch();

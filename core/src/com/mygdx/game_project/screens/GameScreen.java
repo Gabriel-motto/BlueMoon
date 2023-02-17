@@ -66,7 +66,6 @@ public class GameScreen implements Screen {
 	}
 	public static State state = State.RUNNING;
 	public PauseScreen pauseScreen;
-	public InputMultiplexer inputMultiplexer;
 
 	//endregion
 	public GameScreen(MainClass mainClass, boolean isFirst) {
@@ -79,7 +78,7 @@ public class GameScreen implements Screen {
 		debugRenderer = new Box2DDebugRenderer();
 
 		stage = new Stage(viewport);
-		stage.getCamera().position.x = (WORLD_WIDTH) / 2f;
+		//stage.getCamera().position.x = (WORLD_WIDTH) / 2f;
 		controller = new Controller();
 
 		gravity = new Vector2(0,0);
@@ -105,7 +104,7 @@ public class GameScreen implements Screen {
 		stage.addActor(touchpad);
 		UIScreen.initUI(stage);
 
-		pauseScreen = new PauseScreen(prefs);
+		pauseScreen = new PauseScreen(prefs, viewport);
 	}
 	public void spawnEntities() {
 		for (MapObject mapObject : tiledMap.getLayers().get("enemies").getObjects()) {
@@ -232,6 +231,7 @@ public class GameScreen implements Screen {
 	public void resize(int width, int height) {
 		viewport.update(width, height);
 		stage.getViewport().update(width, height);
+		pauseScreen.resize(width, height);
 	}
 
 	@Override
