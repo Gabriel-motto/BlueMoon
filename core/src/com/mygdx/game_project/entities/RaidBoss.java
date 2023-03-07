@@ -1,6 +1,8 @@
 package com.mygdx.game_project.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -12,7 +14,7 @@ import java.util.HashMap;
 
 public class RaidBoss extends CreateHitbox {
 
-    private float dmg, hp, armor, atkSpeed, interval;
+    private float dmg, hp, armor, atkSpeed, interval, time;
     private Body body;
     private boolean alive;
     private TextureAtlas bossAtlas = new TextureAtlas("Boss\\Boss.atlas");
@@ -40,30 +42,6 @@ public class RaidBoss extends CreateHitbox {
         this.alive = true;
         this.currentState = state.IDLE;
         animate();
-    }
-
-    public void update(float delta) {
-        interval += delta;
-        switch (currentState) {
-            case STARTING:
-                break;
-
-            case IDLE:
-                break;
-
-            case HARDEN:
-                setArmor(2);
-                break;
-
-            case ATTACK:
-                break;
-
-            case BEAM:
-                break;
-
-            case DEAD:
-                break;
-        }
     }
 
     public void animate() {
@@ -144,6 +122,94 @@ public class RaidBoss extends CreateHitbox {
                         bossAtlas.findRegion("BossDeath14")));
                 break;
         }
+    }
+
+    public void draw(Batch batch) {
+        switch (currentState) {
+            case STARTING:
+
+                break;
+
+            case IDLE:
+                idleBehaviour();
+                break;
+
+            case HARDEN:
+                hardenBehaviour();
+                break;
+
+            case ATTACK:
+                attackBehaviour();
+                break;
+
+            case BEAM:
+                beamBehaviour();
+                break;
+
+            case DEAD:
+                deadBehaviour();
+                break;
+        }
+    }
+
+    public void drawStates(Batch batch, boolean isLoop, String frame) {
+        time += Gdx.graphics.getDeltaTime();
+
+        actualFrame = animation.get(frame).getKeyFrame(time, isLoop);
+        batch.draw(actualFrame, );
+    }
+
+    public void update(float delta) {
+        interval += delta;
+        switch (currentState) {
+            case STARTING:
+                startingBehaviour();
+                break;
+
+            case IDLE:
+                idleBehaviour();
+                break;
+
+            case HARDEN:
+                hardenBehaviour();
+                break;
+
+            case ATTACK:
+                attackBehaviour();
+                break;
+
+            case BEAM:
+                beamBehaviour();
+                break;
+
+            case DEAD:
+                deadBehaviour();
+                break;
+        }
+    }
+
+    public void startingBehaviour() {
+
+    }
+
+    public void idleBehaviour() {
+
+    }
+
+    public void hardenBehaviour() {
+
+    }
+
+    public void attackBehaviour() {
+
+    }
+
+    public void beamBehaviour() {
+
+    }
+
+    public void deadBehaviour() {
+
     }
 
     @Override
