@@ -6,21 +6,21 @@ filter: Nearest, Nearest
 repeat: none
 Arrow Btn
   rotate: false
-  xy: 411, 108
+  xy: 391, 91
   size: 14, 12
   orig: 14, 12
   offset: 0, 0
   index: -1
 Arrow Icon
   rotate: false
-  xy: 426, 112
+  xy: 435, 116
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 Arrow2 Icon
   rotate: false
-  xy: 475, 121
+  xy: 414, 97
   size: 6, 6
   orig: 6, 6
   offset: 0, 0
@@ -83,14 +83,14 @@ Check Mark
   index: -1
 Checkbox Btn Frame
   rotate: false
-  xy: 460, 120
+  xy: 391, 74
   size: 7, 7
   orig: 7, 7
   offset: 0, 0
   index: -1
 Circular Btn
   rotate: false
-  xy: 435, 116
+  xy: 391, 82
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
@@ -104,7 +104,7 @@ Cross Icon
   index: -1
 Decrease
   rotate: false
-  xy: 394, 104
+  xy: 411, 104
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -118,14 +118,14 @@ Dialog Panel
   index: -1
 Dialog Tip 1
   rotate: false
-  xy: 452, 120
+  xy: 435, 108
   size: 7, 7
   orig: 7, 7
   offset: 0, 0
   index: -1
 Dialog Tip 2
   rotate: false
-  xy: 482, 120
+  xy: 400, 83
   size: 5, 7
   orig: 5, 7
   offset: 0, 0
@@ -204,21 +204,21 @@ Progress Frame
   index: -1
 Question Icon
   rotate: false
-  xy: 468, 119
+  xy: 444, 116
   size: 6, 8
   orig: 6, 8
   offset: 0, 0
   index: -1
 Radio Btn Frame
   rotate: false
-  xy: 444, 117
+  xy: 406, 96
   size: 7, 7
   orig: 7, 7
   offset: 0, 0
   index: -1
 Rect Btn
   rotate: false
-  xy: 127, 17
+  xy: 428, 105
   size: 6, 15
   orig: 6, 15
   offset: 0, 0
@@ -312,5 +312,12 @@ WidePanel
   xy: 1, 63
   size: 128, 64
   orig: 128, 64
+  offset: 0, 0
+  index: -1
+settings
+  rotate: false
+  xy: 394, 104
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1

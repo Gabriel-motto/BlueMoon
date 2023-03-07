@@ -123,8 +123,7 @@ public class Player extends CreateHitbox {
         }
         if (object instanceof String && object.equals("door")) {
             // Gdx.app.log("INFO", "Hit");
-            // pd = new PlayerData(this.speed, this.dmg, this.armor, this.hp);
-            mainClass.setScreen(new GameScreen(mainClass, false));
+            mainClass.setScreen(new GameScreen(mainClass, false, (int)(Math.random() * 3)));
         }
         if (object instanceof Objects) {
             powerUp((Objects) object);
@@ -304,5 +303,6 @@ public class Player extends CreateHitbox {
     public void setAtkSpeed(float atkSpeed) {
         this.atkSpeed = atkSpeed;
     }
+
     //endregion
 }

@@ -14,7 +14,7 @@ public class Bullets extends CreateHitbox{
     private boolean moved = false;
 
     public Bullets(World world, Vector2 position, float radius, float dmg, float speed) {
-        super(world, position, radius / 32, .5f, 1.0f, category.NO_COLLISION.bits(), dmg);
+        super(world, position, radius / 32, 0, 1.0f, category.NO_COLLISION.bits(), dmg);
         this.speed = speed;
         fixture.setUserData(this);
         this.position = position;
@@ -25,7 +25,7 @@ public class Bullets extends CreateHitbox{
     }
 
     public Bullets(World world, Vector2 position, int width, int height, float damping, float dmg, float speed) {
-        super(world, position, width, height, 0.5f, false, false, false, category.NO_COLLISION.bits(), dmg);
+        super(world, position, width, height, 0, false, false, false, category.NO_COLLISION.bits(), dmg);
         this.speed = speed;
         fixture.setUserData(this);
         this.position = position;

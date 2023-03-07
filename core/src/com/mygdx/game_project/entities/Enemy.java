@@ -19,6 +19,7 @@ public class Enemy extends CreateHitbox {
     private boolean alive = true;
     private boolean focusable = true;
     private boolean attacking = false;
+    private boolean spawnedChest = false;
     private TextureAtlas goblinAtlas = new TextureAtlas("Enemies\\Goblin\\Goblin.atlas");
     private TextureAtlas wraithAtlas = new TextureAtlas("Enemies\\Wraith\\Wraith.atlas");
     private TextureAtlas mummyAtlas = new TextureAtlas("Enemies\\Mummy\\Mummy.atlas");
@@ -28,9 +29,9 @@ public class Enemy extends CreateHitbox {
     public enum states {
         SLEEP,
         HOSTILE,
-        AVOID;
+        AVOID
     }
-    private states currentState;
+    public states currentState;
     public Enemy(World world, Vector2 position, int width, int height, float speed, float dmg, float armor, float hp) {
         super(world, position, width, height, 10f, false, true, false, category.COLLISION.bits(), dmg);
         fixture.setUserData(this);
@@ -38,34 +39,30 @@ public class Enemy extends CreateHitbox {
         this.width = width;
         this.height = height;
         this.body = super.body;
-        int rand = (int)Math.floor(Math.random() * 3);
-        switch (rand) {
-            case 0:
-                this.speed = speed;
-                this.dmg = dmg + 1;
-                this.armor = armor;
-                this.hp = hp - 4;
-                this.maxHp = hp;
-                this.currentState = states.SLEEP;
-                break;
-
-            case 1:
-                this.speed = speed;
-                this.dmg = dmg;
-                this.armor = armor + 2;
-                this.hp = hp - 4;
-                this.maxHp = hp;
-                this.currentState = states.HOSTILE;
-                break;
-
-            case 2:
-                this.speed = speed;
-                this.dmg = dmg;
-                this.armor = armor;
-                this.hp = hp;
-                this.maxHp = hp;
-                this.currentState = states.AVOID;
-                break;
+        int rand = (int)Math.floor(Math.random() * 100);
+        if (rand <= 47) {
+            this.speed = speed;
+            this.dmg = dmg + 1;
+            this.armor = armor;
+            this.hp = hp - 4;
+            this.maxHp = hp;
+            this.currentState = states.SLEEP;
+        }
+        if (rand > 47 && rand <= 94) {
+            this.speed = speed;
+            this.dmg = dmg;
+            this.armor = armor + 2;
+            this.hp = hp - 4;
+            this.maxHp = hp;
+            this.currentState = states.HOSTILE;
+        }
+        if (rand > 94) {
+            this.speed = speed;
+            this.dmg = dmg;
+            this.armor = armor;
+            this.hp = hp;
+            this.maxHp = hp;
+            this.currentState = states.AVOID;
         }
 
         animate();
@@ -79,17 +76,17 @@ public class Enemy extends CreateHitbox {
                         goblinAtlas.findRegion("goblin-idle(2)"),
                         goblinAtlas.findRegion("goblin-idle(3)"),
                         goblinAtlas.findRegion("goblin-idle(4)")));
-                animation.put("attackRight", new Animation<>(.5f,
+                animation.put("attackRight", new Animation<>(.8f,
                         goblinAtlas.findRegion("goblin-attack(1)"),
                         goblinAtlas.findRegion("goblin-attack(2)"),
                         goblinAtlas.findRegion("goblin-attack(3)"),
                         goblinAtlas.findRegion("goblin-attack(4)")));
-                animation.put("attackLeft", new Animation<>(.5f,
+                animation.put("attackLeft", new Animation<>(.8f,
                         goblinAtlas.findRegion("goblin-attack(5)"),
                         goblinAtlas.findRegion("goblin-attack(6)"),
                         goblinAtlas.findRegion("goblin-attack(7)"),
                         goblinAtlas.findRegion("goblin-attack(8)")));
-                animation.put("runRight", new Animation<>(.3f,
+                animation.put("runRight", new Animation<>(.8f,
                         goblinAtlas.findRegion("goblin-run(1)"),
                         goblinAtlas.findRegion("goblin-run(2)"),
                         goblinAtlas.findRegion("goblin-run(3)"),
@@ -107,12 +104,12 @@ public class Enemy extends CreateHitbox {
                         mummyAtlas.findRegion("mummy-idle(2)"),
                         mummyAtlas.findRegion("mummy-idle(3)"),
                         mummyAtlas.findRegion("mummy-idle(4)")));
-                animation.put("attackRight", new Animation<>(.7f,
+                animation.put("attackRight", new Animation<>(.8f,
                         mummyAtlas.findRegion("mummy-attack(1)"),
                         mummyAtlas.findRegion("mummy-attack(2)"),
                         mummyAtlas.findRegion("mummy-attack(3)"),
                         mummyAtlas.findRegion("mummy-attack(4)")));
-                animation.put("attackLeft", new Animation<>(.7f,
+                animation.put("attackLeft", new Animation<>(.8f,
                         mummyAtlas.findRegion("mummy-attack(5)"),
                         mummyAtlas.findRegion("mummy-attack(6)"),
                         mummyAtlas.findRegion("mummy-attack(7)"),
@@ -135,12 +132,12 @@ public class Enemy extends CreateHitbox {
                         wraithAtlas.findRegion("wraith-idle(2)"),
                         wraithAtlas.findRegion("wraith-idle(3)"),
                         wraithAtlas.findRegion("wraith-idle(4)")));
-                animation.put("attackRight", new Animation<>(.7f,
+                animation.put("attackRight", new Animation<>(.8f,
                         wraithAtlas.findRegion("wraith-attack(1)"),
                         wraithAtlas.findRegion("wraith-attack(2)"),
                         wraithAtlas.findRegion("wraith-attack(3)"),
                         wraithAtlas.findRegion("wraith-attack(4)")));
-                animation.put("attackLeft", new Animation<>(.7f,
+                animation.put("attackLeft", new Animation<>(.8f,
                         wraithAtlas.findRegion("wraith-attack(5)"),
                         wraithAtlas.findRegion("wraith-attack(6)"),
                         wraithAtlas.findRegion("wraith-attack(7)"),
@@ -339,6 +336,14 @@ public class Enemy extends CreateHitbox {
 
     public void setAttacking(boolean attacking) {
         this.attacking = attacking;
+    }
+
+    public boolean isSpawnedChest() {
+        return spawnedChest;
+    }
+
+    public void setSpawnedChest(boolean spawnedChest) {
+        this.spawnedChest = spawnedChest;
     }
 
     //endregion

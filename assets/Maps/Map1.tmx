@@ -1,96 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="16" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="29">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="16" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="9">
  <tileset firstgid="1" name="Dungeon_Tileset" tilewidth="16" tileheight="16" tilecount="100" columns="10">
   <image source="Dungeon_Tileset.png" width="160" height="160"/>
  </tileset>
- <layer id="2" name="fondo" width="16" height="10">
+ <tileset firstgid="101" source="Dungeon_Tileset.tsx"/>
+ <layer id="2" name="background" width="16" height="10">
   <data encoding="csv">
-79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,
-79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,
-79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,
-79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,
-79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,
-79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,
-79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,
-79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,
-79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,
-79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79
+179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,
+179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,
+179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,
+179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,
+179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,
+179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,
+179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,
+179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,
+179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,
+179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179
 </data>
  </layer>
- <layer id="1" name="piso" width="16" height="10">
+ <layer id="1" name="Capa de patrones 1" width="16" height="10">
   <data encoding="csv">
-1,2,3,4,5,2,3,37,38,2,3,4,5,4,5,6,
-11,12,13,14,13,14,13,14,13,14,13,14,13,14,15,16,
-21,22,24,24,23,24,23,24,23,24,23,24,23,24,25,26,
-31,22,23,24,23,24,23,24,23,24,23,24,23,24,25,36,
-49,22,23,24,23,24,23,24,23,24,23,24,23,24,25,48,
-59,22,23,24,23,24,23,24,23,24,23,24,23,24,25,58,
-11,22,23,24,23,24,23,24,23,24,23,24,23,24,25,16,
-21,22,23,24,23,24,23,24,23,24,23,23,23,24,25,26,
-31,32,33,34,33,34,33,34,33,34,33,34,33,34,35,36,
-41,42,43,42,42,43,43,37,38,43,43,42,42,44,45,46
+1,102,103,102,103,102,103,104,2147483752,102,103,102,103,102,103,116,
+11,12,13,14,13,14,13,14,13,14,13,14,13,14,15,116,
+21,22,7,8,9,10,7,8,9,10,7,8,9,10,25,126,
+31,22,17,18,19,20,17,18,19,20,17,18,19,20,25,116,
+149,22,27,28,29,30,27,28,29,30,27,28,29,30,25,148,
+159,22,7,8,9,10,7,8,9,10,7,8,9,10,25,158,
+31,22,17,18,19,20,17,18,19,20,17,18,19,20,25,136,
+11,22,27,28,29,30,27,28,29,30,27,28,29,30,25,126,
+21,32,33,34,33,34,33,34,33,34,33,34,33,34,35,136,
+41,142,143,142,143,142,143,142,145,144,145,144,145,144,145,46
 </data>
  </layer>
- <layer id="3" name="details" width="16" height="10">
+ <layer id="4" name="details" width="16" height="10">
   <data encoding="csv">
-0,0,0,0,0,91,0,0,0,0,91,0,0,0,0,0,
-0,65,0,0,0,0,0,0,0,0,0,0,0,0,66,0,
-0,92,0,0,0,69,0,0,0,0,0,0,0,0,2147483740,0,
-0,0,0,0,0,0,0,0,0,0,78,0,0,0,0,0,
-0,0,69,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,78,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,69,0,0,0,78,0,0,0,
-0,92,0,0,0,0,0,0,0,0,0,0,0,0,2147483740,0,
-0,65,0,0,0,0,0,0,0,0,0,0,0,0,66,0,
+0,0,0,191,0,0,175,0,0,175,0,0,191,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,192,0,0,0,0,0,0,0,0,0,0,0,0,2147483840,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,192,0,0,0,0,0,0,0,0,0,0,0,0,2147483840,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="4" name="collisions">
-  <object id="9" x="16" y="16">
+ <objectgroup id="3" name="collisions">
+  <object id="8" x="16" y="16">
    <polyline points="0,0 0,128 224,128 224,0 0,0"/>
   </object>
  </objectgroup>
- <objectgroup id="7" name="chest">
-  <object id="28" x="215.875" y="40.125">
-   <point/>
-  </object>
- </objectgroup>
  <objectgroup id="5" name="doors">
-  <object id="10" x="16" y="64">
-   <polygon points="1.9375,0 1.9375,32 -16,32 -16,0"/>
-  </object>
-  <object id="16" x="112" y="16">
-   <polygon points="0.0625,1.9375 31.9375,1.9375 32,-16 0,-16"/>
-  </object>
-  <object id="17" x="240" y="64">
-   <polygon points="-1.875,0.0625 -2,32.0625 16,32 16,0"/>
-  </object>
-  <object id="18" x="112" y="144">
-   <polygon points="0,-1.875 0,16 32,16 32,-1.8125"/>
+  <object id="2" x="0" y="64">
+   <polygon points="0,0 0,32 17.9688,32.0313 18.0313,0"/>
   </object>
  </objectgroup>
  <objectgroup id="6" name="enemies">
-  <object id="22" name="spawn" x="54.75" y="36.5">
-   <properties>
-    <property name="armor" type="float" value="1"/>
-    <property name="dmg" type="float" value="1"/>
-    <property name="hp" type="float" value="10"/>
-    <property name="speed" type="float" value="1"/>
-    <property name="state" type="int" value="1"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="23" name="spawn" x="39.5" y="119.25">
-   <properties>
-    <property name="armor" type="float" value="1"/>
-    <property name="dmg" type="float" value="1"/>
-    <property name="hp" type="float" value="10"/>
-    <property name="speed" type="float" value="1"/>
-    <property name="state" type="int" value="1"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="24" name="spawn" x="222.75" y="130.75">
+  <object id="4" name="spawn" x="51.2043" y="37.645">
    <properties>
     <property name="armor" type="float" value="1"/>
     <property name="dmg" type="float" value="1"/>
@@ -98,6 +65,41 @@
     <property name="speed" type="float" value="1"/>
     <property name="state" type="int" value="0"/>
    </properties>
+   <point/>
+  </object>
+  <object id="5" name="spawn" x="34.7904" y="116.86">
+   <properties>
+    <property name="armor" type="float" value="1"/>
+    <property name="dmg" type="float" value="1"/>
+    <property name="hp" type="float" value="10"/>
+    <property name="speed" type="float" value="1"/>
+    <property name="state" type="int" value="0"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="6" name="spawn" x="183.943" y="134.523">
+   <properties>
+    <property name="armor" type="float" value="1"/>
+    <property name="dmg" type="float" value="1"/>
+    <property name="hp" type="float" value="10"/>
+    <property name="speed" type="float" value="1"/>
+    <property name="state" type="int" value="1"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="7" name="spawn" x="60.8385" y="133.988">
+   <properties>
+    <property name="armor" type="float" value="1"/>
+    <property name="dmg" type="float" value="1"/>
+    <property name="hp" type="float" value="10"/>
+    <property name="speed" type="float" value="1"/>
+    <property name="state" type="int" value="0"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="7" name="chest">
+  <object id="3" x="215.522" y="39.2507">
    <point/>
   </object>
  </objectgroup>

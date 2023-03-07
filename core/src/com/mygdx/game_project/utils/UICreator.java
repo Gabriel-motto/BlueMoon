@@ -47,7 +47,7 @@ public class UICreator {
         stage.addActor(imageButton);
         return imageButton;
     }
-    public static void createLabel(String text, int textSize, Color fontColor, Vector2 pos, Stage stage) {
+    public static Label createLabel(String text, int textSize, Color fontColor, Vector2 pos, Stage stage) {
         parameter.size = textSize;
         font = generator.generateFont(parameter);
 
@@ -57,6 +57,7 @@ public class UICreator {
         Label label = new Label(text, labelStyle);
         label.setPosition(pos.x, pos.y);
         stage.addActor(label);
+        return label;
     }
     public static Image createImage(Vector2 pos, float width, float height, Skin skin, String drawable, Stage stage) {
         Image image = new Image(skin, drawable);

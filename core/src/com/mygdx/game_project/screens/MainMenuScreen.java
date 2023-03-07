@@ -64,7 +64,7 @@ public class MainMenuScreen implements Screen {
             }
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                mainClass.setScreen(new GameScreen(mainClass, true));
+                mainClass.setScreen(new GameScreen(mainClass, true, -1));
             }
         });
     }

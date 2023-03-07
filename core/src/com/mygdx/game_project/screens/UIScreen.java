@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game_project.entities.Player;
+import com.mygdx.game_project.utils.UICreator;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -25,68 +26,41 @@ import java.text.DecimalFormat;
 import static com.mygdx.game_project.constants.Constant.*;
 
 public class UIScreen {
-    private static FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/Minecraftia-Regular.ttf"));
-    private static FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-    private static BitmapFont font;
     private static TextureAtlas hpBarAtlas = new TextureAtlas("HpBar/hpBar.atlas");
     private static Image hpBar;
     private static Label lblAtk, lblSpeed, lblAtkSpeed, lblArmor;
-    private static LabelStyle lblAtkStyle, lblSpeedStyle, lblAtkSpeedStyle, lblArmorStyle;
     private static Button btnSettings;
-    private static ButtonStyle btnSettingsStyle;
-    private static TextureAtlas btnTexure = new TextureAtlas("Buttons\\Buttons.atlas");
-    private static Skin buttonSkin;
+    private static TextureAtlas btnTexure = new TextureAtlas("UIPack\\UIPack.atlas");
+    private static Skin skin;
     private static Vector2 startCoord = new Vector2((WORLD_WIDTH)-75*PPU, (WORLD_HEIGHT)-25*PPU);
     private static float xSeparation = 30*PPU;
     private static float ySeparation = 20*PPU;
     private static DecimalFormat df = new DecimalFormat("##.##");
 
     public static void initUI(Stage stage) {
-        parameter.size = 12;
-        font = generator.generateFont(parameter);
         df.setRoundingMode(RoundingMode.DOWN);
 
-        buttonSkin = new Skin();
-        buttonSkin.addRegions(btnTexure);
+        skin = new Skin();
+        skin.addRegions(btnTexure);
+        skin.addRegions(hpBarAtlas);
 
-        btnSettingsStyle = new ButtonStyle();
-        btnSettingsStyle.up = buttonSkin.getDrawable("smallButtonUp");
-        btnSettingsStyle.down = buttonSkin.getDrawable("smallButtonDown");
-        btnSettings = new Button(btnSettingsStyle);
-        btnSettings.setBounds(startCoord.x +30*PPU, startCoord.y - 15*PPU, 64, 64);
-        stage.addActor(btnSettings);
+        btnSettings = UICreator.createImageButton(new Vector2(startCoord.x +30*PPU, startCoord.y - 15*PPU),
+                64, 64, skin, "Slot", "settings", stage);
 
-        hpBar = new Image(hpBarAtlas.findRegion("hp10"));
-        hpBar.setBounds(startCoord.x, startCoord.y - ySeparation * 2, 64*PPU, 16*PPU);
-        stage.addActor(hpBar);
+        hpBar = UICreator.createImage(new Vector2(startCoord.x, startCoord.y - ySeparation * 2),
+                64*PPU, 16*PPU, skin, "hp10", stage);
 
-        lblAtkStyle = new LabelStyle();
-        lblAtkStyle.font = font;
-        lblAtkStyle.fontColor = Color.WHITE;
-        lblAtk = new Label("Atk", lblAtkStyle);
-        lblAtk.setPosition(startCoord.x, startCoord.y - ySeparation * 3);
-        stage.addActor(lblAtk);
+        lblAtk = UICreator.createLabel("Atk", 12, Color.WHITE,
+                new Vector2(startCoord.x, startCoord.y - ySeparation * 3), stage);
 
-        lblSpeedStyle = new LabelStyle();
-        lblSpeedStyle.font = font;
-        lblSpeedStyle.fontColor = Color.WHITE;
-        lblSpeed = new Label("Speed", lblSpeedStyle);
-        lblSpeed.setPosition(startCoord.x, startCoord.y - ySeparation * 4);
-        stage.addActor(lblSpeed);
+        lblSpeed = UICreator.createLabel("Speed", 12, Color.WHITE,
+                new Vector2(startCoord.x, startCoord.y - ySeparation * 4), stage);
 
-        lblAtkSpeedStyle = new LabelStyle();
-        lblAtkSpeedStyle.font = font;
-        lblAtkSpeedStyle.fontColor = Color.WHITE;
-        lblAtkSpeed = new Label("Atk Speed", lblAtkSpeedStyle);
-        lblAtkSpeed.setPosition(startCoord.x, startCoord.y - ySeparation * 5);
-        stage.addActor(lblAtkSpeed);
+        lblAtkSpeed = UICreator.createLabel("Atk Speed", 12, Color.WHITE,
+                new Vector2(startCoord.x, startCoord.y - ySeparation * 5), stage);
 
-        lblArmorStyle = new LabelStyle();
-        lblArmorStyle.font = font;
-        lblArmorStyle.fontColor = Color.WHITE;
-        lblArmor = new Label("Armor", lblArmorStyle);
-        lblArmor.setPosition(startCoord.x, startCoord.y - ySeparation * 6);
-        stage.addActor(lblArmor);
+        lblArmor = UICreator.createLabel("Armor", 12, Color.WHITE,
+                new Vector2(startCoord.x, startCoord.y - ySeparation * 6), stage);
 
         btnSettings.addListener(new InputListener() {
             @Override
@@ -149,9 +123,5 @@ public class UIScreen {
                 hpBar.setDrawable(new TextureRegionDrawable(hpBarAtlas.findRegion("hp10")));
                 break;
         }
-    }
-
-    public static void dispose() {
-        generator.dispose();
     }
 }

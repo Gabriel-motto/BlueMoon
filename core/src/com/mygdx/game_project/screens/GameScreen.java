@@ -15,10 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mygdx.game_project.MainClass;
-import com.mygdx.game_project.entities.Enemy;
-import com.mygdx.game_project.entities.Objects;
-import com.mygdx.game_project.entities.Player;
-import com.mygdx.game_project.entities.PlayerData;
+import com.mygdx.game_project.entities.*;
 import com.mygdx.game_project.utils.*;
 import com.mygdx.game_project.utils.Input;
 
@@ -55,11 +52,14 @@ public class GameScreen implements Screen {
 	// Entities
 	public Player player;
 	public ArrayList<Enemy> enemies;
+	public ArrayList<Enemy> delEnemies;
 	public ArrayList<Objects> objects;
+	public ArrayList<Objects> delObjects;
+	public ArrayList<Bullets> delBullets;
 	public OrthogonalTiledMapRenderer tmr;
 	public TiledMap tiledMap;
 	public TiledCollisions tiledCollisions;
-	public String mapRoute = "Maps\\Map1.tmx";
+	public String mapRoute;
 	public enum State {
 		RUNNING,
 		PAUSED
@@ -68,9 +68,15 @@ public class GameScreen implements Screen {
 	public PauseScreen pauseScreen;
 
 	//endregion
-	public GameScreen(MainClass mainClass, boolean isFirst) {
+	public GameScreen(MainClass mainClass, boolean isFirst, int map) {
 		this.mainClass = mainClass;
 		this.isFirst = isFirst;
+
+		if (map == -1) {
+			mapRoute = "Maps\\StartMap.tmx";
+		} else {
+			mapRoute = "Maps\\Map"+map+".tmx";
+		}
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT);
@@ -90,7 +96,10 @@ public class GameScreen implements Screen {
 		tiledCollisions = new TiledCollisions(world, tiledMap.getLayers().get("collisions").getObjects());
 
 		enemies = new ArrayList<>();
+		delEnemies = new ArrayList<>();
 		objects = new ArrayList<>();
+		delObjects = new ArrayList<>();
+		delBullets = new ArrayList<>();
 		spawnEntities();
 
 		batch = new SpriteBatch();
@@ -108,10 +117,12 @@ public class GameScreen implements Screen {
 	}
 	public void spawnEntities() {
 		for (MapObject mapObject : tiledMap.getLayers().get("enemies").getObjects()) {
-			enemies.add(new Enemy(world, new Vector2(mapObject.getProperties().get("x", Float.class) * 3, mapObject.getProperties().get("y", Float.class) * 3),
-					32,32,
-					mapObject.getProperties().get("speed", Float.class), mapObject.getProperties().get("dmg", Float.class),
-					mapObject.getProperties().get("armor", Float.class), mapObject.getProperties().get("hp", Float.class)));
+			if (mapObject.getProperties().get("state", Float.class) == 0) {
+				enemies.add(new Enemy(world, new Vector2(mapObject.getProperties().get("x", Float.class) * 3, mapObject.getProperties().get("y", Float.class) * 3),
+						32,32,
+						mapObject.getProperties().get("speed", Float.class), mapObject.getProperties().get("dmg", Float.class),
+						mapObject.getProperties().get("armor", Float.class), mapObject.getProperties().get("hp", Float.class)));
+			}
 		}
 		if (isFirst) {
 			player = new Player(world, camera, mainClass);
@@ -146,31 +157,18 @@ public class GameScreen implements Screen {
 
 		Input.movementInput(delta, player, touchpad);
 		Input.atackInput(delta, player, player.getAtkSpeed(), enemies, world);
-		Input.deleteBullets(world);
 		for (Enemy enemy : enemies) {
 			if (!enemy.isAlive()) {
 				prefs.putInteger("enemiesKilled", prefs.getInteger("enemiesKilled") + 1);
 			}
 		}
 		prefs.flush();
-		Input.deleteEnemies(world, enemies);
 
 		PlayerData.setData(player.getSpeed(), player.getDmg(), player.getArmor(), player.getHp(), player.getAtkSpeed());
 
 		for (Enemy enemy : enemies) {
 			enemy.updateBehavior(delta, player);
 		}
-
-		ArrayList<Objects> delObjects = new ArrayList<>();
-		for (Objects object : objects) {
-			if (!object.isAlive()) {
-				delObjects.add(object);
-			}
-		}
-		for (Objects delObject : delObjects) {
-			world.destroyBody(delObject.getBody());
-		}
-		objects.removeAll(delObjects);
 
 		if (enemies.isEmpty() && !tiledCollisions.isDoorCreated) {
 			tiledCollisions = new TiledCollisions(world, tiledMap.getLayers().get("doors").getObjects());
@@ -197,7 +195,9 @@ public class GameScreen implements Screen {
 
 		batch.begin();
 
-		player.draw(batch);
+		for (Objects delObject : delObjects) {
+			delObject.draw(batch);
+		}
 		for (Enemy enemy : enemies) {
 			enemy.draw(batch);
 		}
@@ -206,8 +206,43 @@ public class GameScreen implements Screen {
 				object.draw(batch);
 			}
 		}
+		player.draw(batch);
 
 		batch.end();
+
+		deleteBodies();
+	}
+
+	public void deleteBodies() {
+		for (Enemy enemy : enemies) {
+			if (!enemy.isAlive()) {
+				world.destroyBody(enemy.getBody());
+				delEnemies.add(enemy);
+			}
+		}
+		for (Enemy delEnemy : delEnemies) {
+			if (delEnemy.currentState == Enemy.states.AVOID && !delEnemy.isSpawnedChest()) {
+				objects.add(new Objects(world, delEnemy.getPosition(), 32, 32));
+				delEnemy.setSpawnedChest(true);
+			}
+		}
+		enemies.removeAll(delEnemies);
+
+		for (Objects object : objects) {
+			if (!object.isAlive()) {
+				world.destroyBody(object.getBody());
+				delObjects.add(object);
+			}
+		}
+		objects.removeAll(delObjects);
+
+		for (Bullets bullet : Input.getBullets()) {
+			if (!bullet.isAlive()) {
+				delBullets.add(bullet);
+				world.destroyBody(bullet.getBody());
+			}
+		}
+		Input.getBullets().removeAll(delBullets);
 	}
 
 	@Override
@@ -217,7 +252,6 @@ public class GameScreen implements Screen {
 		tmr.dispose();
 		batch.dispose();
 		stage.dispose();
-		UIScreen.dispose();
 		pauseScreen.dispose();
 		Gdx.input.setInputProcessor(null);
 	}

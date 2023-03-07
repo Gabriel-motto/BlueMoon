@@ -23,6 +23,11 @@ public class Input extends InputAdapter{
     private Player player;
     private ArrayList<Enemy> enemies;
     private Stage stage;
+    private static ArrayList<Bullets> bullets = new ArrayList<>();
+    private static Vector2 bulletDir;
+    private static Enemy closestEnemy;
+    private static float timer = 0f;
+    private static boolean isTouchDown = false;
 
     public Input(World world, Player player, ArrayList<Enemy> enemies, Stage stage) {
         this.world = world;
@@ -39,7 +44,7 @@ public class Input extends InputAdapter{
     /**
      *
      * @param delta Tiempo en segundos desde el último render.
-     * @param player Jugador al que se le aplica las fuerzas para el movimiento.
+     * @param player Jugador al que se le aplica las fuerzas de movimiento.
      */
     public static void movementInput(float delta, Player player, Touchpad touchpad) {
         float horizontalForce = 0;
@@ -118,13 +123,6 @@ public class Input extends InputAdapter{
 
         player.setPosition(new Vector2(player.getBody().getWorldCenter().x*32, player.getBody().getWorldCenter().y*32));
     }
-
-    private static ArrayList<Bullets> bullets = new ArrayList<>();
-    private static ArrayList<Bullets> delBullets = new ArrayList<>();
-    private static Vector2 bulletDir;
-    private static Enemy closestEnemy;
-    private static float timer = 0f;
-    private static boolean isTouchDown = false;
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
@@ -212,29 +210,6 @@ public class Input extends InputAdapter{
         }
     }
 
-    public static void deleteBullets(World world) {
-        for (Bullets bullet : bullets) {
-            if (!bullet.isAlive()) {
-                delBullets.add(bullet);
-                world.destroyBody(bullet.getBody());
-            }
-        }
-        bullets.removeAll(delBullets);
-    }
-    private static ArrayList<Enemy> delEnemies;
-    public static void deleteEnemies(World world, ArrayList<Enemy> enemies) {
-        delEnemies = new ArrayList<>();
-        for (Enemy enemy : enemies) {
-            if (!enemy.isAlive()) {
-                delEnemies.add(enemy);
-            }
-        }
-        for (Enemy delEnemy : delEnemies) {
-            world.destroyBody(delEnemy.getBody());
-        }
-        enemies.removeAll(delEnemies);
-    }
-
     //region $setter&getters
 
     public static ArrayList<Bullets> getBullets() {
@@ -243,14 +218,6 @@ public class Input extends InputAdapter{
 
     public static void setBullets(ArrayList<Bullets> bullets) {
         Input.bullets = bullets;
-    }
-
-    public static ArrayList<Enemy> getDelEnemies() {
-        return delEnemies;
-    }
-
-    public static void setDelEnemies(ArrayList<Enemy> delEnemies) {
-        Input.delEnemies = delEnemies;
     }
 
     //endregion

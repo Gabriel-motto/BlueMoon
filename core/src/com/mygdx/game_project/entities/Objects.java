@@ -28,15 +28,13 @@ public class Objects extends CreateHitbox {
     private Animation<TextureAtlas.AtlasRegion> chestOpen;
     private TextureRegion actualFrame;
     private float time;
-    private boolean opening = false;
+    private boolean openned = false;
     private boolean alive = true;
-    private World world;
 
     // endregion
     public Objects(World world, Vector2 position, float width, float height) {
         super(world, position, width, height, 0, false, true, false, category.COLLISION.bits(), 0);
         fixture.setUserData(this);
-        this.world = world;
         this.position = position;
         this.width = width;
         this.height = height;
@@ -46,31 +44,22 @@ public class Objects extends CreateHitbox {
         if (rand >= 0 && rand <= 60) rareness = Rareness.COMMON;
         if (rand > 60 && rand <= 95) rareness = Rareness.RARE;
         if (rand > 95) rareness = Rareness.EXOTIC;
-
-        chestOpen = new Animation<>(.75f,
-                chestTextureAtlas.findRegion("chests(1)"),
-                chestTextureAtlas.findRegion("chests(3)"),
-                chestTextureAtlas.findRegion("chests(2)"));
     }
 
     public void draw(Batch batch) {
         time += Gdx.graphics.getDeltaTime();
-        if (!isOpening()) {
+        if (!isOpenned()) {
             batch.draw(chestTextureAtlas.findRegion("chests(1)"),position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*PPU, height*PPU);
         } else {
-            actualFrame = chestOpen.getKeyFrame(time, false);
-            batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*PPU, height*PPU);
-            super.fixture.getFilterData().groupIndex = category.NO_COLLISION.bits();
-            if (chestOpen.isAnimationFinished(time)) {
-                setAlive(false);
-            }
+            batch.draw(chestTextureAtlas.findRegion("chests(2)"), position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*PPU, height*PPU);
+            setAlive(false);
         }
     }
 
     @Override
     public void onHit(Object object) {
         Gdx.app.log("CHEST", "Cat: " + rareness);
-        setOpening(true);
+        setOpenned(true);
     }
 
     // region &Setters/Getters
@@ -115,12 +104,12 @@ public class Objects extends CreateHitbox {
         this.rareness = rareness;
     }
 
-    public boolean isOpening() {
-        return opening;
+    public boolean isOpenned() {
+        return openned;
     }
 
-    public void setOpening(boolean opening) {
-        this.opening = opening;
+    public void setOpenned(boolean openned) {
+        this.openned = openned;
     }
 
     public boolean isAlive() {

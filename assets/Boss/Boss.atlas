@@ -1,0 +1,461 @@
+
+Boss.png
+size: 2048, 256
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+BossAttack2
+  rotate: false
+  xy: 1943, 144
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossAttack3
+  rotate: false
+  xy: 500, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossAttack4
+  rotate: false
+  xy: 1200, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossAttack5
+  rotate: false
+  xy: 1200, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossAttack7
+  rotate: false
+  xy: 500, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossAttack6
+  rotate: false
+  xy: 500, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossAttack8
+  rotate: false
+  xy: 1000, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossAttack9
+  rotate: false
+  xy: 1600, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossBeam1
+  rotate: false
+  xy: 400, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossAttack1
+  rotate: false
+  xy: 400, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossDeath1
+  rotate: false
+  xy: 400, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossIdle1
+  rotate: false
+  xy: 400, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossInvul1
+  rotate: false
+  xy: 400, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossBeam2
+  rotate: false
+  xy: 900, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossBeam3
+  rotate: false
+  xy: 1500, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossBeam4
+  rotate: false
+  xy: 1800, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossBeam5
+  rotate: false
+  xy: 200, 5
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossBeam6
+  rotate: false
+  xy: 800, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossBeam7
+  rotate: false
+  xy: 1300, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossDeath10
+  rotate: false
+  xy: 300, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossDeath11
+  rotate: false
+  xy: 900, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossDeath12
+  rotate: false
+  xy: 1400, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossDeath14
+  rotate: false
+  xy: 200, 105
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossDeath13
+  rotate: false
+  xy: 200, 105
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossDeath2
+  rotate: false
+  xy: 100, 5
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossDeath3
+  rotate: false
+  xy: 700, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossDeath4
+  rotate: false
+  xy: 1200, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossDeath5
+  rotate: false
+  xy: 1700, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossDeath6
+  rotate: false
+  xy: 0, 105
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossDeath7
+  rotate: false
+  xy: 600, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossDeath8
+  rotate: false
+  xy: 1100, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossDeath9
+  rotate: false
+  xy: 1600, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossGlowing1
+  rotate: false
+  xy: 1300, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossGlowing3
+  rotate: false
+  xy: 0, 5
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossGlowing7
+  rotate: false
+  xy: 0, 5
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossGlowing4
+  rotate: false
+  xy: 600, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossGlowing6
+  rotate: false
+  xy: 600, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossGlowing5
+  rotate: false
+  xy: 1100, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossGlowing8
+  rotate: false
+  xy: 400, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossGlowing2
+  rotate: false
+  xy: 400, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossIdle2
+  rotate: false
+  xy: 1800, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossIdle3
+  rotate: false
+  xy: 100, 105
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossIdle4
+  rotate: false
+  xy: 700, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossInvul2
+  rotate: false
+  xy: 1000, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossInvul3
+  rotate: false
+  xy: 1500, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossInvul4
+  rotate: false
+  xy: 1900, 44
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossInvul5
+  rotate: false
+  xy: 300, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossInvul6
+  rotate: false
+  xy: 800, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossInvul7
+  rotate: false
+  xy: 1400, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BossInvul8
+  rotate: false
+  xy: 1700, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+LargeBeam1
+  rotate: false
+  xy: 323, 200
+  size: 270, 44
+  orig: 270, 44
+  offset: 0, 0
+  index: -1
+LargeBeam2
+  rotate: false
+  xy: 1403, 200
+  size: 270, 44
+  orig: 270, 44
+  offset: 0, 0
+  index: -1
+LargeBeam3
+  rotate: false
+  xy: 863, 200
+  size: 270, 44
+  orig: 270, 44
+  offset: 0, 0
+  index: -1
+LargeBeam4
+  rotate: false
+  xy: 1673, 200
+  size: 270, 44
+  orig: 270, 44
+  offset: 0, 0
+  index: -1
+LargeBeam5
+  rotate: false
+  xy: 1133, 200
+  size: 270, 44
+  orig: 270, 44
+  offset: 0, 0
+  index: -1
+LargeBeam6
+  rotate: false
+  xy: 593, 200
+  size: 270, 44
+  orig: 270, 44
+  offset: 0, 0
+  index: -1
+LaserAtk
+  rotate: false
+  xy: 251, 205
+  size: 36, 39
+  orig: 36, 39
+  offset: 0, 0
+  index: -1
+LaserAtk2
+  rotate: false
+  xy: 143, 205
+  size: 36, 39
+  orig: 36, 39
+  offset: 0, 0
+  index: -1
+LaserAtk3
+  rotate: false
+  xy: 35, 205
+  size: 36, 39
+  orig: 36, 39
+  offset: 0, 0
+  index: -1
+LaserAtk4
+  rotate: false
+  xy: 215, 205
+  size: 36, 39
+  orig: 36, 39
+  offset: 0, 0
+  index: -1
+LaserAtk5
+  rotate: false
+  xy: 107, 205
+  size: 36, 39
+  orig: 36, 39
+  offset: 0, 0
+  index: -1
+LaserAtk6
+  rotate: false
+  xy: 287, 205
+  size: 36, 39
+  orig: 36, 39
+  offset: 0, 0
+  index: -1
+LaserAtk7
+  rotate: false
+  xy: 179, 205
+  size: 36, 39
+  orig: 36, 39
+  offset: 0, 0
+  index: -1
+LaserAtk8
+  rotate: false
+  xy: 71, 205
+  size: 36, 39
+  orig: 36, 39
+  offset: 0, 0
+  index: -1
+Projectile
+  rotate: false
+  xy: 0, 230
+  size: 35, 14
+  orig: 35, 14
+  offset: 0, 0
+  index: -1
