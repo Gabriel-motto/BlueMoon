@@ -83,7 +83,7 @@
     <property name="dmg" type="float" value="1"/>
     <property name="hp" type="float" value="10"/>
     <property name="speed" type="float" value="1"/>
-    <property name="state" type="int" value="1"/>
+    <property name="state" type="int" value="0"/>
    </properties>
    <point/>
   </object>

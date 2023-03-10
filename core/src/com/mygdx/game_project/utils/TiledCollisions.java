@@ -37,6 +37,11 @@ public class TiledCollisions {
         }
     }
 
+    /**
+     * Creacion de una hitbox lineal
+     * @param polyline
+     * @return
+     */
     private ChainShape createPoly(PolylineMapObject polyline) {
         float[] vertices = polyline.getPolyline().getTransformedVertices();
         Vector2[] worldVertices = new Vector2[vertices.length / 2];
@@ -50,6 +55,11 @@ public class TiledCollisions {
         return chainShape;
     }
 
+    /**
+     * Creacion de una hitbox poligonal
+     * @param polygon
+     * @return
+     */
     private PolygonShape createPoly(PolygonMapObject polygon) {
         float[] vertices = polygon.getPolygon().getTransformedVertices();
         float[] worldVertices = new float[vertices.length];

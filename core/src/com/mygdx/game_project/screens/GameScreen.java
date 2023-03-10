@@ -4,6 +4,8 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -48,40 +50,51 @@ public class GameScreen implements Screen {
 	public Input input;
 	public boolean isFirst;
 	public Preferences prefs = Gdx.app.getPreferences("Scores");
-
-	// Entities
 	public Player player;
 	public ArrayList<Enemy> enemies;
 	public ArrayList<Enemy> delEnemies;
+	public ArrayList<RaidBoss> raidBoss;
+	public ArrayList<RaidBoss> delRaidBoss;
 	public ArrayList<Objects> objects;
 	public ArrayList<Objects> delObjects;
-	public ArrayList<Bullets> delBullets;
+	public ArrayList<Bullets> delBullets, delBulletsBoss;
 	public OrthogonalTiledMapRenderer tmr;
 	public TiledMap tiledMap;
 	public TiledCollisions tiledCollisions;
-	public String mapRoute;
+	public static String mapRoute;
 	public enum State {
 		RUNNING,
-		PAUSED
+		PAUSED,
+		END
 	}
 	public static State state = State.RUNNING;
-	public PauseScreen pauseScreen;
+	public SettingsScreen settingsScreen;
+	public EndScreen endScreen;
+	public TextureRegion playerBulletTexture = new TextureAtlas("Player/Samurai.atlas").findRegion("shuriken");
 
 	//endregion
+
 	public GameScreen(MainClass mainClass, boolean isFirst, int map) {
 		this.mainClass = mainClass;
 		this.isFirst = isFirst;
 
+		Gdx.app.log("INFO/MAP", "" + PlayerData.mapCount);
+
 		if (map == -1) {
 			mapRoute = "Maps\\StartMap.tmx";
 		} else {
-			mapRoute = "Maps\\Map"+map+".tmx";
+			if (PlayerData.mapCount == 5) {
+				mapRoute = "Maps\\BossMap.tmx";
+			} else {
+				mapRoute = "Maps\\Map"+map+".tmx";
+			}
 		}
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT);
 		viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 		debugRenderer = new Box2DDebugRenderer();
+		debugRenderer.setDrawBodies(false);
 
 		stage = new Stage(viewport);
 		//stage.getCamera().position.x = (WORLD_WIDTH) / 2f;
@@ -100,6 +113,9 @@ public class GameScreen implements Screen {
 		objects = new ArrayList<>();
 		delObjects = new ArrayList<>();
 		delBullets = new ArrayList<>();
+		raidBoss = new ArrayList<>();
+		delRaidBoss = new ArrayList<>();
+		delBulletsBoss = new ArrayList<>();
 		spawnEntities();
 
 		batch = new SpriteBatch();
@@ -113,22 +129,31 @@ public class GameScreen implements Screen {
 		stage.addActor(touchpad);
 		UIScreen.initUI(stage);
 
-		pauseScreen = new PauseScreen(prefs, viewport);
+		input = new Input(world, player, enemies, raidBoss, stage);
+		settingsScreen = new SettingsScreen(prefs, viewport, mainClass, false);
+		endScreen = new EndScreen(prefs, viewport, mainClass);
 	}
+
+	/**
+	 * Crea las entidades que contiene el mapa
+	 */
 	public void spawnEntities() {
 		for (MapObject mapObject : tiledMap.getLayers().get("enemies").getObjects()) {
-			if (mapObject.getProperties().get("state", Float.class) == 0) {
+			if (mapObject.getProperties().get("state", Integer.class) == 0) {
 				enemies.add(new Enemy(world, new Vector2(mapObject.getProperties().get("x", Float.class) * 3, mapObject.getProperties().get("y", Float.class) * 3),
 						32,32,
 						mapObject.getProperties().get("speed", Float.class), mapObject.getProperties().get("dmg", Float.class),
 						mapObject.getProperties().get("armor", Float.class), mapObject.getProperties().get("hp", Float.class)));
+			} else {
+				raidBoss.add(new RaidBoss(world, new Vector2(mapObject.getProperties().get("x", Float.class) * 3, mapObject.getProperties().get("y", Float.class) * 3),
+						75,75));
 			}
 		}
 		if (isFirst) {
 			player = new Player(world, camera, mainClass);
 		} else {
 			player = new Player(world, PLAYER_INIT_POS, 50,50,
-					PlayerData.speed, PlayerData.dmg, PlayerData.armor, PlayerData.hp,
+					PlayerData.speed, PlayerData.atk, PlayerData.armor, PlayerData.hp,
 					camera, mainClass, PlayerData.atkSpeed);
 		}
 	}
@@ -140,23 +165,31 @@ public class GameScreen implements Screen {
 
 		switch (state) {
 			case RUNNING:
-				input = new Input(world, player, enemies, stage);
+				input.setInpProcessors();
 				update(delta);
 				break;
 
 			case PAUSED:
-				pauseScreen.render(delta);
+				settingsScreen.render(delta);
+				break;
+
+			case END:
+				endScreen.render(delta);
 				break;
 		}
 	}
 
+	/**
+	 * Actualiza el comportamiento general del juego
+	 * @param delta
+	 */
 	public void update(float delta) {
 		tmr.setView((OrthographicCamera) viewport.getCamera());
 		Gdx.gl.glClearColor(0f,0f,0f,1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		Input.movementInput(delta, player, touchpad);
-		Input.atackInput(delta, player, player.getAtkSpeed(), enemies, world);
+		Input.atackInput(delta, player.getAtkSpeed());
 		for (Enemy enemy : enemies) {
 			if (!enemy.isAlive()) {
 				prefs.putInteger("enemiesKilled", prefs.getInteger("enemiesKilled") + 1);
@@ -164,23 +197,21 @@ public class GameScreen implements Screen {
 		}
 		prefs.flush();
 
-		PlayerData.setData(player.getSpeed(), player.getDmg(), player.getArmor(), player.getHp(), player.getAtkSpeed());
+		PlayerData.setData(player.getSpeed(), player.getAtk(), player.getArmor(), player.getHp(), player.getAtkSpeed());
 
 		for (Enemy enemy : enemies) {
 			enemy.updateBehavior(delta, player);
 		}
+		for (RaidBoss boss : raidBoss) {
+			boss.update(delta, player);
+		}
 
-		if (enemies.isEmpty() && !tiledCollisions.isDoorCreated) {
+		if ((enemies.isEmpty() && raidBoss.isEmpty()) && !tiledCollisions.isDoorCreated) {
 			tiledCollisions = new TiledCollisions(world, tiledMap.getLayers().get("doors").getObjects());
 			for (MapObject mapObject : tiledMap.getLayers().get("chest").getObjects()) {
 				objects.add(new Objects(world, new Vector2(mapObject.getProperties().get("x", Float.class) * 3, mapObject.getProperties().get("y", Float.class) * 3),
 						32, 32));
 			}
-		}
-
-		if (!player.isAlive()) {
-			mainClass.setScreen(new EndScreen(mainClass));
-			dispose();
 		}
 
 		UIScreen.updateUI(player);
@@ -206,6 +237,9 @@ public class GameScreen implements Screen {
 				object.draw(batch);
 			}
 		}
+		for (RaidBoss boss : raidBoss) {
+			boss.draw(batch);
+		}
 		player.draw(batch);
 
 		batch.end();
@@ -213,7 +247,14 @@ public class GameScreen implements Screen {
 		deleteBodies();
 	}
 
+	/**
+	 * Borra los cuerpos fisicos
+	 */
 	public void deleteBodies() {
+		if (!player.isAlive()) {
+			world.destroyBody(player.getBody());
+		}
+
 		for (Enemy enemy : enemies) {
 			if (!enemy.isAlive()) {
 				world.destroyBody(enemy.getBody());
@@ -238,11 +279,28 @@ public class GameScreen implements Screen {
 
 		for (Bullets bullet : Input.getBullets()) {
 			if (!bullet.isAlive()) {
-				delBullets.add(bullet);
 				world.destroyBody(bullet.getBody());
+				delBullets.add(bullet);
 			}
 		}
 		Input.getBullets().removeAll(delBullets);
+
+		for (RaidBoss boss : raidBoss) {
+			if (!boss.isAlive()) {
+				world.destroyBody(boss.getBody());
+				delRaidBoss.add(boss);
+			}
+
+			for (Bullets bullet : boss.getBullets()) {
+				if (!boss.isAlive()) bullet.setAlive(false);
+				if (!bullet.isAlive()) {
+					world.destroyBody(bullet.getBody());
+					delBulletsBoss.add(bullet);
+				}
+			}
+			boss.getBullets().removeAll(delBulletsBoss);
+		}
+		raidBoss.removeAll(delRaidBoss);
 	}
 
 	@Override
@@ -252,7 +310,7 @@ public class GameScreen implements Screen {
 		tmr.dispose();
 		batch.dispose();
 		stage.dispose();
-		pauseScreen.dispose();
+		settingsScreen.dispose();
 		Gdx.input.setInputProcessor(null);
 	}
 
@@ -265,7 +323,7 @@ public class GameScreen implements Screen {
 	public void resize(int width, int height) {
 		viewport.update(width, height);
 		stage.getViewport().update(width, height);
-		pauseScreen.resize(width, height);
+		settingsScreen.resize(width, height);
 	}
 
 	@Override

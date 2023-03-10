@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game_project.utils.CreateHitbox;
+import com.mygdx.game_project.utils.Sounds;
+
 import java.util.HashMap;
 import static com.mygdx.game_project.constants.Constant.PPU;
 
@@ -25,15 +27,17 @@ public class Enemy extends CreateHitbox {
     private TextureAtlas mummyAtlas = new TextureAtlas("Enemies\\Mummy\\Mummy.atlas");
     private HashMap<String, Animation<TextureAtlas.AtlasRegion>> animation;
     private TextureRegion actualFrame;
-    private float time, delay;
+    private float timer;
     public enum states {
         SLEEP,
         HOSTILE,
         AVOID
     }
     public states currentState;
+    private Sounds hitSound;
+
     public Enemy(World world, Vector2 position, int width, int height, float speed, float dmg, float armor, float hp) {
-        super(world, position, width, height, 10f, false, true, false, category.COLLISION.bits(), dmg);
+        super(world, position, width, height, 10f, false, true, false, category.ENEMY_NO_COLL.bits(), dmg, false);
         fixture.setUserData(this);
         this.position = position;
         this.width = width;
@@ -64,29 +68,33 @@ public class Enemy extends CreateHitbox {
             this.maxHp = hp;
             this.currentState = states.AVOID;
         }
-
+        hitSound = new Sounds("Sounds\\Hit1.mp3");
         animate();
     }
+
+    /**
+     * Inicializa los sprites de los enemigos
+     */
     public void animate() {
         animation = new HashMap<>();
         switch (currentState) {
             case HOSTILE:
                 animation.put("idle", new Animation<>(.3f,
-                        goblinAtlas.findRegion("goblin-idle(1)"),
-                        goblinAtlas.findRegion("goblin-idle(2)"),
-                        goblinAtlas.findRegion("goblin-idle(3)"),
-                        goblinAtlas.findRegion("goblin-idle(4)")));
-                animation.put("attackRight", new Animation<>(.8f,
+                        wraithAtlas.findRegion("goblin-idle(1)"),
+                        wraithAtlas.findRegion("goblin-idle(2)"),
+                        wraithAtlas.findRegion("goblin-idle(3)"),
+                        wraithAtlas.findRegion("goblin-idle(4)")));
+                animation.put("attackRight", new Animation<>(.4f,
                         goblinAtlas.findRegion("goblin-attack(1)"),
                         goblinAtlas.findRegion("goblin-attack(2)"),
                         goblinAtlas.findRegion("goblin-attack(3)"),
                         goblinAtlas.findRegion("goblin-attack(4)")));
-                animation.put("attackLeft", new Animation<>(.8f,
+                animation.put("attackLeft", new Animation<>(.4f,
                         goblinAtlas.findRegion("goblin-attack(5)"),
                         goblinAtlas.findRegion("goblin-attack(6)"),
                         goblinAtlas.findRegion("goblin-attack(7)"),
                         goblinAtlas.findRegion("goblin-attack(8)")));
-                animation.put("runRight", new Animation<>(.8f,
+                animation.put("runRight", new Animation<>(.3f,
                         goblinAtlas.findRegion("goblin-run(1)"),
                         goblinAtlas.findRegion("goblin-run(2)"),
                         goblinAtlas.findRegion("goblin-run(3)"),
@@ -100,16 +108,16 @@ public class Enemy extends CreateHitbox {
 
             case AVOID:
                 animation.put("idle", new Animation<>(.3f,
-                        mummyAtlas.findRegion("mummy-idle(1)"),
-                        mummyAtlas.findRegion("mummy-idle(2)"),
-                        mummyAtlas.findRegion("mummy-idle(3)"),
-                        mummyAtlas.findRegion("mummy-idle(4)")));
-                animation.put("attackRight", new Animation<>(.8f,
+                        wraithAtlas.findRegion("mummy-idle(1)"),
+                        wraithAtlas.findRegion("mummy-idle(2)"),
+                        wraithAtlas.findRegion("mummy-idle(3)"),
+                        wraithAtlas.findRegion("mummy-idle(4)")));
+                animation.put("attackRight", new Animation<>(.4f,
                         mummyAtlas.findRegion("mummy-attack(1)"),
                         mummyAtlas.findRegion("mummy-attack(2)"),
                         mummyAtlas.findRegion("mummy-attack(3)"),
                         mummyAtlas.findRegion("mummy-attack(4)")));
-                animation.put("attackLeft", new Animation<>(.8f,
+                animation.put("attackLeft", new Animation<>(.4f,
                         mummyAtlas.findRegion("mummy-attack(5)"),
                         mummyAtlas.findRegion("mummy-attack(6)"),
                         mummyAtlas.findRegion("mummy-attack(7)"),
@@ -132,12 +140,12 @@ public class Enemy extends CreateHitbox {
                         wraithAtlas.findRegion("wraith-idle(2)"),
                         wraithAtlas.findRegion("wraith-idle(3)"),
                         wraithAtlas.findRegion("wraith-idle(4)")));
-                animation.put("attackRight", new Animation<>(.8f,
+                animation.put("attackRight", new Animation<>(.4f,
                         wraithAtlas.findRegion("wraith-attack(1)"),
                         wraithAtlas.findRegion("wraith-attack(2)"),
                         wraithAtlas.findRegion("wraith-attack(3)"),
                         wraithAtlas.findRegion("wraith-attack(4)")));
-                animation.put("attackLeft", new Animation<>(.8f,
+                animation.put("attackLeft", new Animation<>(.4f,
                         wraithAtlas.findRegion("wraith-attack(5)"),
                         wraithAtlas.findRegion("wraith-attack(6)"),
                         wraithAtlas.findRegion("wraith-attack(7)"),
@@ -155,41 +163,38 @@ public class Enemy extends CreateHitbox {
                 break;
         }
     }
+
+    /**
+     * Anima los enemigos
+     * @param batch
+     */
     public void draw(Batch batch) {
-        time += Gdx.graphics.getDeltaTime();
+        timer += Gdx.graphics.getDeltaTime();
 
         if (body.getLinearVelocity().x < 0) {
-            if (isAttacking()) {
-                delay += Gdx.graphics.getDeltaTime();
+            if (attacking) {
                 body.setLinearVelocity(0,0);
-                actualFrame = animation.get("attackLeft").getKeyFrame(time, false);
+                actualFrame = animation.get("attackLeft").getKeyFrame(timer, false);
                 batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
-                if (delay > 1f) {
-                    setAttacking(false);
-                    delay -= 1f;
-                }
             } else {
-                actualFrame = animation.get("runLeft").getKeyFrame(time, true);
+                actualFrame = animation.get("runLeft").getKeyFrame(timer, true);
                 batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
             }
         }
+
         if (body.getLinearVelocity().x > 0) {
-            if (isAttacking()) {
-                delay += Gdx.graphics.getDeltaTime();
+            if (attacking) {
                 body.setLinearVelocity(0,0);
-                actualFrame = animation.get("attackRight").getKeyFrame(time, false);
+                actualFrame = animation.get("attackRight").getKeyFrame(timer, false);
                 batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
-                if (delay > 1f) {
-                    setAttacking(false);
-                    delay -= 1f;
-                }
             } else {
-                actualFrame = animation.get("runRight").getKeyFrame(time, true);
+                actualFrame = animation.get("runRight").getKeyFrame(timer, true);
                 batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
             }
         }
-        if (body.getLinearVelocity().x == 0 && !isAttacking()) {
-            actualFrame = animation.get("idle").getKeyFrame(time, true);
+
+        if (currentState == states.SLEEP) {
+            actualFrame = animation.get("idle").getKeyFrame(timer, true);
             batch.draw(actualFrame, position.x*PPU - width*PPU/2, position.y*PPU - height*PPU/2, width*1.25f*PPU, height*1.25f*PPU);
         }
     }
@@ -200,15 +205,23 @@ public class Enemy extends CreateHitbox {
             if (currentState == states.SLEEP) currentState = states.HOSTILE;
             Gdx.app.log("INFO", "Enemy hp: " + hp);
             if (hp <= 0) setAlive(false);
+            hitSound.play(false);
         }
         if (object instanceof Player) {
-            setAttacking(true);
+            attacking = true;
         }
     }
 
     float randDirX = (float) (Math.random() * 2) - 1;
     float randDirY = (float) (Math.random() * 2) - 1;
+
+    /**
+     * Cambia el comportamiento segun el momento o la accion que realize el enemigo
+     * @param delta
+     * @param player jugador
+     */
     public void updateBehavior(float delta, Player player) {
+        timer += delta;
         if (isAlive()) {
             Vector2 enemyDir;
             float playerDistanceX;
@@ -217,6 +230,11 @@ public class Enemy extends CreateHitbox {
                 case HOSTILE:
                     enemyDir  = new Vector2((player.getBody().getPosition().x * 32 - body.getPosition().x * 32), (player.getBody().getPosition().y * 32 - body.getPosition().y * 32)).nor();
                     body.setLinearVelocity(new Vector2(speed * enemyDir.x, speed * enemyDir.y));
+
+                    if (animation.get("attackLeft").isAnimationFinished(timer)) {
+                        attacking = false;
+                        timer = 0;
+                    }
                     break;
 
                 case AVOID:
@@ -230,6 +248,11 @@ public class Enemy extends CreateHitbox {
                         randDirY = (float) (Math.random() * 2) - 1;
                     } else {
                         body.setLinearVelocity(new Vector2(speed * randDirX, speed * randDirY));
+                    }
+
+                    if (animation.get("attackLeft").isAnimationFinished(timer)) {
+                        attacking = false;
+                        timer = 0;
                     }
                     break;
 

@@ -33,7 +33,7 @@ public class Objects extends CreateHitbox {
 
     // endregion
     public Objects(World world, Vector2 position, float width, float height) {
-        super(world, position, width, height, 0, false, true, false, category.COLLISION.bits(), 0);
+        super(world, position, width, height, 0, false, true, false, category.ENEMY_NO_COLL.bits(), 0, false);
         fixture.setUserData(this);
         this.position = position;
         this.width = width;
@@ -46,6 +46,10 @@ public class Objects extends CreateHitbox {
         if (rand > 95) rareness = Rareness.EXOTIC;
     }
 
+    /**
+     * Dibuja el objeto
+     * @param batch
+     */
     public void draw(Batch batch) {
         time += Gdx.graphics.getDeltaTime();
         if (!isOpenned()) {

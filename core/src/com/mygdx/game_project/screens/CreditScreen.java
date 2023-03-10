@@ -5,13 +5,13 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.I18NBundle;
@@ -19,23 +19,25 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mygdx.game_project.MainClass;
 import com.mygdx.game_project.utils.UICreator;
 
-import static com.mygdx.game_project.constants.Constant.*;
+import static com.mygdx.game_project.constants.Constant.WORLD_HEIGHT;
+import static com.mygdx.game_project.constants.Constant.WORLD_WIDTH;
 
-public class EndScreen implements Screen {
+public class CreditScreen implements Screen {
     final MainClass mainClass;
     private Stage stage;
     private Image board;
     private TextButton btnMainMenu;
+    private Label title1, title2, title3, title4, parag1, parag2, parag3, parag4;
     private Skin skin;
     private TextureAtlas texures = new TextureAtlas("UIPack\\UIPack.atlas");
 
     /**
-     * Se inicializan todos los elementos de la pantalla de muerte
+     * Se inicializan todos los elementos de la pantalla de creditos
      * @param prefs record de enemigos matados
      * @param viewport
      * @param mainClass
      */
-    public EndScreen(Preferences prefs, ExtendViewport viewport, final MainClass mainClass) {
+    public CreditScreen(Preferences prefs, ExtendViewport viewport, final MainClass mainClass) {
         this.mainClass = mainClass;
         I18NBundle lang = I18NBundle.createBundle(Gdx.files.internal("Locale/Locale"));
 
@@ -47,20 +49,43 @@ public class EndScreen implements Screen {
         board = UICreator.createImage(new Vector2(10f,5f), WORLD_WIDTH-20f, WORLD_HEIGHT-10f,
                 skin, "WidePanel", stage);
 
-        btnMainMenu = UICreator.createTextButton("Main menu", 20, new Vector2(board.getX()+125, board.getX()+50),
+        btnMainMenu = UICreator.createTextButton("Main menu", 20, new Vector2(board.getX()+board.getWidth()/2-100f, board.getX()+25),
                 200, 64, skin, "Big Wood 2 Btn", stage);
         btnMainMenu.getLabelCell().padTop(20);
 
-        UICreator.createLabel(lang.get("end.died"), 64, Color.WHITE,
-                new Vector2((board.getX()+board.getWidth()/2)-200, board.getY()+board.getHeight()-150f), stage);
+        title1 = UICreator.createLabel(lang.get("cred.title1"), 24, Color.BLACK,
+                new Vector2(board.getX()+50f, board.getY()+board.getHeight()-100f), stage);
 
-        UICreator.createLabel(lang.get("settings.enemies"), 32, Color.WHITE,
-                new Vector2((board.getX()+board.getWidth()/2)-160, board.getY()+board.getHeight()-250f), stage);
+        title2 = UICreator.createLabel(lang.get("cred.title2"), 24, Color.BLACK,
+                new Vector2(board.getX()+50f, board.getY()+board.getHeight()-220f), stage);
 
-        UICreator.createLabel(String.format(""+prefs.getInteger("enemiesKilled")),48, Color.RED,
-                new Vector2((board.getX()+board.getWidth()/2)-50, board.getY()+board.getHeight()-350f), stage);
+        title3 = UICreator.createLabel(lang.get("cred.title3"), 24, Color.BLACK,
+                new Vector2(board.getX()+board.getWidth()/2+50f, board.getY()+board.getHeight()-100f), stage);
 
-        btnMainMenu.addListener(new InputListener(){
+        title4 = UICreator.createLabel(lang.get("cred.title4"), 24, Color.BLACK,
+                new Vector2(board.getX()+board.getWidth()/2+50f, board.getY()+board.getHeight()-220f), stage);
+
+        parag1 = UICreator.createLabel(lang.get("cred.parag1"), 16, Color.WHITE,
+                new Vector2(board.getX()+50f, board.getY()+board.getHeight()-150f), stage);
+        parag1.setWrap(true);
+        parag1.setWidth((board.getWidth()/2)-100);
+
+        parag2 = UICreator.createLabel(lang.get("cred.parag2"), 16, Color.WHITE,
+                new Vector2(board.getX()+50f, board.getY()+board.getHeight()-310f), stage);
+        parag2.setWrap(true);
+        parag2.setWidth((board.getWidth()/2)-100);
+
+        parag3 = UICreator.createLabel(lang.get("cred.parag3"), 16, Color.WHITE,
+                new Vector2(board.getX()+board.getWidth()/2+50f, board.getY()+board.getHeight()-150f), stage);
+        parag3.setWrap(true);
+        parag3.setWidth((board.getWidth()/2)-100);
+
+        parag4 = UICreator.createLabel(lang.get("cred.parag4"), 16, Color.WHITE,
+                new Vector2(board.getX()+board.getWidth()/2+50f, board.getY()+board.getHeight()-300f), stage);
+        parag4.setWrap(true);
+        parag4.setWidth((board.getWidth()/2)-100);
+
+        btnMainMenu.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Gdx.input.vibrate(200);
@@ -69,8 +94,7 @@ public class EndScreen implements Screen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 //                super.touchUp(event, x, y, pointer, button);
-                GameScreen.state = GameScreen.State.RUNNING;
-                mainClass.setScreen(new MainMenuScreen(mainClass));
+                MainMenuScreen.credits = false;
             }
         });
     }

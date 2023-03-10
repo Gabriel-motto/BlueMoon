@@ -9,23 +9,25 @@ import com.mygdx.game_project.utils.CreateHitbox;
 public class Bullets extends CreateHitbox{
     Vector2 position;
     private float radius, width, height, damping, dmg, speed;
+    private short group;
     private Body body;
     private boolean alive = true;
-    private boolean moved = false;
+    private boolean shot = false;
 
-    public Bullets(World world, Vector2 position, float radius, float dmg, float speed) {
-        super(world, position, radius / 32, 0, 1.0f, category.NO_COLLISION.bits(), dmg);
+    public Bullets(World world, Vector2 position, float radius, float dmg, float speed, short group) {
+        super(world, position, radius / 32, 0, 1.0f, group, dmg, true);
         this.speed = speed;
         fixture.setUserData(this);
         this.position = position;
         this.radius = radius;
         this.body = super.body;
         this.dmg = dmg;
+        this.group = group;
         body.setBullet(true);
     }
 
-    public Bullets(World world, Vector2 position, int width, int height, float damping, float dmg, float speed) {
-        super(world, position, width, height, 0, false, false, false, category.NO_COLLISION.bits(), dmg);
+    public Bullets(World world, Vector2 position, int width, int height, float damping, float dmg, float speed, short group) {
+        super(world, position, width, height, 0, false, false, false, group, dmg, true);
         this.speed = speed;
         fixture.setUserData(this);
         this.position = position;
@@ -34,6 +36,8 @@ public class Bullets extends CreateHitbox{
         this.damping = damping;
         this.body = super.body;
         this.dmg = dmg;
+        this.group = group;
+        body.setBullet(true);
     }
 
     @Override
@@ -100,14 +104,6 @@ public class Bullets extends CreateHitbox{
         this.damping = damping;
     }
 
-    public boolean isMoved() {
-        return moved;
-    }
-
-    public void setMoved(boolean moved) {
-        this.moved = moved;
-    }
-
     public float getDmg() {
         return dmg;
     }
@@ -122,6 +118,22 @@ public class Bullets extends CreateHitbox{
 
     public void setSpeed(float speed) {
         this.speed = speed;
+    }
+
+    public short getGroup() {
+        return group;
+    }
+
+    public void setGroup(short group) {
+        this.group = group;
+    }
+
+    public boolean isShot() {
+        return shot;
+    }
+
+    public void setShot(boolean shot) {
+        this.shot = shot;
     }
 
     //endregion

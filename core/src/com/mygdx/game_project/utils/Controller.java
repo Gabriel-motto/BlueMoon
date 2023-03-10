@@ -12,10 +12,12 @@ public class Controller extends Actor {
     private static Skin touchpadSkin;
     private static Touchpad.TouchpadStyle touchpadStyle;
     private static Touchpad touchpad;
-    public Controller() {
+    public Controller() { }
 
-    }
-
+    /**
+     * Creación del touchpad que permite el movimiento del personaje
+     * @return
+     */
     public Touchpad createTouchpad() {
         touchpadSkin = new Skin();
         touchpadSkin.add("touchBackground", new Texture("Touchpad/Joystick.png"));

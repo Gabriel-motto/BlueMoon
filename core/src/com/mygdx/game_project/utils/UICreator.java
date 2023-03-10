@@ -16,6 +16,17 @@ public class UICreator {
     private static FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/Minecraftia-Regular.ttf"));
     private static FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
     private static BitmapFont font;
+
+    /**
+     * Creacion de un boton
+     * @param pos posicion del boton
+     * @param width ancho del boton
+     * @param height alto del boton
+     * @param skin texturas a usar
+     * @param drawable textura especifica
+     * @param stage stage donde se añade para dibujarlo
+     * @return
+     */
     public static Button createButton(Vector2 pos, float width, float height, Skin skin, String drawable, Stage stage) {
         ButtonStyle buttonStyle = new ButtonStyle();
         buttonStyle.up = skin.getDrawable(drawable);
@@ -24,6 +35,19 @@ public class UICreator {
         stage.addActor(button);
         return button;
     }
+
+    /**
+     * Creacion de un boton con texto
+     * @param text texto a mostrar
+     * @param textSize tamaño del texto
+     * @param pos posicion boton
+     * @param width ancho del boton
+     * @param height alto del boton
+     * @param skin texturas a usar
+     * @param drawable textura especifica
+     * @param stage stage donde se añade para dibujarlo
+     * @return
+     */
     public static TextButton createTextButton(String text, int textSize, Vector2 pos, float width, float height, Skin skin, String drawable, Stage stage) {
         parameter.size = textSize;
         font = generator.generateFont(parameter);
@@ -36,6 +60,18 @@ public class UICreator {
         stage.addActor(textButton);
         return textButton;
     }
+
+    /**
+     * Creacion de un boton con imagen
+     * @param pos posicion del boton
+     * @param width ancho del boton
+     * @param height alto del boton
+     * @param skin texturas a usar
+     * @param drawable textura especifica
+     * @param drawable2 textura de la imagen del boton
+     * @param stage stage donde se añade para dibujarlo
+     * @return
+     */
     public static ImageButton createImageButton(Vector2 pos, float width, float height, Skin skin, String drawable, String drawable2, Stage stage) {
         ImageButtonStyle imageButtonStyle = new ImageButtonStyle();
         imageButtonStyle.up = skin.getDrawable(drawable);
@@ -47,6 +83,16 @@ public class UICreator {
         stage.addActor(imageButton);
         return imageButton;
     }
+
+    /**
+     * Creacion de una etiqueta
+     * @param text texto de la etiqueta
+     * @param textSize tamaño del texto
+     * @param fontColor color de la fuente
+     * @param pos posicion de la etiqueta
+     * @param stage stage donde se añade para dibujarlo
+     * @return
+     */
     public static Label createLabel(String text, int textSize, Color fontColor, Vector2 pos, Stage stage) {
         parameter.size = textSize;
         font = generator.generateFont(parameter);
@@ -59,6 +105,17 @@ public class UICreator {
         stage.addActor(label);
         return label;
     }
+
+    /**
+     * Creacion de una imagen
+     * @param pos posicion de una imagen
+     * @param width ancho de una imagen
+     * @param height alto de una imagen
+     * @param skin texturas a usar
+     * @param drawable textura especifica
+     * @param stage stage donde se añade para dibujarlo
+     * @return
+     */
     public static Image createImage(Vector2 pos, float width, float height, Skin skin, String drawable, Stage stage) {
         Image image = new Image(skin, drawable);
         image.setBounds(pos.x, pos.y, width, height);

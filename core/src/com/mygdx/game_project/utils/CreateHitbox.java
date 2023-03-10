@@ -15,9 +15,9 @@ public abstract class CreateHitbox {
     protected BodyDef bodyDef;
     protected float dmg;
     public enum category {
-        NO_COLLISION((short)-1),
-        COLLISION((short)1),
-        NEUTRAL((short)0);
+        PLAYER_NO_COLL((short)-1),
+        ENEMY_NO_COLL((short)-2),
+        NEUTRAL((short)-1);
 
         private final short bits;
         category(short bits) {
@@ -27,7 +27,22 @@ public abstract class CreateHitbox {
             return bits;
         }
     }
-    public CreateHitbox(World world, Vector2 position, float width, float height, float damping, boolean isStatic, boolean cantRotate, boolean isPlayer, short group, float dmg) {
+
+    /**
+     * Creacion de una hitbox cuadrada
+     * @param world mundo en el que se crea
+     * @param position position en el que se crea
+     * @param width ancho
+     * @param height alto
+     * @param damping fuerza de rozamiento
+     * @param isStatic si se puede mover
+     * @param cantRotate si no puede rotar
+     * @param isPlayer si es jugador
+     * @param group grupo con el que no colisiona
+     * @param dmg daño que ejerce
+     * @param isSensor si es sensor
+     */
+    public CreateHitbox(World world, Vector2 position, float width, float height, float damping, boolean isStatic, boolean cantRotate, boolean isPlayer, short group, float dmg, boolean isSensor) {
         bodyDef = new BodyDef();
         PolygonShape shape = new PolygonShape();
 
@@ -44,6 +59,7 @@ public abstract class CreateHitbox {
         fixtureDef.shape = shape;
         fixtureDef.density = 1.0f;
         fixtureDef.filter.groupIndex = group;
+        fixtureDef.isSensor = isSensor;
 
         if (isPlayer) fixture = body.createFixture(fixtureDef);
         else fixture = body.createFixture(fixtureDef);
@@ -53,7 +69,18 @@ public abstract class CreateHitbox {
         this.dmg = dmg;
     }
 
-    public CreateHitbox(World world, Vector2 position, float radius, float damping, float bounce, short group, float dmg) {
+    /**
+     * Creacion de una hitbox redonda
+     * @param world mundo en el que se crea
+     * @param position posicion
+     * @param radius radio
+     * @param damping fuerza de rozamiento
+     * @param bounce elasticidad
+     * @param group grupo con el que no colisiona
+     * @param dmg daño que ejerce
+     * @param isSensor si es sensor
+     */
+    public CreateHitbox(World world, Vector2 position, float radius, float damping, float bounce, short group, float dmg, boolean isSensor) {
         bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(position.x / 32f, position.y / 32f);
@@ -69,6 +96,7 @@ public abstract class CreateHitbox {
         fixtureDef.density = 1.0f;
         fixtureDef.restitution = bounce;
         fixtureDef.filter.groupIndex = group;
+        fixtureDef.isSensor = isSensor;
 
         fixture = body.createFixture(fixtureDef);
         circle.dispose();

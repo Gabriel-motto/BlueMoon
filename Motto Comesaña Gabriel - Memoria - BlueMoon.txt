@@ -1,0 +1,24 @@
+Memoria del proyecto BlueMoon
+
+Inicio
+Libgdx y box2d tiene un comienzo bastante complicado ya que existe poca documentacion sobre ello (a parte de la oficial de libgdx) que sea resolutiva.
+Debida a esa escasez de documentación lleva más tiempo la resolución de los bugs cuando el código empieza a crecer.
+
+Desarrollo
+A pesar de sus complicaciones, libgdx y box2d permiten un desarrollo rápido de muchas funciones como la creación de fisicas y animaciones del entorno.
+Gracias a herramientas como Gdx Texture Packer, Tiled e ImageMagick se pueden crear las hojas de texturas necesarias facilmente y en poco tiempo, lo que permite evitar usar herramientas de libgdx que son más complicadas
+
+Conclusion e ideas finales
+Gracias a realizar un proyecto relativamente grande se afianzan muchas bases de programación, aprendes a organizar más el código y a simplificarlo para evitar que los bugs futuros sean muy complicados.
+
+
+Creación del mundo
+Es una tarea sencilla ya que box2d te lo permite hacer en pocas líneas de código
+
+Creación de entidades
+Aquí ya se complica un poco debido a la cantidad de código necesario para crearlas y la multitud de opciones para cambiarlas.
+De todas formas, de nuevo, box2d facilita ligeramente las cosas.
+
+Creación de efectos de colisión
+Bajo mi punto de vista una de las etapas del código más confusas al principio.
+Hay que diferenciar muy bien las entidades en el momento de la colisión para evitar resultados no deseados.

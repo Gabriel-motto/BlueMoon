@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="16" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="4">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="16" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="6">
  <tileset firstgid="1" source="Dungeon_Tileset.tsx"/>
  <layer id="2" name="background" width="16" height="10">
   <data encoding="csv">
@@ -43,7 +43,11 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="7" name="chest"/>
+ <objectgroup id="7" name="chest">
+  <object id="5" x="73.8626" y="79.7502">
+   <point/>
+  </object>
+ </objectgroup>
  <objectgroup id="4" name="collisions">
   <object id="1" x="16" y="16">
    <polyline points="0,0 0,128 224,128 224,0 0,0"/>
@@ -62,8 +66,8 @@
   </object>
  </objectgroup>
  <objectgroup id="6" name="doors">
-  <object id="2" x="48" y="64" rotation="90">
-   <polygon points="0,0 0,16 32,16 32,0"/>
+  <object id="4" x="32" y="64">
+   <polygon points="0,0 0,32 17.9688,32.0313 18.0313,0"/>
   </object>
  </objectgroup>
 </map>

@@ -1,0 +1,41 @@
+Changelog
+
+V 0.1
+Creación del mundo, jugador y movimiento del mismo
+
+V 0.1.5
+Renderizado el mapa y encuadre
+
+V 0.2
+Modularización y simplificación del código para la creación del jugador, enemigos y paredes
+
+V 0.2.5
+Añadidos diferentes sprites para el jugador y cambios menores
+
+V 0.3
+Creación de las acciones tras la colisión
+
+V 0.4
+Creación de los patrones de comportamiento de los enemigos
+
+V 0.4.5
+Organización de los puntos de nacimiento de los enemigos mediante Tiled
+
+V 0.5
+Creación del touchpad para el movimiento con el telefono (hasta ahora era mediante teclado)
+
+V 0.5.5
+Resolución de problemas con el escalado de imagenes en diferentes pantallas y cambios menores en el código
+
+V 0.6
+Añadidos los sprites para los enemigos
+Comienzo de la creacion del interfaz y los menús
+Resolución de bugs
+
+V 0.7
+Finalización de menus e interfaz
+Comienzo del Jefe final
+
+V 0.8
+Finalización del Jefe final
+Retoques en los menus
